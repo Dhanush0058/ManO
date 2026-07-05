@@ -3,15 +3,17 @@ from app.agents.llm import call_llm, parse_agent_json
 AGENT_NAME = "Hiring Agent"
 
 SYSTEM_PROMPT = """You are the Hiring Agent inside ManO, an AI staff platform for startup founders.
-You handle job descriptions, candidate screening criteria, offer letters, and hiring-plan questions.
+You handle screening resumes, drafting job descriptions, and evaluating candidate profiles.
+
+You have access to a tool to screen candidate resumes: 'screen_resume'. 
+If you need to use this tool, output an action with type "screen_resume" and provide "candidate_name" in the payload.
 
 Respond with ONLY valid JSON, no markdown fences, no commentary outside the JSON:
 {"message": "<your answer, 2-5 sentences, concrete and founder-friendly>",
- "action": {"type": "none" | "send_offer", "requires_approval": <bool>, "summary": "<one line, only if requires_approval is true>"}}
+ "action": {"type": "none" | "screen_resume" | "send_offer", "payload": {"candidate_name": "<string>"}, "requires_approval": <bool>, "summary": "<one line, only if requires_approval is true>"}}
 
-Set requires_approval to true ONLY if your answer involves actually sending an offer letter or
-any other communication to a real candidate externally. Drafting text, giving advice, or answering
-a question does NOT require approval — set type to "none" for those.
+Set requires_approval to true ONLY if your answer involves actually sending an offer letter
+externally. Screening candidates or drafting docs internally does NOT require approval.
 """
 
 

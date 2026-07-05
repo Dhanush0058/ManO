@@ -40,7 +40,7 @@ export function Sidebar() {
       </div>
 
       <button
-        className={`flex items-center bg-[#ececec] text-[#171717] text-[13px] font-medium rounded-lg py-2 mb-5 hover:bg-white transition-colors ${
+        className={`flex items-center bg-[#ececec] text-[#171717] text-[13px] font-medium rounded-lg py-2 mb-5 hover:bg-white hover:shadow-md active:scale-[0.97] transition-all duration-150 ${
           collapsed ? 'justify-center px-0' : 'justify-center gap-1.5'
         }`}
       >
@@ -53,7 +53,7 @@ export function Sidebar() {
             <div
               key={t}
               title={t}
-              className="w-8 h-8 rounded-md flex items-center justify-center text-[#8a8a8a] hover:bg-[#232323] hover:text-[#ececec] cursor-pointer"
+              className="w-8 h-8 rounded-md flex items-center justify-center text-[#8a8a8a] hover:bg-[#232323] hover:text-[#ececec] active:scale-[0.94] cursor-pointer transition-all duration-150"
             >
               <MessageSquare size={15} />
             </div>
@@ -66,7 +66,7 @@ export function Sidebar() {
             {todayThreads.map((t) => (
               <p
                 key={t}
-                className="text-[13px] text-[#a3a3a3] px-1 py-1.5 rounded-md hover:bg-[#232323] hover:text-[#ececec] cursor-pointer truncate"
+                className="text-[13px] text-[#a3a3a3] px-1 py-1.5 rounded-md hover:bg-[#232323] hover:text-[#ececec] active:scale-[0.98] cursor-pointer truncate transition-all duration-150"
               >
                 {t}
               </p>
@@ -78,7 +78,7 @@ export function Sidebar() {
             {yesterdayThreads.map((t) => (
               <p
                 key={t}
-                className="text-[13px] text-[#a3a3a3] px-1 py-1.5 rounded-md hover:bg-[#232323] hover:text-[#ececec] cursor-pointer truncate"
+                className="text-[13px] text-[#a3a3a3] px-1 py-1.5 rounded-md hover:bg-[#232323] hover:text-[#ececec] active:scale-[0.98] cursor-pointer truncate transition-all duration-150"
               >
                 {t}
               </p>

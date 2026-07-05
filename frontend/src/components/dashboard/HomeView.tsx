@@ -50,7 +50,7 @@ export function HomeView({ onSendMessage, isLoading }: HomeViewProps) {
             Board
           </span>
         </div>
-        <button className="flex items-center gap-1.5 text-[13px] font-medium text-[#171717] bg-[#ececec] rounded-lg px-3 py-1.5 hover:bg-white transition-colors">
+        <button className="flex items-center gap-1.5 text-[13px] font-medium text-[#171717] bg-[#ececec] rounded-lg px-3 py-1.5 hover:bg-white hover:shadow-md active:scale-[0.96] transition-all duration-150">
           <Plus size={14} /> New Chat
         </button>
       </div>
@@ -96,7 +96,7 @@ export function HomeView({ onSendMessage, isLoading }: HomeViewProps) {
           >
             <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] text-[#8a8a8a]">Tasks</span>
-              <span className="text-[11px] text-[#8a8a8a] hover:text-[#ececec] cursor-pointer">
+              <span className="text-[11px] text-[#8a8a8a] hover:text-[#ececec] hover:underline active:scale-95 inline-block cursor-pointer transition-all duration-150">
                 View All
               </span>
             </div>
@@ -135,7 +135,7 @@ export function HomeView({ onSendMessage, isLoading }: HomeViewProps) {
           {quickActions.map(({ icon: Icon, label }) => (
             <button
               key={label}
-              className="flex items-center gap-2 text-[13px] text-[#d4d4d4] border border-[#333333] rounded-full px-4 py-2 hover:bg-[#2a2a2a] transition-colors"
+              className="flex items-center gap-2 text-[13px] text-[#d4d4d4] border border-[#333333] rounded-full px-4 py-2 hover:bg-[#2a2a2a] hover:border-[#4a4a4a] hover:text-[#ececec] active:scale-[0.95] transition-all duration-150"
             >
               <Icon size={14} className="text-[#8a8a8a]" />
               {label}
@@ -158,20 +158,20 @@ export function HomeView({ onSendMessage, isLoading }: HomeViewProps) {
               className="w-full bg-transparent border-none outline-none text-[14px] text-[#ececec] placeholder:text-[#8a8a8a] px-2 pb-3"
             />
             <div className="flex items-center justify-between border-t border-[#3a3a3a] pt-2.5 px-1">
-              <button className="flex items-center gap-1.5 text-[11px] text-[#a3a3a3] border border-[#3a3a3a] rounded-full px-3 py-1.5 hover:bg-[#3a3a3a] transition-colors">
+              <button className="flex items-center gap-1.5 text-[11px] text-[#a3a3a3] border border-[#3a3a3a] rounded-full px-3 py-1.5 hover:bg-[#3a3a3a] hover:text-[#ececec] active:scale-[0.96] transition-all duration-150">
                 Select Source ⌄
               </button>
               <div className="flex items-center gap-2">
-                <button className="w-8 h-8 rounded-lg border border-[#3a3a3a] flex items-center justify-center text-[#a3a3a3] hover:bg-[#3a3a3a] transition-colors">
+                <button className="w-8 h-8 rounded-lg border border-[#3a3a3a] flex items-center justify-center text-[#a3a3a3] hover:bg-[#3a3a3a] hover:text-[#ececec] active:scale-[0.92] transition-all duration-150">
                   <Paperclip size={14} />
                 </button>
-                <button className="w-8 h-8 rounded-lg border border-[#3a3a3a] flex items-center justify-center text-[#a3a3a3] hover:bg-[#3a3a3a] transition-colors">
+                <button className="w-8 h-8 rounded-lg border border-[#3a3a3a] flex items-center justify-center text-[#a3a3a3] hover:bg-[#3a3a3a] hover:text-[#ececec] active:scale-[0.92] transition-all duration-150">
                   <Mic size={14} />
                 </button>
                 <button
                   onClick={submit}
                   disabled={isLoading}
-                  className="flex items-center gap-1.5 text-[13px] font-medium text-[#171717] bg-[#ececec] rounded-lg px-3.5 py-2 hover:bg-white transition-colors disabled:opacity-50"
+                  className="flex items-center gap-1.5 text-[13px] font-medium text-[#171717] bg-[#ececec] rounded-lg px-3.5 py-2 hover:bg-white hover:shadow-md active:scale-[0.95] transition-all duration-150 disabled:opacity-50 disabled:active:scale-100"
                 >
                   Send <ArrowUp size={14} />
                 </button>
