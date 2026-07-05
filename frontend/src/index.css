@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --background: #212121;
+  --foreground: #ececec;
+  --sidebar: #171717;
+  --input-bg: #2f2f2f;
+  --border: #333333;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.serif-heading {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+.glass-panel {
+  background: rgba(23, 23, 23, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid #262626;
+}
+
+/* Staggered pop-in used by HomeView cards, pills, and composer */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pop-in {
+  opacity: 0;
+  animation: pop-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pop-in {
+    animation: none;
+    opacity: 1;
+  }
+}
