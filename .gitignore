@@ -1,0 +1,31 @@
+# Environments
+.env
+.env.local
+.env.*
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Databases
+*.db
+*.sqlite3
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+
+# Node/Frontend
+node_modules/
+dist/
+.eslintcache
+.parcel-cache
+.cache/
+
+# OS Files
+.DS_Store
+Thumbs.db
