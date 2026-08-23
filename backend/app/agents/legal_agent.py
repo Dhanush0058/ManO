@@ -1,4 +1,6 @@
 from app.agents.llm import call_llm, parse_agent_json
+from app.models.database import SessionLocal
+from app.adapters import DocumentAdapter
 
 AGENT_NAME = "Legal Agent"
 
@@ -16,7 +18,21 @@ Set requires_approval to true ONLY if your action involves sending a binding con
 to an external party for signature. Generating a draft internally does NOT require approval.
 """
 
-
 async def run_legal_agent(query: str) -> dict:
-    raw = await call_llm(SYSTEM_PROMPT, query)
+    session = SessionLocal()
+    try:
+        docs = DocumentAdapter.get_documents(session)
+        docs_str = "\n".join([
+            f"- {d.title} ({d.type}): Status: {d.status}, Approval: {d.approval_status}"
+            for d in docs[:5]
+        ])
+        context = (
+            f"\n\n[CONTEXT: Recent Documents:\n{docs_str}]"
+        )
+    except Exception as e:
+        context = ""
+    finally:
+        session.close()
+
+    raw = await call_llm(SYSTEM_PROMPT + context, query)
     return parse_agent_json(raw, AGENT_NAME)

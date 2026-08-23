@@ -1,53 +1,279 @@
 @import "tailwindcss";
 
 :root {
-  --background: #212121;
-  --foreground: #ececec;
-  --sidebar: #171717;
-  --input-bg: #2f2f2f;
-  --border: #333333;
+  --background: #EFEFF1;       /* Cognivo Outer Canvas (Soft Grey) */
+  --foreground: #1E1E24;       /* Charcoal Typography */
+  --sidebar: #F9F9FB;          /* Cognivo Left Sidebar (Off-White) */
+  --card-bg: #FFFFFF;          /* Pure White for main workspace */
+  --widget-bg: #F4F4F6;        /* Light Grey for widgets & inner cards */
+  --accent: #F27A30;           /* Cognivo Premium Orange Accent */
+  --border: #E5E5E7;           /* Clean thin borders */
+  --muted: #6E6E73;            /* Muted slate-gray */
 }
 
+/* Base Body Styles */
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
   margin: 0;
   padding: 0;
   overflow: hidden;
+  position: relative;
 }
 
-.serif-heading {
-  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+/* Hide glowing neon blobs to match minimal paper-like theme */
+.glow-blob {
+  display: none !important;
 }
 
-.glass-panel {
-  background: rgba(23, 23, 23, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid #262626;
+/* Re-skin outer app layout container wrapper */
+.bg-\[\#000000\], .bg-black {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
 }
 
-/* Staggered pop-in used by HomeView cards, pills, and composer */
-@keyframes pop-in {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+/* Left Sidebar Navigation Container styling (Cognivo off-white layout) */
+aside, 
+.bg-\[\#030307\]\/95,
+.bg-\[\#030408\] {
+  background-color: var(--sidebar) !important;
+  border-right: 1px solid var(--border) !important;
 }
 
-.pop-in {
-  opacity: 0;
-  animation: pop-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: var(--delay, 0ms);
+aside span, 
+aside h3,
+.bg-\[\#030307\]\/95 span,
+.bg-\[\#030307\]\/95 h3 {
+  color: var(--foreground) !important;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .pop-in {
-    animation: none;
-    opacity: 1;
-  }
+aside button,
+.bg-\[\#030307\]\/95 button {
+  color: var(--muted) !important;
+  transition: all 0.15s ease;
+}
+
+aside button:hover,
+.bg-\[\#030307\]\/95 button:hover {
+  background-color: rgba(242, 122, 48, 0.06) !important;
+  color: var(--accent) !important;
+}
+
+/* Selected sidebar items */
+aside button.bg-white\/10,
+aside button.bg-blue-600\/10,
+.bg-\[\#030307\]\/95 button.bg-white\/10,
+.bg-\[\#030307\]\/95 button.bg-blue-600\/10 {
+  background-color: rgba(242, 122, 48, 0.08) !important;
+  color: var(--accent) !important;
+  border-left: 3px solid var(--accent) !important;
+}
+
+aside .text-blue-400,
+aside .text-indigo-400 {
+  color: var(--accent) !important;
+}
+
+/* Floating Central Workspace Sheet Card (Cognivo layout) */
+.flex-1.flex.flex-col.min-h-0.relative {
+  background-color: var(--card-bg) !important;
+  margin: 16px !important;
+  border-radius: 24px !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03) !important;
+  overflow: hidden !important;
+  height: calc(100vh - 32px) !important;
+}
+
+/* Inner Workspace Header */
+header, .bg-\[\#030307\]\/50 {
+  background-color: var(--card-bg) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+}
+
+header span {
+  color: var(--foreground) !important;
+}
+
+/* Inner Card Panels (Scoped within workspace to not affect glows) */
+.flex-1.flex.flex-col.min-h-0.relative .glass-panel,
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#111221\]\/50,
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#161214\]\/50,
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#111612\]\/50,
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#111221\]\/40,
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#030307\]\/30,
+.flex-1.flex.flex-col.min-h-0.relative .bg-white\/5,
+.flex-1.flex.flex-col.min-h-0.relative .bg-black\/20 {
+  background: var(--widget-bg) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: none !important;
+  color: var(--foreground) !important;
+  border-radius: 16px !important;
+}
+
+/* Make specialist desk headers transparent to align text cleanly */
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#0a0c18\]\/25 {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* Financial Widget boxes overrides */
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#0c0e1a\]\/80 {
+  background-color: var(--widget-bg) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: none !important;
+}
+
+/* Approvals & Tasks header bar override */
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#020205\]\/45 {
+  background-color: var(--sidebar) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* Approvals & Tasks item boxes overrides */
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#1b111e\]\/40 {
+  background-color: var(--sidebar) !important;
+  border: 1px solid rgba(242, 122, 48, 0.15) !important;
+}
+
+/* Hover effects for cards */
+.flex-1.flex.flex-col.min-h-0.relative .glass-panel:hover {
+  border-color: rgba(242, 122, 48, 0.25) !important;
+}
+
+/* Enforce dark text contrast inside workspace panels */
+.flex-1.flex.flex-col.min-h-0.relative .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-100,
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-200,
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-300 {
+  color: var(--foreground) !important;
+}
+
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-400,
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-500 {
+  color: var(--muted) !important;
+}
+
+/* Overrides for specific text inside task trackers to keep them legible */
+.flex-1.flex.flex-col.min-h-0.relative .text-rose-300 {
+  color: #CF492D !important; /* Rich readable dark terra cotta/rose */
+}
+
+.flex-1.flex.flex-col.min-h-0.relative .text-rose-400 {
+  color: var(--accent) !important;
+}
+
+/* Guard White text color on solid backgrounds (buttons/bubbles) */
+.flex-1.flex.flex-col.min-h-0.relative button .text-white,
+.flex-1.flex.flex-col.min-h-0.relative button.text-white,
+.flex-1.flex.flex-col.min-h-0.relative .bg-blue-600 .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .bg-indigo-600 .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .bg-rose-600 .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .bg-red-600 .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .user-bubble .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .user-bubble span,
+.flex-1.flex.flex-col.min-h-0.relative .user-bubble p {
+  color: #FFFFFF !important;
+}
+
+/* Form and input elements */
+input, textarea, select {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+  border-radius: 12px !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px rgba(242, 122, 48, 0.08) !important;
+}
+
+/* Standard Buttons - enforce orange accent */
+button.bg-blue-600, 
+button.bg-indigo-600, 
+button.bg-purple-600,
+button.bg-indigo-700,
+button.bg-rose-600,
+button.bg-red-600 {
+  background-color: var(--accent) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(242, 122, 48, 0.15) !important;
+  transition: all 0.2s ease !important;
+}
+
+button.bg-blue-600:hover, 
+button.bg-indigo-600:hover, 
+button.bg-purple-600:hover,
+button.bg-rose-600:hover {
+  background-color: #DE671C !important;
+  box-shadow: 0 4px 12px rgba(242, 122, 48, 0.25) !important;
+}
+
+/* Chat Bubbles */
+.user-bubble {
+  background: var(--accent) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 3px 10px rgba(242, 122, 48, 0.12) !important;
+  border-radius: 16px 16px 2px 16px !important;
+}
+
+.assistant-bubble {
+  background: var(--widget-bg) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+  border-radius: 16px 16px 16px 2px !important;
+}
+
+/* Data Tables inside cards */
+.glass-panel table th {
+  color: var(--foreground) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.glass-panel table td {
+  color: var(--foreground) !important;
+  border-bottom: 1px solid rgba(30, 30, 36, 0.04) !important;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(242, 122, 48, 0.15) !important;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(242, 122, 48, 0.35) !important;
+}
+
+/* Recharts styling */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--border) !important;
+}
+
+.recharts-text {
+  fill: var(--muted) !important;
+}
+
+/* Operation Mode Toggle Badge */
+.bg-yellow-500\/20 {
+  background-color: rgba(242, 122, 48, 0.08) !important;
+  color: var(--accent) !important;
+  border: 1px solid rgba(242, 122, 48, 0.2) !important;
 }

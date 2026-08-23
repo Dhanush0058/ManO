@@ -1,4 +1,6 @@
 from app.agents.llm import call_llm, parse_agent_json
+from app.models.database import SessionLocal
+from app.adapters import FinanceAdapter
 
 AGENT_NAME = "Finance Agent"
 
@@ -13,10 +15,24 @@ Respond with ONLY valid JSON, no markdown fences, no commentary outside the JSON
  "action": {"type": "none" | "calculate_burn_rate", "payload": {"cash": <float>, "monthly_expenses": <float>}, "requires_approval": <bool>, "summary": "<one line, only if requires_approval is true>"}}
 
 Set requires_approval to true ONLY if your answer involves actually moving money or sending a
-financial document externally. Answering a question, running an analysis, or reconciling numbers does NOT require approval — set requires_approval to false for those.
+financial commitment externally (like paying a budget or executing a transaction). Answering a question, running an analysis, or checking runway does NOT require approval — set requires_approval to false for those.
 """
 
-
 async def run_finance_agent(query: str) -> dict:
-    raw = await call_llm(SYSTEM_PROMPT, query)
+    session = SessionLocal()
+    try:
+        summary = FinanceAdapter.get_financial_summary(session)
+        context = (
+            f"\n\n[CONTEXT: Current cash balance is ₹{summary['cash_balance']:,.2f}. "
+            f"Monthly burn rate is ₹{summary['monthly_burn']:,.2f}. "
+            f"Runway is {summary['runway_months']} months. "
+            f"If the founder wants to hire people, check if we can afford them. "
+            f"Hiring developers will increase burn. Weigh in on whether this is financially safe.]"
+        )
+    except Exception as e:
+        context = ""
+    finally:
+        session.close()
+
+    raw = await call_llm(SYSTEM_PROMPT + context, query)
     return parse_agent_json(raw, AGENT_NAME)

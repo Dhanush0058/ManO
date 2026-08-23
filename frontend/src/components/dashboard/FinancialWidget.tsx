@@ -13,13 +13,13 @@ export function FinancialWidget() {
   }, []);
 
   return (
-    <div className="glass-panel rounded-xl p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="font-semibold text-gray-200 flex items-center gap-2">
-          <DollarSign className="w-5 h-5 text-emerald-400" />
+    <div className="glass-panel rounded-2xl p-5 z-10">
+      <div className="flex items-center justify-between mb-4.5">
+        <h2 className="font-semibold text-gray-200 text-sm flex items-center gap-2 tracking-wide">
+          <DollarSign className="w-4 h-4 text-emerald-400" />
           Financial Pulse
         </h2>
-        <span className="text-xs px-2 py-1 bg-emerald-900/30 text-emerald-400 rounded-full border border-emerald-800/50">
+        <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 bg-emerald-950/20 text-emerald-400 rounded-full border border-emerald-500/20">
           Live
         </span>
       </div>
@@ -27,24 +27,25 @@ export function FinancialWidget() {
       {error && <p className="text-xs text-red-400">Couldn&apos;t load: {error}</p>}
 
       {!error && !snapshot && (
-        <div className="grid grid-cols-2 gap-4 animate-pulse">
-          <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-800 h-16" />
-          <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-800 h-16" />
+        <div className="grid grid-cols-2 gap-3.5 animate-pulse">
+          <div className="bg-[#0c0e1a]/80 p-4 rounded-xl border border-white/5 h-20" />
+          <div className="bg-[#0c0e1a]/80 p-4 rounded-xl border border-white/5 h-20" />
         </div>
       )}
 
       {snapshot && (
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-800">
-            <div className="text-sm text-gray-400 mb-1">Runway</div>
-            <div className="text-2xl font-bold text-gray-100">
-              {snapshot.runway_months} <span className="text-sm font-normal text-gray-500">months</span>
+        <div className="grid grid-cols-2 gap-3.5">
+          <div className="bg-[#0c0e1a]/80 p-4 rounded-xl border border-white/5 border-t-2 border-t-emerald-500/40 shadow-inner flex flex-col">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-500 mb-1">Runway</div>
+            <div className="text-2xl font-bold text-gray-100 mt-auto leading-none">
+              {snapshot.runway_months} <span className="text-xs font-medium text-gray-500">months</span>
             </div>
           </div>
-          <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-800">
-            <div className="text-sm text-gray-400 mb-1">Burn Rate</div>
-            <div className="text-xl font-bold text-gray-100 flex items-center gap-2">
-              ${Math.round(snapshot.burn_rate_usd / 1000)}K <TrendingDown className="w-4 h-4 text-red-400" />
+          <div className="bg-[#0c0e1a]/80 p-4 rounded-xl border border-white/5 border-t-2 border-t-rose-500/40 shadow-inner flex flex-col">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-500 mb-1">Burn Rate</div>
+            <div className="text-2xl font-bold text-gray-100 mt-auto leading-none flex items-baseline gap-1.5">
+              ${Math.round(snapshot.burn_rate_usd / 1000)}K 
+              <TrendingDown className="w-3.5 h-3.5 text-rose-500 self-center" />
             </div>
           </div>
         </div>

@@ -1,97 +1,180 @@
 import json
 import re
 from typing import Any, Dict
-
 import httpx
 
 from app.config import settings
 
-ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
+OPENAI_URL = "https://api.openai.com/v1/chat/completions"
+GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
+NVIDIA_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
 
 
 class LLMNotConfigured(RuntimeError):
     pass
 
 
-async def call_llm(system: str, user: str, max_tokens: int = 1024) -> str:
-    """
-    Calls either Gemini or Anthropic depending on LLM_PROVIDER.
-    """
+async def call_llm_gemini(system: str, user: str, max_tokens: int = 1024) -> str:
+    key = settings.gemini_api_key.strip()
+    if not key:
+        raise LLMNotConfigured("GEMINI_API_KEY is not set.")
 
-    # ---------------- GEMINI ----------------
-    if settings.llm_provider == "gemini":
-        if not settings.gemini_api_key:
-            raise LLMNotConfigured(
-                "GEMINI_API_KEY is not set. Add it to backend/.env."
-            )
-
-        url = (
-            f"https://generativelanguage.googleapis.com/v1beta/models/"
-            f"{settings.gemini_model}:generateContent"
-            f"?key={settings.gemini_api_key}"
-        )
-
-        payload = {
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": f"{system}\n\n{user}"
-                        }
-                    ]
-                }
-            ]
-        }
-
-        async with httpx.AsyncClient(timeout=45) as client:
-            resp = await client.post(url, json=payload)
-            resp.raise_for_status()
-            data = resp.json()
-
-            try:
-                return data["candidates"][0]["content"]["parts"][0]["text"]
-            except Exception:
-                raise RuntimeError(f"Unexpected Gemini response:\n{data}")
-
-    # ---------------- ANTHROPIC ----------------
-    if not settings.anthropic_api_key:
-        raise LLMNotConfigured(
-            "ANTHROPIC_API_KEY is not set. Add it to backend/.env (see .env.example)."
-        )
-
-    headers = {
-        "x-api-key": settings.anthropic_api_key,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-    }
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{settings.gemini_model}:generateContent"
+        f"?key={key}"
+    )
 
     payload = {
-        "model": settings.anthropic_model,
-        "max_tokens": max_tokens,
-        "system": system,
-        "messages": [
+        "contents": [
             {
-                "role": "user",
-                "content": user,
+                "parts": [
+                    {
+                        "text": f"{system}\n\n{user}"
+                    }
+                ]
             }
-        ],
+        ]
     }
 
     async with httpx.AsyncClient(timeout=45) as client:
-        resp = await client.post(
-            ANTHROPIC_URL,
-            headers=headers,
-            json=payload,
-        )
-
+        resp = await client.post(url, json=payload)
         resp.raise_for_status()
         data = resp.json()
 
-        return "".join(
-            block["text"]
-            for block in data["content"]
-            if block.get("type") == "text"
-        )
+        try:
+            return data["candidates"][0]["content"]["parts"][0]["text"]
+        except Exception:
+            raise RuntimeError(f"Unexpected Gemini response:\n{data}")
+
+
+async def call_llm_openai(system: str, user: str, max_tokens: int = 1024) -> str:
+    key = settings.openai_api_key.strip()
+    if not key:
+        raise LLMNotConfigured("OPENAI_API_KEY is not set.")
+
+    headers = {
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+    }
+
+    payload = {
+        "model": settings.openai_model,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user}
+        ],
+        "max_tokens": max_tokens,
+    }
+
+    async with httpx.AsyncClient(timeout=45) as client:
+        resp = await client.post(OPENAI_URL, headers=headers, json=payload)
+        resp.raise_for_status()
+        data = resp.json()
+        return data["choices"][0]["message"]["content"]
+
+
+async def call_llm_groq(system: str, user: str, max_tokens: int = 1024) -> str:
+    key = settings.groq_api_key.strip()
+    if not key:
+        raise LLMNotConfigured("GROQ_API_KEY is not set.")
+
+    headers = {
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+    }
+
+    payload = {
+        "model": settings.groq_model,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user}
+        ],
+        "max_tokens": max_tokens,
+    }
+
+    async with httpx.AsyncClient(timeout=45) as client:
+        resp = await client.post(GROQ_URL, headers=headers, json=payload)
+        resp.raise_for_status()
+        data = resp.json()
+        return data["choices"][0]["message"]["content"]
+
+
+async def call_llm_nvidia(system: str, user: str, max_tokens: int = 1024) -> str:
+    key = settings.nvidia_api_key.strip()
+    if not key:
+        raise LLMNotConfigured("NVIDIA_API_KEY is not set.")
+
+    headers = {
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+    }
+
+    payload = {
+        "model": settings.nvidia_model,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user}
+        ],
+        "max_tokens": max_tokens,
+    }
+
+    async with httpx.AsyncClient(timeout=45) as client:
+        resp = await client.post(NVIDIA_URL, headers=headers, json=payload)
+        resp.raise_for_status()
+        data = resp.json()
+        return data["choices"][0]["message"]["content"]
+
+
+async def call_llm(system: str, user: str, max_tokens: int = 1024) -> str:
+    """
+    Resilient Multi-Model LLMRouter failover system.
+    Determines order of attempt starting with the primary provider:
+    Gemini -> OpenAI -> Groq -> Nvidia
+    and automatically falls back to alternative models on exceptions.
+    """
+    primary = settings.llm_provider
+    
+    # Establish priority list
+    providers = ["gemini", "openai", "groq", "nvidia"]
+    if primary in providers:
+        # Move primary to the front of the list
+        providers.remove(primary)
+        providers.insert(0, primary)
+
+    last_error = None
+    for provider in providers:
+        # Check if the provider is actually configured (has a key)
+        has_key = False
+        if provider == "gemini" and settings.gemini_api_key.strip():
+            has_key = True
+        elif provider == "openai" and settings.openai_api_key.strip():
+            has_key = True
+        elif provider == "groq" and settings.groq_api_key.strip():
+            has_key = True
+        elif provider == "nvidia" and settings.nvidia_api_key.strip():
+            has_key = True
+
+        if not has_key:
+            continue
+
+        print(f"[LLMRouter] Routing query to: {provider.upper()}")
+        try:
+            if provider == "gemini":
+                return await call_llm_gemini(system, user, max_tokens)
+            elif provider == "openai":
+                return await call_llm_openai(system, user, max_tokens)
+            elif provider == "groq":
+                return await call_llm_groq(system, user, max_tokens)
+            elif provider == "nvidia":
+                return await call_llm_nvidia(system, user, max_tokens)
+        except Exception as e:
+            print(f"[LLMRouter Warning] Provider {provider.upper()} failed: {e}")
+            last_error = e
+
+    # If we exited the loop, all configured providers failed
+    print(f"[LLMRouter Fatal] All available providers failed. Last error: {last_error}")
+    raise LLMNotConfigured("All configured LLM providers failed. Triggering Demo Simulation Mode.")
 
 
 def _strip_code_fences(raw: str) -> str:
@@ -103,9 +186,6 @@ def _strip_code_fences(raw: str) -> str:
 
 
 def parse_json_response(raw: str) -> Dict[str, Any]:
-    """
-    Best-effort JSON parse of an LLM response.
-    """
     cleaned = _strip_code_fences(raw)
 
     try:
@@ -130,5 +210,6 @@ def parse_agent_json(raw: str, agent_name: str) -> Dict[str, Any]:
         "action": data.get("action") or {
             "type": "none",
             "requires_approval": False,
+            "payload": {}
         },
     }

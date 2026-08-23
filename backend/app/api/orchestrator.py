@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.agents.llm import LLMNotConfigured
 from app.agents.orchestrator import run_orchestration
 from app.models.database import Approval, AuditLogEntry, get_session, utcnow
-from app.models.schemas import OrchestratorResponse, QueryRequest
+from app.models.schemas import OrchestratorResponse, QueryRequest, ApprovalOut
 
 router = APIRouter()
 
@@ -24,28 +24,39 @@ async def query_orchestrator(payload: QueryRequest, session: Session = Depends(g
         action = resp.get("action") or {}
         session.add(
             AuditLogEntry(
-                actor=resp["agent_name"],
+                agent=resp["agent_name"],
                 action="response",
-                detail=resp["message"][:1000],
+                input=payload.query[:1000],
+                output=resp["message"][:1000],
+                status="success",
                 timestamp=utcnow(),
             )
         )
         if action.get("requires_approval"):
+            # Determine risk level based on action details
+            risk = "High"
+            act_type = action.get("type", "generic").lower()
+            if "outreach" in act_type or "campaign" in act_type:
+                risk = "Medium"
+            elif "NDA" in action.get("summary", ""):
+                risk = "Medium"
+                
             approval = Approval(
-                agent_name=resp["agent_name"],
-                action_type=action.get("type", "generic"),
-                title=action.get("summary") or f"{resp['agent_name']} needs approval",
+                agent=resp["agent_name"],
+                action=action.get("summary") or f"{resp['agent_name']} needs approval",
+                risk_level=risk,
                 description=resp["message"],
                 status="pending",
-                created_at=utcnow(),
+                timestamp=utcnow(),
             )
             session.add(approval)
             pending.append(approval)
+            
     session.commit()
     for approval in pending:
         session.refresh(approval)
 
     return OrchestratorResponse(
         agent_responses=[{"agent_name": r["agent_name"], "message": r["message"]} for r in state["agent_responses"]],
-        pending_approvals=pending,
+        pending_approvals=[ApprovalOut.model_validate(p) for p in pending],
     )
