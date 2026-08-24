@@ -173,7 +173,9 @@ class EntityLookupAdapter:
         employee = session.query(Employee).filter(
             or_(
                 Employee.email.ilike(f"%{clean_query}%"),
-                Employee.name.ilike(f"%{clean_query}%")
+                Employee.name.ilike(f"%{clean_query}%"),
+                Employee.role.ilike(f"%{clean_query}%"),
+                Employee.department.ilike(f"%{clean_query}%")
             )
         ).first()
 
