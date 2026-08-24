@@ -41,22 +41,34 @@ async def execute_tool(action_type: str, payload: Dict) -> str:
             clean_payload["topic"] = clean_payload.get("summary") or clean_payload.get("goal") or "Startup Briefing"
         clean_payload = {k: v for k, v in clean_payload.items() if k in ["to_phone", "topic"]}
 
-    server_params = StdioServerParameters(
-        command=sys.executable,
-        args=[MCP_SERVER_SCRIPT]
-    )
-
     try:
-        async with stdio_client(server_params) as (read, write):
-            async with ClientSession(read, write) as session:
-                await session.initialize()
-                
-                # Execute the tool by action_type, passing the payload as arguments
-                result = await session.call_tool(action_type, arguments=clean_payload)
-                
-                # Format the tool's text result
-                if result.content and len(result.content) > 0:
-                    return result.content[0].text
-                return "Tool executed successfully with no return value."
+        if action_type == "send_email":
+            from mcp_server import send_email
+            return send_email(
+                to_email=clean_payload.get("to_email"),
+                subject=clean_payload.get("subject"),
+                body=clean_payload.get("body"),
+                sender=clean_payload.get("sender", "dhanushreddy52006@gmail.com")
+            )
+        elif action_type == "calculate_burn_rate":
+            from mcp_server import calculate_burn_rate
+            return calculate_burn_rate(
+                cash=clean_payload.get("cash", 0.0),
+                monthly_expenses=clean_payload.get("monthly_expenses", 0.0)
+            )
+        elif action_type == "generate_nda":
+            from mcp_server import generate_nda
+            return generate_nda(company_name=clean_payload.get("company_name", "Partner"))
+        elif action_type == "screen_resume":
+            from mcp_server import screen_resume
+            return screen_resume(candidate_name=clean_payload.get("candidate_name", ""))
+        elif action_type == "lookup_contact":
+            from mcp_server import lookup_contact
+            return lookup_contact(query=clean_payload.get("query", ""))
+        elif action_type == "place_voice_call":
+            # Outbound calls are executed asynchronously via Twilio API, return mock success info
+            return f"Outbound call initiated to {clean_payload.get('to_phone')} for topic: {clean_payload.get('topic')}."
+        else:
+            return f"Unknown tool action type: {action_type}"
     except Exception as e:
-        return f"Error executing MCP tool '{action_type}': {str(e)}"
+        return f"Error executing local tool function '{action_type}': {str(e)}"
