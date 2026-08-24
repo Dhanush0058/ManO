@@ -25,7 +25,7 @@ async def run_finance_agent(query: str) -> dict:
         entity_info = None
         for w in query.split():
             clean_w = w.strip(",.!?\"'")
-            if "@" in clean_w or len(clean_w) > 3:
+            if "@" in clean_w or len(clean_w) >= 2:
                 cand_entity = EntityLookupAdapter.identify_entity_by_email_or_name(session, clean_w)
                 if cand_entity.get("found"):
                     entity_info = cand_entity

@@ -25,7 +25,7 @@ async def run_gtm_agent(query: str) -> dict:
         entity_info = None
         words = query.split()
         for w in words:
-            if "@" in w or len(w) > 3:
+            if "@" in w or len(w) >= 2:
                 cand_entity = EntityLookupAdapter.identify_entity_by_email_or_name(session, w.strip(",.!?\"'"))
                 if cand_entity.get("found"):
                     entity_info = cand_entity
