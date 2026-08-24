@@ -1,3 +1,4 @@
+import re
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -28,9 +29,17 @@ async def approve_task(task_id: int, session: Session = Depends(get_session)):
     
     if "email" in action_lower or "outreach" in action_lower or "send" in action_lower:
         tool_name = "send_email"
+        
+        # Dynamically extract recipient email address from approval details
+        email_match = re.search(r'[\w\.-]+@[\w\.-]+\.\w+', approval.action or "")
+        if not email_match:
+            email_match = re.search(r'[\w\.-]+@[\w\.-]+\.\w+', approval.description or "")
+            
+        target_email = email_match.group(0) if email_match else "dhanushreddy52006@gmail.com"
+        
         payload = {
-            "to_email": "recipient@example.com",
-            "subject": approval.action,
+            "to_email": target_email,
+            "subject": approval.action or "Notification from FounderOS",
             "body": approval.description or "Automated message approved by founder.",
             "sender": f"FounderOS ({approval.agent})"
         }
