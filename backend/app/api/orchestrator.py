@@ -28,7 +28,7 @@ async def query_orchestrator(payload: QueryRequest, session: Session = Depends(g
         
         # Execute MCP Email tool if action is send_email or if prompt commands sending an email
         was_executed_directly = False
-        if act_type == "send_email" or ("email" in payload.query.lower() and "send" in payload.query.lower()):
+        if act_type == "send_email" or (any(w in payload.query.lower() for w in ["email", "mail"]) and "send" in payload.query.lower()):
             email_payload = dict(action.get("payload", {}))
             if not email_payload.get("to_email"):
                 for w in payload.query.split():
