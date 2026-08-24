@@ -10,8 +10,7 @@ router = APIRouter()
 
 @router.get("/tasks", response_model=list[ApprovalOut])
 def list_tasks(session: Session = Depends(get_session)):
-    approvals_list = session.query(Approval).order_by(Approval.timestamp.desc()).all()
-    # Map them using model_validate for backwards compatibility
+    approvals_list = session.query(Approval).filter(Approval.status == "pending").order_by(Approval.timestamp.desc()).all()
     return [ApprovalOut.model_validate(p) for p in approvals_list]
 
 
@@ -23,8 +22,26 @@ async def approve_task(task_id: int, session: Session = Depends(get_session)):
     if approval.status != "pending":
         raise HTTPException(status_code=409, detail=f"Task is already {approval.status}")
 
-    # Map the action string to a mock tool execution
-    result = await execute_tool("none", {"action": approval.action, "description": approval.description})
+    # Map the action string to the corresponding MCP tool execution
+    action_lower = (approval.action or "").lower()
+    desc_lower = (approval.description or "").lower()
+    
+    if "email" in action_lower or "outreach" in action_lower or "send" in action_lower:
+        tool_name = "send_email"
+        payload = {
+            "to_email": "recipient@example.com",
+            "subject": approval.action,
+            "body": approval.description or "Automated message approved by founder.",
+            "sender": f"FounderOS ({approval.agent})"
+        }
+    elif "contract" in action_lower or "nda" in action_lower or "agreement" in action_lower:
+        tool_name = "generate_nda"
+        payload = {"company_name": approval.description or "Partner"}
+    else:
+        tool_name = "none"
+        payload = {"action": approval.action, "description": approval.description}
+
+    result = await execute_tool(tool_name, payload)
 
     approval.status = "executed"
     approval.result = result

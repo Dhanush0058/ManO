@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Send, Bot, Loader2 } from 'lucide-react';
+import { Send, Bot, Loader2, Mic, MicOff, Volume2, VolumeX, AlertCircle } from 'lucide-react';
 import { fetchDashboardStats, type DashboardStats } from '../../lib/api';
+import { useVoiceRecognition } from '../../lib/useVoiceRecognition';
+import { useTextToSpeech } from '../../lib/useTextToSpeech';
 
 interface ChatMessage {
   id: string;
@@ -46,6 +48,32 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Text-To-Speech hook
+  const { isSpeaking, currentSpeakingId, toggleSpeak } = useTextToSpeech();
+
+  // Speech-To-Text / Voice Recognition hook
+  const {
+    isListening,
+    isTranscribing,
+    transcript,
+    error: voiceError,
+    isSupported: isVoiceSupported,
+    toggleListening,
+    stopListening,
+    resetTranscript,
+  } = useVoiceRecognition((liveText) => {
+    if (liveText) {
+      setInput(liveText);
+    }
+  });
+
+  // Sync transcript to input if updated
+  useEffect(() => {
+    if (transcript) {
+      setInput(transcript);
+    }
+  }, [transcript]);
 
   // 1. Fetch dashboard stats
   const loadStats = () => {
@@ -97,14 +125,19 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isListening) {
+      stopListening();
+    }
     if (input.trim() && !isLoading) {
       onSendMessage(input);
       setInput('');
+      resetTranscript();
     }
   };
 
   const handleSuggestedPrompt = (prompt: string) => {
     if (!isLoading) {
+      if (isListening) stopListening();
       onSendMessage(prompt);
     }
   };
@@ -166,24 +199,38 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
             <div>
               <h1 className="text-2xl font-bold text-white tracking-wide">Tell your AI CEO what you want to accomplish...</h1>
               <p className="text-xs text-gray-400 mt-2 max-w-md mx-auto leading-relaxed">
-                FounderOS is an AI operating system. Provide a high-level goal, and the orchestrator will coordinate specialist agents, retrieve database context, and present plan reports.
+                FounderOS coordinates specialist agents, retrieves live database context, and executes plans. Type or use the <span className="text-cyan-400 font-semibold">🎙️ Microphone</span> to speak your goals naturally.
               </p>
             </div>
             
             <div className="w-full grid grid-cols-2 gap-3 text-left">
               <button 
                 onClick={() => handleSuggestedPrompt("I want to get 20 new gym customers in Hyderabad within 30 days and hire 2 React developers under ₹60,000 per month.")}
-                className="glass-panel p-4 rounded-xl border border-white/5 hover:border-blue-500/30 text-xs text-gray-300 hover:text-white transition-all text-left"
+                className="glass-panel p-3.5 rounded-xl border border-white/5 hover:border-blue-500/30 text-xs text-gray-300 hover:text-white transition-all text-left col-span-2 sm:col-span-1"
               >
                 <span className="font-semibold text-blue-400 block mb-1">💡 Main Hackathon Demo Goal</span>
                 &ldquo;Get 20 customers in Hyderabad + hire 2 React developers under ₹60k/month.&rdquo;
               </button>
               <button 
-                onClick={() => handleSuggestedPrompt("Can we afford to hire another developer? Analyze runway impact.")}
-                className="glass-panel p-4 rounded-xl border border-white/5 hover:border-purple-500/30 text-xs text-gray-300 hover:text-white transition-all text-left"
+                onClick={() => handleSuggestedPrompt("Send an email to dhanushr672@gmail.com with an update on candidate hiring status and next interviews.")}
+                className="glass-panel p-3.5 rounded-xl border border-white/5 hover:border-emerald-500/30 text-xs text-gray-300 hover:text-white transition-all text-left"
               >
-                <span className="font-semibold text-purple-400 block mb-1">💰 Runway Affordability</span>
-                &ldquo;Can we afford to hire another developer? Analyze burn rate impact.&rdquo;
+                <span className="font-semibold text-emerald-400 block mb-1">👥 Hiring Manager (dhanushr672@gmail.com)</span>
+                &ldquo;Auto-recognize Dhanush R & send candidate hiring pipeline status.&rdquo;
+              </button>
+              <button 
+                onClick={() => handleSuggestedPrompt("Send an email to bogguajaykumar0@gmail.com summarizing our monthly burn rate and runway calculation.")}
+                className="glass-panel p-3.5 rounded-xl border border-white/5 hover:border-amber-500/30 text-xs text-gray-300 hover:text-white transition-all text-left"
+              >
+                <span className="font-semibold text-amber-400 block mb-1">💰 Finance Manager (bogguajaykumar0@gmail.com)</span>
+                &ldquo;Auto-recognize Ajay Kumar & send live runway & burn analysis.&rdquo;
+              </button>
+              <button 
+                onClick={() => handleSuggestedPrompt("Send an email to guntiprashanthkumar646@gmail.com requesting NDA drafts and employee contract templates.")}
+                className="glass-panel p-3.5 rounded-xl border border-white/5 hover:border-purple-500/30 text-xs text-gray-300 hover:text-white transition-all text-left"
+              >
+                <span className="font-semibold text-purple-400 block mb-1">⚖️ Legal Manager (guntiprashanthkumar646@gmail.com)</span>
+                &ldquo;Auto-recognize Prashanth Kumar & request standard NDA/contracts.&rdquo;
               </button>
             </div>
           </div>
@@ -193,22 +240,46 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
         {hasUserMessages && messages.map((m) => {
           if (m.role === 'assistant') {
             const theme = getAgentTheme(m.agent);
+            const isThisSpeaking = isSpeaking && currentSpeakingId === m.id;
             return (
-              <div key={m.id} className="max-w-[85%] animate-fade-in">
-                {m.agent && (
-                  <div 
-                    className="text-[10px] font-bold uppercase tracking-wider mb-1.5 ml-1 px-2.5 py-0.5 rounded-full inline-block border"
-                    style={{ 
-                      color: theme.text, 
-                      backgroundColor: theme.badgeBg, 
-                      borderColor: `rgba(${theme.border === '#10b981' ? '16, 185, 129' : theme.border === '#f43f5e' ? '244, 63, 94' : theme.border === '#06b6d4' ? '6, 181, 212' : theme.border === '#a855f7' ? '168, 85, 247' : theme.border === '#3b82f6' ? '59, 130, 246' : '99, 102, 241'}, 0.25)` 
-                    }}
+              <div key={m.id} className="max-w-[85%] animate-fade-in group relative">
+                <div className="flex items-center justify-between mb-1.5 ml-1">
+                  {m.agent && (
+                    <div 
+                      className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full inline-block border"
+                      style={{ 
+                        color: theme.text, 
+                        backgroundColor: theme.badgeBg, 
+                        borderColor: `rgba(${theme.border === '#10b981' ? '16, 185, 129' : theme.border === '#f43f5e' ? '244, 63, 94' : theme.border === '#06b6d4' ? '6, 181, 212' : theme.border === '#a855f7' ? '168, 85, 247' : theme.border === '#3b82f6' ? '59, 130, 246' : '99, 102, 241'}, 0.25)` 
+                      }}
+                    >
+                      {theme.label}
+                    </div>
+                  )}
+
+                  {/* Read Aloud Button */}
+                  <button
+                    type="button"
+                    onClick={() => toggleSpeak(m.text, m.id)}
+                    title={isThisSpeaking ? "Stop voice readout" : "Listen to agent report"}
+                    className={`text-gray-400 hover:text-white transition-colors p-1 rounded-md text-[11px] flex items-center gap-1 opacity-70 hover:opacity-100 ${isThisSpeaking ? 'text-cyan-400 opacity-100' : ''}`}
                   >
-                    {theme.label}
-                  </div>
-                )}
+                    {isThisSpeaking ? (
+                      <>
+                        <VolumeX className="w-3.5 h-3.5 animate-pulse text-cyan-400" />
+                        <span className="text-[10px] text-cyan-400 font-mono">Speaking...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Volume2 className="w-3.5 h-3.5" />
+                        <span className="text-[10px] text-gray-500 hover:text-gray-300">Listen</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
                 <div 
-                  className="assistant-bubble text-[13px] text-gray-100 p-4 rounded-2xl rounded-tl-none border-l-4 leading-relaxed"
+                  className="assistant-bubble text-[13px] text-gray-100 p-4 rounded-2xl rounded-tl-none border-l-4 leading-relaxed relative"
                   style={{ 
                     borderLeftColor: theme.border,
                     backgroundColor: theme.bg,
@@ -253,24 +324,91 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
         )}
       </div>
 
-      {/* 4. Goal Input Composer Form */}
+      {/* 4. Goal Input Composer Form with Voice Recognition */}
       <div className="p-4 bg-[#020205]/45 border-t border-white/5">
-        <form onSubmit={handleSubmit} className="relative">
+        {/* Voice Error Warning Banner */}
+        {voiceError && (
+          <div className="mb-3 px-3 py-2 bg-rose-950/40 border border-rose-500/30 rounded-xl flex items-center gap-2 text-rose-300 text-xs animate-fade-in">
+            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <span>{voiceError}</span>
+          </div>
+        )}
+
+        {/* Active Voice Listening Banner */}
+        {isListening && (
+          <div className="mb-3 px-3 py-2 bg-gradient-to-r from-cyan-950/50 via-blue-950/50 to-indigo-950/50 border border-cyan-500/30 rounded-xl flex items-center justify-between animate-fade-in shadow-lg shadow-cyan-500/5">
+            <div className="flex items-center gap-2.5">
+              {/* Dynamic Sound Wave Bars */}
+              <div className="flex items-center gap-0.5 h-4">
+                <span className="w-1 bg-cyan-400 rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-3" />
+                <span className="w-1 bg-cyan-400 rounded-full animate-[pulse_0.4s_ease-in-out_infinite_0.1s] h-4" />
+                <span className="w-1 bg-cyan-400 rounded-full animate-[pulse_0.8s_ease-in-out_infinite_0.2s] h-2.5" />
+                <span className="w-1 bg-cyan-400 rounded-full animate-[pulse_0.5s_ease-in-out_infinite_0.3s] h-4" />
+                <span className="w-1 bg-cyan-400 rounded-full animate-[pulse_0.7s_ease-in-out_infinite_0.15s] h-3" />
+              </div>
+              <span className="text-xs font-semibold text-cyan-300">
+                Listening to founder voice... <span className="text-[11px] text-gray-400 font-normal">Speak your vision</span>
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={stopListening}
+              className="text-[10.5px] font-bold text-cyan-400 hover:text-white bg-cyan-500/10 hover:bg-cyan-500/20 px-2.5 py-1 rounded-lg border border-cyan-500/30 transition-all"
+            >
+              Done Speaking
+            </button>
+          </div>
+        )}
+
+        {/* AI Whisper Transcribing Banner */}
+        {isTranscribing && (
+          <div className="mb-3 px-3 py-2 bg-indigo-950/40 border border-indigo-500/30 rounded-xl flex items-center gap-2 text-indigo-300 text-xs animate-fade-in">
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-400" />
+            <span>Processing voice audio with Groq Whisper AI...</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="relative flex items-center">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Tell your AI CEO what you want to accomplish..."
-            className="w-full bg-[#0c0e21] border border-white/5 text-gray-100 rounded-xl py-3.5 px-4 pr-12 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 text-sm transition-all placeholder:text-gray-500 shadow-inner"
-            disabled={isLoading}
+            placeholder={isListening ? "Transcribing your voice in real time..." : "Tell your AI CEO what you want to accomplish (or click mic to speak)..."}
+            className={`w-full bg-[#0c0e21] border text-gray-100 rounded-xl py-3.5 pl-4 pr-24 focus:outline-none text-sm transition-all placeholder:text-gray-500 shadow-inner ${
+              isListening
+                ? 'border-cyan-500/50 ring-2 ring-cyan-500/20 bg-[#0e122b]'
+                : 'border-white/5 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20'
+            }`}
+            disabled={isLoading || isTranscribing}
           />
-          <button
-            type="submit"
-            disabled={isLoading || !input.trim()}
-            className="absolute right-2 top-2 p-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-lg hover:from-indigo-500 hover:to-blue-500 active:scale-90 disabled:opacity-30 disabled:active:scale-100 transition-all duration-150 border border-indigo-400/20 shadow-md"
-          >
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-          </button>
+          
+          {/* Action Buttons: Voice Input & Send */}
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+            {isVoiceSupported && (
+              <button
+                type="button"
+                onClick={toggleListening}
+                disabled={isLoading || isTranscribing}
+                title={isListening ? "Stop listening" : "Click to speak with voice recognition"}
+                className={`p-2.5 rounded-lg border transition-all duration-200 active:scale-95 ${
+                  isListening
+                    ? 'bg-rose-500/20 border-rose-500/40 text-rose-400 animate-pulse shadow-lg shadow-rose-500/20'
+                    : 'bg-white/5 border-white/10 text-gray-400 hover:text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-500/30'
+                }`}
+              >
+                {isListening ? <MicOff className="w-4 h-4 text-rose-400" /> : <Mic className="w-4 h-4" />}
+              </button>
+            )}
+
+            <button
+              type="submit"
+              disabled={isLoading || isTranscribing || !input.trim()}
+              title="Execute goal"
+              className="p-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-lg hover:from-indigo-500 hover:to-blue-500 active:scale-90 disabled:opacity-30 disabled:active:scale-100 transition-all duration-150 border border-indigo-400/20 shadow-md"
+            >
+              {isLoading || isTranscribing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+            </button>
+          </div>
         </form>
       </div>
     </div>

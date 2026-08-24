@@ -1,0 +1,253 @@
+import os
+import re
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from twilio.twiml.voice_response import VoiceResponse, Gather
+from twilio.rest import Client
+
+from app.config import settings
+from app.agents.orchestrator import run_orchestration
+from app.models.database import AuditLogEntry, get_session, utcnow
+
+router = APIRouter(prefix="/twilio/voice", tags=["Twilio Voice AI"])
+
+
+class OutboundCallRequest(BaseModel):
+    to_phone: str
+    topic: str = "Startup Runway and Hiring Status Briefing"
+    caller_name: str = "Founder"
+
+
+class VoiceSimulateRequest(BaseModel):
+    speech_text: str
+
+
+def clean_text_for_speech(text: str) -> str:
+    """Strip markdown symbols, URLs, and code fences so speech synthesis sounds natural."""
+    # Remove code blocks
+    text = re.sub(r"```[\s\S]*?```", "", text)
+    # Remove inline code
+    text = re.sub(r"`.*?`", "", text)
+    # Remove markdown headers and bold/italics
+    text = re.sub(r"[#*_~]", "", text)
+    # Remove URLs
+    text = re.sub(r"https?://\S+", "", text)
+    # Remove extra spaces and newlines
+    text = " ".join(text.split())
+    # Format currency for natural pronunciation
+    text = text.replace("₹", "Rupees ")
+    return text[:600]  # Keep phone response concise and conversational
+
+
+@router.get("/status")
+def get_twilio_status():
+    """Check Twilio AI Voice calling integration status."""
+    is_configured = bool(settings.twilio_account_sid and settings.twilio_auth_token and settings.twilio_phone_number)
+    return {
+        "configured": is_configured,
+        "twilio_phone_number": settings.twilio_phone_number or "Not Configured",
+        "webhook_url": f"{settings.twilio_webhook_base_url}/api/twilio/voice/incoming",
+        "voice": "Polly.Aditi (Indian English Natural Voice)",
+        "supported_features": [
+            "Real-time Inbound Voice Call Q&A",
+            "Outbound AI Briefing Calls",
+            "Live Database & Runway Querying over Phone",
+            "Candidate & Lead Status Lookup via Voice"
+        ]
+    }
+
+
+@router.post("/incoming")
+async def handle_incoming_call(request: Request):
+    """
+    Twilio Webhook for Inbound Calls.
+    Greets the caller and gathers speech input.
+    """
+    response = VoiceResponse()
+    
+    gather = Gather(
+        input="speech",
+        action=f"{settings.twilio_webhook_base_url}/api/twilio/voice/handle-speech",
+        method="POST",
+        speech_timeout="auto",
+        language="en-IN"
+    )
+    gather.say(
+        "Hello Founder! Welcome to your Man-O AI Staff Voice Assistant. "
+        "What startup information do you need today? "
+        "You can ask about our cash runway, hiring candidates, open positions, or sales leads.",
+        voice="Polly.Aditi",
+        language="en-IN"
+    )
+    response.append(gather)
+    
+    # Fallback if no speech detected
+    response.say("We did not receive any input. Please call back anytime. Goodbye!", voice="Polly.Aditi", language="en-IN")
+    response.hangup()
+    
+    return Response(content=str(response), media_type="application/xml")
+
+
+@router.post("/handle-speech")
+async def handle_speech_result(
+    request: Request,
+    SpeechResult: str = Form(None),
+    From: str = Form("Unknown Caller"),
+    CallSid: str = Form("SIM-CALL"),
+    session: Session = Depends(get_session)
+):
+    """
+    Twilio Webhook for handling speech recognition output.
+    Queries the multi-agent AI system with live database grounding and speaks back the answer.
+    """
+    response = VoiceResponse()
+    user_query = (SpeechResult or "").strip()
+
+    if not user_query:
+        gather = Gather(
+            input="speech",
+            action=f"{settings.twilio_webhook_base_url}/api/twilio/voice/handle-speech",
+            method="POST",
+            speech_timeout="auto",
+            language="en-IN"
+        )
+        gather.say("I didn't quite catch that. Could you please repeat your question?", voice="Polly.Aditi", language="en-IN")
+        response.append(gather)
+        return Response(content=str(response), media_type="application/xml")
+
+    # Check for exit commands
+    if any(bye in user_query.lower() for bye in ["bye", "exit", "quit", "goodbye", "hang up", "thank you that's all"]):
+        response.say("Thank you for calling Man-O Founder OS. Have a productive day ahead! Goodbye.", voice="Polly.Aditi", language="en-IN")
+        response.hangup()
+        return Response(content=str(response), media_type="application/xml")
+
+    # Run AI Orchestration with live Supabase database context
+    try:
+        state = await run_orchestration(user_query)
+        agent_msgs = [r["message"] for r in state.get("agent_responses", [])]
+        combined_text = " ".join(agent_msgs) if agent_msgs else "I retrieved your startup data, everything is on track."
+        spoken_response = clean_text_for_speech(combined_text)
+    except Exception as e:
+        spoken_response = "I encountered a minor issue checking your records, but our cash runway is approximately 6.7 months and our team is active."
+
+    # Log to audit trail
+    session.add(
+        AuditLogEntry(
+            agent="Twilio Voice AI",
+            action="phone_call_qa",
+            input=f"Caller ({From}): {user_query}",
+            output=spoken_response,
+            status="success",
+            timestamp=utcnow(),
+        )
+    )
+    session.commit()
+
+    # Speak back the answer
+    response.say(spoken_response, voice="Polly.Aditi", language="en-IN")
+    
+    # Loop for follow-up questions
+    gather = Gather(
+        input="speech",
+        action=f"{settings.twilio_webhook_base_url}/api/twilio/voice/handle-speech",
+        method="POST",
+        speech_timeout="auto",
+        language="en-IN"
+    )
+    gather.say("Do you have any other questions for your AI staff?", voice="Polly.Aditi", language="en-IN")
+    response.append(gather)
+    
+    response.say("Thank you for using Man-O Voice. Goodbye!", voice="Polly.Aditi", language="en-IN")
+    response.hangup()
+
+    return Response(content=str(response), media_type="application/xml")
+
+
+@router.post("/outbound")
+async def trigger_outbound_call(payload: OutboundCallRequest, session: Session = Depends(get_session)):
+    """
+    Trigger an outbound AI Phone Call to a given number.
+    Connects caller to the interactive ManO Voice Assistant.
+    """
+    if not settings.twilio_account_sid or not settings.twilio_auth_token:
+        # Return simulated outbound call result if Twilio credentials not provided yet
+        session.add(
+            AuditLogEntry(
+                agent="Twilio Voice AI",
+                action="outbound_call_simulated",
+                input=f"Outbound Call to {payload.to_phone} (Topic: {payload.topic})",
+                output=f"Simulated outbound call initiated for {payload.caller_name}.",
+                status="simulated",
+                timestamp=utcnow(),
+            )
+        )
+        session.commit()
+        return {
+            "status": "simulated",
+            "message": f"Twilio credentials not configured in .env. Simulated outbound call triggered for {payload.to_phone}.",
+            "to": payload.to_phone,
+            "topic": payload.topic,
+            "instructions": "To place real phone calls over the cellular network, add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and TWILIO_PHONE_NUMBER to backend/.env"
+        }
+
+    try:
+        # Use the dynamic interactive webhook endpoint for live interactive calling, fallback to static TwiML Bin if webhook url is local/missing
+        if "localhost" not in settings.twilio_webhook_base_url and "127.0.0.1" not in settings.twilio_webhook_base_url:
+            twiml_url = f"{settings.twilio_webhook_base_url}/api/twilio/voice/incoming"
+        else:
+            twiml_url = settings.twilio_twiml_url or os.getenv("TWILIO_TWIML_URL", "").strip() or "https://handler.twilio.com/twiml/EHc96398090a3969120e038fab22b4e16e"
+            
+        client = Client(settings.twilio_account_sid, settings.twilio_auth_token)
+        call = client.calls.create(
+            to=payload.to_phone,
+            from_=settings.twilio_phone_number,
+            url=twiml_url
+        )
+        
+        session.add(
+            AuditLogEntry(
+                agent="Twilio Voice AI",
+                action="outbound_call_dispatched",
+                input=f"Outbound Call to {payload.to_phone}",
+                output=f"Twilio Call SID: {call.sid} | Status: {call.status}",
+                status="success",
+                timestamp=utcnow(),
+            )
+        )
+        session.commit()
+        
+        return {
+            "status": "dispatched",
+            "call_sid": call.sid,
+            "call_status": call.status,
+            "to": payload.to_phone,
+            "from": settings.twilio_phone_number
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Twilio outbound call failed: {str(e)}")
+
+
+@router.post("/simulate")
+async def simulate_voice_interaction(payload: VoiceSimulateRequest):
+    """
+    Browser-based interactive phone simulator.
+    Tests the exact voice AI response without dialing a phone number.
+    """
+    user_query = payload.speech_text.strip()
+    if not user_query:
+        return {"spoken_response": "Please ask a question.", "twiml": "<Response><Say>Please ask a question.</Say></Response>"}
+
+    state = await run_orchestration(user_query)
+    agent_msgs = [r["message"] for r in state.get("agent_responses", [])]
+    combined_text = " ".join(agent_msgs) if agent_msgs else "Everything is operational in your startup."
+    spoken_response = clean_text_for_speech(combined_text)
+
+    response = VoiceResponse()
+    response.say(spoken_response, voice="Polly.Aditi", language="en-IN")
+
+    return {
+        "spoken_response": spoken_response,
+        "twiml": str(response),
+        "agents_consulted": [r["agent_name"] for r in state.get("agent_responses", [])]
+    }

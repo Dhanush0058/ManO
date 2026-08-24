@@ -8,6 +8,7 @@ import { IntegrationsPanel } from '../components/dashboard/IntegrationsPanel';
 import { AnalyticsPanel } from '../components/dashboard/AnalyticsPanel';
 import { AuditLogPanel } from '../components/dashboard/AuditLogPanel';
 import { AIOrchestratorPanel } from '../components/dashboard/AIOrchestratorPanel';
+import { TwilioVoicePanel } from '../components/dashboard/TwilioVoicePanel';
 import { queryOrchestrator, fetchMode, updateMode, triggerSeed } from '../lib/api';
 import { Sparkles, Database, Settings, Check } from 'lucide-react';
 
@@ -136,6 +137,10 @@ export function Dashboard() {
         return <AnalyticsPanel />;
       case 'audit_logs':
         return <AuditLogPanel />;
+      case 'voice_calling':
+      case 'twilio':
+      case 'phone':
+        return <TwilioVoicePanel />;
       case 'settings':
         return (
           <div className="flex-1 flex flex-col p-6 overflow-y-auto space-y-6 bg-transparent z-10 max-w-2xl mx-auto w-full">

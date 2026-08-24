@@ -40,17 +40,19 @@ def seed_demo_company(session: Session):
     session.commit()
     session.refresh(fitflow)
 
-    # 3. Seed Employees (4 employees)
+    # 3. Seed Key Managers & Employees
     employees_data = [
-        ("Rahul Sharma", "CEO & Founder", "Executive", 120000.0, date(2025, 1, 15)),
-        ("Sneha Reddy", "CTO", "Engineering", 100000.0, date(2025, 1, 20)),
-        ("Amit Verma", "Head of Sales", "GTM", 75000.0, date(2025, 2, 10)),
-        ("Priya Patel", "Full Stack Engineer", "Engineering", 60000.0, date(2025, 3, 1))
+        ("Dhanush R", "dhanushr672@gmail.com", "Hiring Manager & Head of Talent", "Hiring", 85000.0, date(2025, 1, 15)),
+        ("Ajay Kumar", "bogguajaykumar0@gmail.com", "Finance Manager & Head of Treasury", "Finance", 95000.0, date(2025, 1, 10)),
+        ("Prashanth Kumar", "guntiprashanthkumar646@gmail.com", "Legal Manager & General Counsel", "Legal", 90000.0, date(2025, 1, 20)),
+        ("Sneha Reddy", "sneha.reddy@fitflow.ai", "CTO", "Engineering", 100000.0, date(2025, 1, 20)),
+        ("Amit Verma", "amit.verma@fitflow.ai", "Head of Sales", "GTM", 75000.0, date(2025, 2, 10))
     ]
-    for name, role, dept, sal, join_date in employees_data:
+    for name, email, role, dept, sal, join_date in employees_data:
         emp = Employee(
             company_id=fitflow.company_id,
             name=name,
+            email=email,
             role=role,
             department=dept,
             salary=sal,

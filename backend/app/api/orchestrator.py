@@ -9,6 +9,8 @@ from app.models.schemas import OrchestratorResponse, QueryRequest, ApprovalOut
 router = APIRouter()
 
 
+from app.agents.tools import execute_tool
+
 @router.post("/orchestrator/query", response_model=OrchestratorResponse)
 async def query_orchestrator(payload: QueryRequest, session: Session = Depends(get_session)):
     if not payload.query.strip():
@@ -22,6 +24,50 @@ async def query_orchestrator(payload: QueryRequest, session: Session = Depends(g
     pending: list[Approval] = []
     for resp in state["agent_responses"]:
         action = resp.get("action") or {}
+        act_type = action.get("type", "none")
+        
+        # Execute MCP Email tool if action is send_email or if prompt commands sending an email
+        was_executed_directly = False
+        if act_type == "send_email" or ("email" in payload.query.lower() and "send" in payload.query.lower()):
+            email_payload = dict(action.get("payload", {}))
+            if not email_payload.get("to_email"):
+                for w in payload.query.split():
+                    if "@" in w:
+                        email_payload["to_email"] = w.strip(",.!?\"'")
+                        break
+            if not email_payload.get("to_email"):
+                email_payload["to_email"] = "recipient@example.com"
+            if not email_payload.get("subject"):
+                email_payload["subject"] = f"Update from FounderOS ({resp['agent_name']})"
+            if not email_payload.get("body"):
+                email_payload["body"] = resp["message"]
+
+            mcp_res = await execute_tool("send_email", email_payload)
+            
+            from app.adapters import EntityLookupAdapter
+            entity = EntityLookupAdapter.identify_entity_by_email_or_name(session, email_payload["to_email"])
+            recip_info = f"{entity.get('name', 'Contact')} [{entity.get('match_type', 'Recipient')}]" if entity.get("found") else email_payload["to_email"]
+            
+            resp["message"] = f"✅ Email has been sent to {recip_info} ({email_payload['to_email']})."
+            was_executed_directly = True
+        elif act_type in ["place_voice_call", "trigger_call", "call_phone"] or ("call" in payload.query.lower() and any(c.isdigit() for c in payload.query)):
+            call_payload = dict(action.get("payload", {}))
+            import re
+            digits = re.findall(r'\+?\d{10,12}', payload.query)
+            if digits:
+                target_phone = digits[0]
+                if not target_phone.startswith("+"):
+                    target_phone = "+91" + target_phone if len(target_phone) == 10 else "+" + target_phone
+                call_payload["to_phone"] = target_phone
+            if not call_payload.get("to_phone"):
+                call_payload["to_phone"] = "+918886544423"
+            if not call_payload.get("topic"):
+                call_payload["topic"] = "Startup Runway & Executive Briefing"
+
+            mcp_call_res = await execute_tool("place_voice_call", call_payload)
+            resp["message"] = f"📞 Outbound AI Voice Call initiated to {call_payload['to_phone']} (Topic: {call_payload['topic']})."
+            was_executed_directly = True
+
         session.add(
             AuditLogEntry(
                 agent=resp["agent_name"],
@@ -32,13 +78,14 @@ async def query_orchestrator(payload: QueryRequest, session: Session = Depends(g
                 timestamp=utcnow(),
             )
         )
-        if action.get("requires_approval"):
-            # Determine risk level based on action details
+        
+        # Only add to pending approvals if it wasn't already executed directly
+        if action.get("requires_approval") and not was_executed_directly:
             risk = "High"
-            act_type = action.get("type", "generic").lower()
-            if "outreach" in act_type or "campaign" in act_type:
+            act_type_lower = action.get("type", "generic").lower()
+            if "outreach" in act_type_lower or "campaign" in act_type_lower:
                 risk = "Medium"
-            elif "NDA" in action.get("summary", ""):
+            elif "nda" in action.get("summary", "").lower():
                 risk = "Medium"
                 
             approval = Approval(

@@ -35,6 +35,7 @@ class Employee(Base):
     employee_id = Column(Integer, primary_key=True, index=True)
     company_id = Column(Integer, ForeignKey("companies.company_id", ondelete="CASCADE"), nullable=False)
     name = Column(String(255), nullable=False)
+    email = Column(String(255), nullable=True)
     role = Column(String(100), nullable=False)
     department = Column(String(100))
     salary = Column(Float, nullable=False)

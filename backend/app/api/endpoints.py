@@ -137,10 +137,13 @@ def get_tasks_list(session: Session = Depends(get_session)):
     return session.query(Task).order_by(Task.created_at.desc()).all()
 
 
+from fastapi import UploadFile, File
 from fastapi.responses import StreamingResponse
 import json
 import asyncio
+import httpx
 from datetime import datetime
+from app.config import settings
 
 @router.get("/live-events")
 async def live_events_stream():
@@ -163,3 +166,72 @@ async def live_events_stream():
             await asyncio.sleep(1.2)
             
     return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
+@router.post("/voice/transcribe")
+async def transcribe_audio(file: UploadFile = File(...)):
+    """Transcribe uploaded audio recordings using Groq's high-speed Whisper AI."""
+    if not settings.groq_api_key:
+        raise HTTPException(status_code=400, detail="GROQ_API_KEY is not configured")
+
+    contents = await file.read()
+    filename = file.filename or "recording.webm"
+
+    async with httpx.AsyncClient(timeout=30) as client:
+        response = await client.post(
+            "https://api.groq.com/openai/v1/audio/transcriptions",
+            headers={"Authorization": f"Bearer {settings.groq_api_key}"},
+            files={"file": (filename, contents, file.content_type or "audio/webm")},
+            data={"model": "whisper-large-v3-turbo"},
+        )
+        if response.status_code != 200:
+            raise HTTPException(status_code=response.status_code, detail=f"Whisper transcription failed: {response.text}")
+        data = response.json()
+        return {"text": data.get("text", "").strip()}
+
+
+from pydantic import BaseModel
+from app.adapters import EntityLookupAdapter
+
+class EmailSendRequest(BaseModel):
+    to_email: str
+    subject: str
+    body: str
+    sender: str = "FounderOS Orchestrator"
+
+
+@router.get("/email/lookup")
+def lookup_email_entity(query: str, session: Session = Depends(get_session)):
+    """Auto-recognize and compare an email or contact against the database."""
+    return EntityLookupAdapter.identify_entity_by_email_or_name(session, query)
+
+
+@router.post("/email/send")
+async def send_email_mcp_endpoint(payload: EmailSendRequest, session: Session = Depends(get_session)):
+    """Deliver an email via MCP Email Protocol with automatic database entity recognition."""
+    entity_info = EntityLookupAdapter.identify_entity_by_email_or_name(session, payload.to_email)
+    
+    # Execute MCP tool
+    from app.agents.tools import execute_tool
+    tool_result = await execute_tool("send_email", payload.model_dump())
+    
+    # Append to audit logs
+    session.add(
+        AuditLogEntry(
+            agent="MCP Email Server",
+            action="send_email",
+            input=f"To: {payload.to_email} | Subject: {payload.subject}",
+            output=f"Recipient: {entity_info.get('summary', 'Unknown')} — {tool_result}",
+            status="success",
+            timestamp=datetime.now(timezone.utc),
+        )
+    )
+    session.commit()
+    
+    return {
+        "status": "delivered",
+        "entity": entity_info,
+        "mcp_result": tool_result
+    }
+
+

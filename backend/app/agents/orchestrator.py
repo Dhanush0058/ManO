@@ -12,11 +12,12 @@ from app.agents.hiring_agent import run_hiring_agent
 from app.agents.legal_agent import run_legal_agent
 from app.agents.llm import call_llm, parse_json_response
 from app.agents.research_agent import run_research_agent
+from app.config import settings
 from app.models.database import SessionLocal, Task, Approval, AuditLogEntry, utcnow
 
 # Global configuration for Live vs Demo Simulation Mode
 # Auto-detect if API key is not configured properly, fallback to demo
-AI_MODE = os.getenv("AI_MODE", "demo")
+AI_MODE = os.getenv("AI_MODE", "live")
 
 CLASSIFY_SYSTEM = """You are the Orchestrator Agent inside FounderOS, an AI staff platform for startup
 founders. Given a founder's goal or question, decide which specialist agents should weigh in.
@@ -63,6 +64,27 @@ class OrchestratorState(TypedDict):
 
 
 async def classify_node(state: OrchestratorState) -> OrchestratorState:
+    # 1. Instant keyword routing check to avoid multiple LLM calls and reduce latency
+    q = state["query"].lower()
+    agents = []
+    if any(w in q for w in ["runway", "burn", "budget", "finance", "money", "afford"]):
+        agents.append("finance")
+    if any(w in q for w in ["hire", "recruiting", "recruit", "candidate", "developer", "resume"]):
+        agents.append("hiring")
+    if any(w in q for w in ["nda", "contract", "agreement", "legal", "compliance"]):
+        agents.append("legal")
+    if any(w in q for w in ["gtm", "market", "sales", "leads", "customer", "customer acquisition"]):
+        agents.append("gtm")
+    
+    if agents:
+        return {
+            **state,
+            "relevant_agents": agents,
+            "needs_clarification": False,
+            "clarifying_question": None,
+        }
+
+    # 2. Fallback to LLM classification if query is complex
     try:
         raw = await call_llm(CLASSIFY_SYSTEM, state["query"])
         data = parse_json_response(raw)
@@ -74,22 +96,9 @@ async def classify_node(state: OrchestratorState) -> OrchestratorState:
             "clarifying_question": data.get("clarifying_question"),
         }
     except Exception:
-        # If LLM classification fails, fallback to simple keyword routing
-        q = state["query"].lower()
-        agents = []
-        if any(w in q for w in ["runway", "burn", "budget", "finance", "money", "afford"]):
-            agents.append("finance")
-        if any(w in q for w in ["hire", "recruiting", "recruit", "candidate", "developer", "resume"]):
-            agents.append("hiring")
-        if any(w in q for w in ["nda", "contract", "agreement", "legal", "compliance"]):
-            agents.append("legal")
-        if any(w in q for w in ["gtm", "market", "sales", "leads", "customer", "customer acquisition"]):
-            agents.append("gtm")
-        if not agents:
-            agents.append("research")
         return {
             **state,
-            "relevant_agents": agents,
+            "relevant_agents": ["research"],
             "needs_clarification": False,
             "clarifying_question": None,
         }
@@ -100,7 +109,8 @@ def route_after_classify(state: OrchestratorState) -> str:
 
 
 async def dispatch_node(state: OrchestratorState) -> OrchestratorState:
-    agents = state["relevant_agents"] or ["research"]
+    # Limit to primary matching agent for voice call clarity and low latency
+    agents = [state["relevant_agents"][0]] if state["relevant_agents"] else ["research"]
     
     # Run agent executions
     results = await asyncio.gather(
@@ -149,8 +159,14 @@ _GRAPH = build_graph()
 
 async def run_orchestration(query: str) -> OrchestratorState:
     # 1. Determine if we should run in live mode or simulated mode
-    # Check if AI_MODE is 'demo' or if API keys are missing/mocked
-    is_demo = AI_MODE == "demo" or not os.getenv("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY") == "your-key-here"
+    # Check if AI_MODE is 'demo' or if all API keys are missing/mocked
+    has_any_key = bool(
+        (settings.gemini_api_key.strip() and settings.gemini_api_key.strip() != "your-key-here")
+        or settings.openai_api_key.strip()
+        or settings.groq_api_key.strip()
+        or settings.nvidia_api_key.strip()
+    )
+    is_demo = AI_MODE == "demo" or not has_any_key
 
     if is_demo:
         print("Running in DEMO SIMULATION MODE")

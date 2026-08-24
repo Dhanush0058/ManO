@@ -39,5 +39,13 @@ class Settings:
         ).split(",")
     ]
 
+    # ---------- Twilio Voice Call Service ----------
+    twilio_account_sid: str = os.getenv("TWILIO_ACCOUNT_SID", "").strip()
+    twilio_auth_token: str = os.getenv("TWILIO_AUTH_TOKEN", "").strip()
+    twilio_phone_number: str = os.getenv("TWILIO_PHONE_NUMBER", "").strip()
+    twilio_webhook_base_url: str = os.getenv("TWILIO_WEBHOOK_BASE_URL", "http://localhost:8000").strip()
+    twilio_twiml_url: str = os.getenv("TWILIO_TWIML_URL", "https://handler.twilio.com/twiml/EHc96398090a3969120e038fab22b4e16e").strip()
+
 
 settings = Settings()
+# Reload trigger comment v4

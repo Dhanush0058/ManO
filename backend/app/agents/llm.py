@@ -37,7 +37,7 @@ async def call_llm_gemini(system: str, user: str, max_tokens: int = 1024) -> str
         ]
     }
 
-    async with httpx.AsyncClient(timeout=45) as client:
+    async with httpx.AsyncClient(timeout=4.0) as client:
         resp = await client.post(url, json=payload)
         resp.raise_for_status()
         data = resp.json()
@@ -67,7 +67,7 @@ async def call_llm_openai(system: str, user: str, max_tokens: int = 1024) -> str
         "max_tokens": max_tokens,
     }
 
-    async with httpx.AsyncClient(timeout=45) as client:
+    async with httpx.AsyncClient(timeout=4.0) as client:
         resp = await client.post(OPENAI_URL, headers=headers, json=payload)
         resp.raise_for_status()
         data = resp.json()
@@ -93,7 +93,7 @@ async def call_llm_groq(system: str, user: str, max_tokens: int = 1024) -> str:
         "max_tokens": max_tokens,
     }
 
-    async with httpx.AsyncClient(timeout=45) as client:
+    async with httpx.AsyncClient(timeout=4.0) as client:
         resp = await client.post(GROQ_URL, headers=headers, json=payload)
         resp.raise_for_status()
         data = resp.json()
@@ -119,7 +119,7 @@ async def call_llm_nvidia(system: str, user: str, max_tokens: int = 1024) -> str
         "max_tokens": max_tokens,
     }
 
-    async with httpx.AsyncClient(timeout=45) as client:
+    async with httpx.AsyncClient(timeout=4.0) as client:
         resp = await client.post(NVIDIA_URL, headers=headers, json=payload)
         resp.raise_for_status()
         data = resp.json()
