@@ -67,13 +67,13 @@ async def classify_node(state: OrchestratorState) -> OrchestratorState:
     # 1. Instant keyword routing check to avoid multiple LLM calls and reduce latency
     q = state["query"].lower()
     agents = []
-    if any(w in q for w in ["runway", "burn", "budget", "finance", "money", "afford"]):
+    if any(w in q for w in ["runway", "burn", "budget", "finance", "money", "afford", "cash", "bank", "revenue", "spend"]):
         agents.append("finance")
-    if any(w in q for w in ["hire", "recruiting", "recruit", "candidate", "developer", "resume"]):
+    if any(w in q for w in ["hire", "recruiting", "recruit", "candidate", "developer", "resume", "job", "hired", "salary", "employee"]):
         agents.append("hiring")
-    if any(w in q for w in ["nda", "contract", "agreement", "legal", "compliance"]):
+    if any(w in q for w in ["nda", "contract", "agreement", "legal", "compliance", "policy", "sign", "lawsuit"]):
         agents.append("legal")
-    if any(w in q for w in ["gtm", "market", "sales", "leads", "customer", "customer acquisition"]):
+    if any(w in q for w in ["gtm", "market", "sales", "leads", "customer", "customer acquisition", "pipeline", "deal"]):
         agents.append("gtm")
     
     if agents:

@@ -1,6 +1,6 @@
 import os
 import re
-from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response, BackgroundTasks
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from twilio.twiml.voice_response import VoiceResponse, Gather
@@ -89,9 +89,31 @@ async def handle_incoming_call(request: Request):
     return Response(content=str(response), media_type="application/xml")
 
 
+def log_audit_in_background(user_query: str, response_text: str, caller_num: str):
+    from app.models.database import SessionLocal, AuditLogEntry, utcnow
+    db = SessionLocal()
+    try:
+        db.add(
+            AuditLogEntry(
+                agent="Twilio Voice AI",
+                action="phone_call_qa",
+                input=f"Caller ({caller_num}): {user_query}",
+                output=response_text,
+                status="success",
+                timestamp=utcnow(),
+            )
+        )
+        db.commit()
+    except Exception as e:
+        print(f"[Twilio Voice AI Log Error] Failed to write background audit log: {e}")
+    finally:
+        db.close()
+
+
 @router.post("/handle-speech")
 async def handle_speech_result(
     request: Request,
+    background_tasks: BackgroundTasks,
     SpeechResult: str = Form(None),
     From: str = Form("Unknown Caller"),
     CallSid: str = Form("SIM-CALL"),
@@ -131,18 +153,8 @@ async def handle_speech_result(
     except Exception as e:
         spoken_response = "I encountered a minor issue checking your records, but our cash runway is approximately 6.7 months and our team is active."
 
-    # Log to audit trail
-    session.add(
-        AuditLogEntry(
-            agent="Twilio Voice AI",
-            action="phone_call_qa",
-            input=f"Caller ({From}): {user_query}",
-            output=spoken_response,
-            status="success",
-            timestamp=utcnow(),
-        )
-    )
-    session.commit()
+    # Log to audit trail in background thread to avoid voice latency / timeouts
+    background_tasks.add_task(log_audit_in_background, user_query, spoken_response, From)
 
     # Speak back the answer
     response.say(spoken_response, voice="Polly.Aditi", language="en-IN")
