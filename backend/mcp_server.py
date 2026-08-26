@@ -4,13 +4,31 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timezone
-from mcp.server import MCPServer
 from dotenv import load_dotenv
+
+from app.adapters import EntityLookupAdapter
+from app.models.database import SessionLocal
 
 load_dotenv(override=True)
 
-# Initialize the MCP Server
-mcp = MCPServer("ManO Local Tools")
+try:
+    from mcp.server.fastmcp import FastMCP
+    mcp = FastMCP("ManO Local Tools")
+except Exception:
+    try:
+        from mcp.server import MCPServer
+        mcp = MCPServer("ManO Local Tools")
+    except Exception:
+        from mcp.server import Server
+        mcp = Server("ManO Local Tools")
+
+if not hasattr(mcp, "tool"):
+    def _compat_tool(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
+
+    mcp.tool = _compat_tool
 
 # Ensure a local directory exists for file operations
 WORK_DIR = os.path.join(os.path.dirname(__file__), "agent_work")
@@ -128,8 +146,18 @@ def send_email(to_email: str, subject: str, body: str, sender: str = "dhanushred
 
 @mcp.tool()
 def lookup_contact(query: str) -> str:
-    """Fast MCP helper tool to query and summarize who a contact is in the database."""
-    return f"MCP queried database for contact '{query}'."
+    """Look up a contact through the configured application database."""
+    session = SessionLocal()
+    try:
+        entity = EntityLookupAdapter.identify_entity_by_email_or_name(session, query)
+        if entity.get("found"):
+            return (
+                f"Found {entity['name']} ({entity.get('match_type', 'Contact')}) "
+                f"at {entity['email']}."
+            )
+        return f"No registered contact found for '{query}'."
+    finally:
+        session.close()
 
 
 @mcp.tool()

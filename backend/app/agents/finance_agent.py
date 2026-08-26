@@ -22,17 +22,20 @@ async def run_finance_agent(query: str) -> dict:
     session = SessionLocal()
     try:
         # Check if query mentions an email or person
-        entity_info = None
+        found_entities = []
         for w in query.split():
             clean_w = w.strip(",.!?\"'")
             if "@" in clean_w or len(clean_w) >= 2:
                 cand_entity = EntityLookupAdapter.identify_entity_by_email_or_name(session, clean_w)
-                if cand_entity.get("found"):
-                    entity_info = cand_entity
-                    break
+                if cand_entity.get("found") and cand_entity["email"] not in [e["email"] for e in found_entities]:
+                    found_entities.append(cand_entity)
 
         summary = FinanceAdapter.get_financial_summary(session)
-        entity_context = f"\n[DATABASE RECIPIENT MATCH: {entity_info['summary']} | {entity_info['details']}]" if entity_info else ""
+        
+        entity_context = ""
+        if found_entities:
+            entity_context = "\n[DATABASE RECIPIENT MATCHES:\n" + "\n".join([f"- {e['summary']} | {e['details']}" for e in found_entities]) + "\nIf sending an email to multiple recipients, you can separate their emails with commas in the to_email field.]"
+            
         context = (
             f"\n\n[CONTEXT: Current cash balance is ₹{summary['cash_balance']:,.2f}. "
             f"Monthly burn rate is ₹{summary['monthly_burn']:,.2f}. "

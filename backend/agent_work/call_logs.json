@@ -1,0 +1,32 @@
+[
+  {
+    "timestamp": "2026-08-24T11:05:43.066148+00:00",
+    "to_phone": "+918886544423",
+    "topic": "Startup Runway & Executive Briefing",
+    "status": "Twilio call error: name 'client' is not defined"
+  },
+  {
+    "timestamp": "2026-08-24T11:05:44.050945+00:00",
+    "to_phone": "+918886544423",
+    "topic": "Startup Runway & Executive Briefing",
+    "status": "Twilio call error: name 'client' is not defined"
+  },
+  {
+    "timestamp": "2026-08-24T11:18:55.392297+00:00",
+    "to_phone": "+918886544423",
+    "topic": "Startup Runway & Executive Briefing",
+    "status": "Twilio call error: name 'client' is not defined"
+  },
+  {
+    "timestamp": "2026-08-24T11:19:26.050807+00:00",
+    "to_phone": "+918886544423",
+    "topic": "Startup Runway & Executive Briefing",
+    "status": "Twilio call error: name 'client' is not defined"
+  },
+  {
+    "timestamp": "2026-08-24T11:20:04.069725+00:00",
+    "to_phone": "+918886544423",
+    "topic": "Startup Runway & Executive Briefing",
+    "status": "Twilio call error: name 'client' is not defined"
+  }
+]

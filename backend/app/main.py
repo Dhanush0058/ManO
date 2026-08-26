@@ -23,6 +23,11 @@ def on_startup() -> None:
     print("[Startup config] webhook_base:", settings.twilio_webhook_base_url)
 
 
+@app.get("/")
+def root() -> dict[str, str]:
+    return {"status": "ok", "message": "ManO API is running"}
+
+
 app.include_router(health.router, prefix="/api", tags=["health"])
 app.include_router(orchestrator.router, prefix="/api", tags=["orchestrator"])
 app.include_router(tasks.router, prefix="/api", tags=["tasks"])

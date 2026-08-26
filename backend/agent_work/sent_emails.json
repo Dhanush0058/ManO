@@ -1,0 +1,416 @@
+[
+  {
+    "timestamp": "2026-08-24T09:38:41.843204+00:00",
+    "sender": "FounderOS Orchestrator",
+    "to_email": "sandhya.choudhury1@example.com",
+    "subject": "Technical Interview Schedule",
+    "body": "Dear Sandhya, we would love to invite you for the React Developer position interview.",
+    "status": "delivered",
+    "protocol": "MCP Email Protocol (Secure)"
+  },
+  {
+    "timestamp": "2026-08-24T09:58:57.952809+00:00",
+    "sender": "FounderOS Orchestrator",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Communication from FounderOS (Orchestrator)",
+    "body": "Could you clarify what you would like the email to contain and under what specific finance management trigger it should be sent?",
+    "status": "Archived to local MCP mailbox",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T09:59:27.651237+00:00",
+    "sender": "FounderOS Orchestrator",
+    "to_email": "bogguajaykumar0@gmail.com",
+    "subject": "Monthly Burn Rate and Runway Update",
+    "body": "Hi Ajay,\n\nI wanted to share our current financial metrics:\n- Cash balance: \u20b9500,000\n- Monthly burn rate: \u20b975,000\n- Estimated runway: 6.7 months\n\nPlease let me know if you need any further details.\n\nBest,\n[Your Name]",
+    "status": "Archived to local MCP mailbox",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T09:59:48.221737+00:00",
+    "sender": "FounderOS Orchestrator",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Candidate Hiring Status Update & Upcoming Interviews",
+    "body": "Hi Dhanush,\n\nI wanted to share the latest hiring snapshot:\n- Rajesh Kumar (React, Node.js) \u2013 91% match \u2013 currently **offered**.\n- Meera Choudhury (Sales) \u2013 89% match \u2013 currently **offered**.\n- Divya Gupta (React) \u2013 88% match \u2013 currently **offered**.\n- Arjun Bose \u2013 95% match \u2013 **interviewed**.\n- Divya Kumar \u2013 94% match \u2013 **screened**.\n\nUpcoming interviews:\n- **React Developer**: Divya Gupta on Thursday, 10\u202fAM.\n- **Python/FastAPI Developer**: New candidate on Friday, 2\u202fPM.\n\nLet me know if you need any adjustments or additional details.\n\nBest,\n[Your Name]\nHiring Agent, ManO",
+    "status": "Archived to local MCP mailbox",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T10:02:04.927920+00:00",
+    "sender": "dhanushreddy520006@gmail.com",
+    "to_email": "bogguajaykumar0@gmail.com",
+    "subject": "Monthly Burn Rate & Runway Update",
+    "body": "Hi Ajay,\n\nI wanted to share our latest financial snapshot:\n- Cash balance: \u20b9500,000\n- Monthly burn rate: \u20b975,000\n- Projected runway: ~6.7 months\n\nPlease let me know if you\u2019d like a detailed breakdown of the expenses or any other metrics.\n\nBest,\n[Your Name]",
+    "status": "Archived to local MCP mailbox",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T10:06:36.546894+00:00",
+    "sender": "dhanushreddy520006@gmail.com",
+    "to_email": "bogguajaykumar0@gmail.com",
+    "subject": "Current Runway and Burn Rate Update",
+    "body": "Hi Ajay,\n\nI wanted to share the latest financial snapshot:\n- Cash balance: \u20b9500,000.00\n- Monthly burn rate: \u20b975,000.00\n- Runway remaining: ~6.7 months\n\nPlease let me know if you need any further details.\n\nBest,\n[Your Name]",
+    "status": "Archived to local MCP mailbox",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T10:13:43.759119+00:00",
+    "sender": "dhanushreddy520006@gmail.com",
+    "to_email": "bogguajaykumar0@gmail.com",
+    "subject": "Current Runway and Burn Rate Update",
+    "body": "Hi Ajay Kumar,\n\nOur cash balance stands at \u20b9500,000 and the monthly burn rate is \u20b975,000, which translates to an approximate runway of 6.7 months.\n\nLet me know if you need any further details or a detailed financial report.\n\nBest,\n[Your Name]",
+    "status": "Archived to local MCP mailbox",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T10:26:01.350791+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "bogguajaykumar0@gmail.com",
+    "subject": "\ud83d\ude80 ManO Live Email Test \u2014 Runway & Burn Update",
+    "body": "Hi Ajay,\n\nThis is a real live test email sent from the ManO AI platform!\n\nMetrics:\n- Cash: \u20b9500,000\n- Monthly Burn: \u20b975,000\n- Runway: 6.7 months\n\nStatus: Successfully delivered to your inbox.\n\nBest regards,\nFounderOS Team",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to bogguajaykumar0@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T10:26:22.850195+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "bogguajaykumar0@gmail.com",
+    "subject": "Current Runway and Monthly Burn Rate Update",
+    "body": "Hi Ajay,\n\nAs of today, our cash balance stands at \u20b9500,000 and our monthly burn rate is \u20b975,000. This translates to roughly 6.7 months of runway.\n\nBest regards,\n[Your Name]",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to bogguajaykumar0@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T10:28:06.907411+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com, hr@example.com",
+    "subject": "Coordination on Current Openings",
+    "body": "Hi Dhanush and HR Team,\n\nI hope you\u2019re both well. I\u2019d like to discuss the status of our current open positions (React Developer and Python/FastAPI Developer) and align on next steps for candidate interviews and offers.\n\nPlease let me know a convenient time for a brief sync.\n\nBest regards,\n[Your Name]\nHiring Agent, ManO",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com, hr@example.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T10:48:35.533565+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Communication from FounderOS (Orchestrator)",
+    "body": "What should be the subject and body of the email you\u2019d like to send to dhanushr672@gmail.com?",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T10:49:41.312183+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Update from FounderOS (Orchestrator)",
+    "body": "What is the subject and body of the email you\u2019d like to send to dhanushr672@gmail.com?",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T10:51:15.065756+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Hiring Update and Next Steps",
+    "body": "Hi Dhanush,\n\nI wanted to share a quick update on our hiring pipeline. We have several strong candidates for the React Developer and Python/FastAPI Developer roles, with match scores above 90%. Let me know a convenient time to discuss interview schedules and any additional requirements.\n\nBest regards,\n[Your Name]\nManO Hiring Team",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T12:22:10.573590+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "owner@titanfitnessstudio.com",
+    "subject": "Boost Your Membership: 20 New Gym Customers in 30 Days",
+    "body": "Hi,\n\nI\u2019m reaching out from ManO to help Titan Fitness Studio quickly add 20 new members in the next 30 days. We\u2019ll set up a targeted outreach and referral program at no upfront cost, delivering measurable results and a clear ROI. Can we schedule a 15\u2011minute call this week to walk you through the plan?\n\nBest regards,\n[Your Name]\nManO \u2013 GTM Partner",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to owner@titanfitnessstudio.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T17:18:01.189107+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Live Test via execute_tool",
+    "body": "This is a test of the execute_tool layer.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T17:19:14.118388+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Direct In-Process Email Test",
+    "body": "This email was dispatched via direct in-process tool execution.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T17:58:46.953326+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "\ud83d\ude80 ManO OS Live Delivery Test \u2014 Hiring Manager",
+    "body": "Hello Dhanush R,\n\nThis is a live test email dispatched automatically to verify your role credentials as Hiring Manager in the ManO Founder OS platform.\n\nEverything is working successfully!\n\nBest regards,\nFounderOS Team",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T17:58:50.403268+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "bogguajaykumar0@gmail.com",
+    "subject": "\ud83d\ude80 ManO OS Live Delivery Test \u2014 Finance Manager",
+    "body": "Hello Ajay Kumar,\n\nThis is a live test email dispatched automatically to verify your role credentials as Finance Manager in the ManO Founder OS platform.\n\nEverything is working successfully!\n\nBest regards,\nFounderOS Team",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to bogguajaykumar0@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T17:58:54.021676+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "guntiprashanthkumar646@gmail.com",
+    "subject": "\ud83d\ude80 ManO OS Live Delivery Test \u2014 Legal Manager",
+    "body": "Hello Prashanth Kumar,\n\nThis is a live test email dispatched automatically to verify your role credentials as Legal Manager in the ManO Founder OS platform.\n\nEverything is working successfully!\n\nBest regards,\nFounderOS Team",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to guntiprashanthkumar646@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T18:18:00.961530+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Root Env Live Test",
+    "body": "Sent successfully from the repaired root environment!",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T18:20:00.230707+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Clarification Needed on HR Process",
+    "body": "Hi Dhanush,\n\nI hope you're well. Could you please provide an overview of the current HR process, including onboarding steps and any recent updates? This will help us ensure alignment across the team.\n\nThanks in advance,\n[Your Name]",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T18:20:50.425046+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "recipient@example.com",
+    "subject": "Update from FounderOS (Finance Agent)",
+    "body": "Sure, could you please provide the email address of the Finance Manager & Head of Treasury so I can draft and send the complaint email?",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to recipient@example.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T18:24:27.286117+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "recipient@example.com",
+    "subject": "Update from FounderOS (Orchestrator)",
+    "body": "What is the subject and body of the email you\u2019d like to send to Ajay, and are there any additional details such as CC, attachments, or specific tone you want?",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to recipient@example.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T18:25:09.074806+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "recipient@example.com",
+    "subject": "Update from FounderOS (Orchestrator)",
+    "body": "What is the purpose and content of the email you want to send to Ajay?",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to recipient@example.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T18:26:42.086881+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "bogguajaykumar0@gmail.com",
+    "subject": "\ud83d\ude80 ManO OS Live Delivery Test \u2014 Finance Manager",
+    "body": "Hello Ajay Kumar,\n\nThis is a live test email dispatched automatically to verify your role credentials as Finance Manager in the ManO Founder OS platform.\n\nEverything is working successfully!\n\nBest regards,\nFounderOS Team",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to bogguajaykumar0@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T18:26:45.587620+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "guntiprashanthkumar646@gmail.com",
+    "subject": "\ud83d\ude80 ManO OS Live Delivery Test \u2014 Legal Manager",
+    "body": "Hello Prashanth Kumar,\n\nThis is a live test email dispatched automatically to verify your role credentials as Legal Manager in the ManO Founder OS platform.\n\nEverything is working successfully!\n\nBest regards,\nFounderOS Team",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to guntiprashanthkumar646@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:08:18.007218+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "test@example.com",
+    "subject": "hello",
+    "body": "body",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to test@example.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:13:56.649454+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "bogguajaykumar0@gmail.com",
+    "subject": "Test email from ManO",
+    "body": "This is a test email triggered from the ManO system to validate the seeded employee email flow.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to bogguajaykumar0@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:14:45.791699+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "recipient@example.com",
+    "subject": "Update from FounderOS (Orchestrator)",
+    "body": "What is the subject and content of the email you\u2019d like to send to Ajay and Dhanush, and any specific details or attachments needed?",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to recipient@example.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:15:49.848929+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Update from FounderOS (Research Agent)",
+    "body": "I\u2019m sorry, but I can\u2019t send emails on your behalf.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:18:12.966817+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Update from FounderOS (Research Agent)",
+    "body": "I'm a research agent and do not have the capability to send emails. I can provide information and answer questions to the best of my knowledge, but I do not have direct access to external systems or the ability to perform actions such as sending emails.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:24:46.757981+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com, owner@goldsarena.com",
+    "subject": "Update from FounderOS (Research Agent)",
+    "body": "This agent hit an error: All configured LLM providers failed. Triggering Demo Simulation Mode.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com, owner@goldsarena.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:25:45.697650+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com, owner@goldsarena.com",
+    "subject": "Update from FounderOS (Hiring Agent)",
+    "body": "This agent hit an error: All configured LLM providers failed. Triggering Demo Simulation Mode.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com, owner@goldsarena.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:26:50.878984+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "bogguajaykumar0@gmail.com",
+    "subject": "Update from FounderOS (GTM Agent)",
+    "body": "No information is available about ajay in the database. To send an email, we need the recipient's email address and name.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to bogguajaykumar0@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:31:31.718107+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "ManO MCP connection test",
+    "body": "Hello Dhanush, this is a test email sent through the ManO MCP email tool using a registered database contact.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:35:06.514556+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "bogguajaykumar0@gmail.com, dhanushr672@gmail.com",
+    "subject": "Update from FounderOS (Hiring Agent)",
+    "body": "Preparing the email using the registered database contact.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to bogguajaykumar0@gmail.com, dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:35:24.721790+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "bogguajaykumar0@gmail.com",
+    "subject": "Update from FounderOS (Hiring Agent)",
+    "body": "Preparing the email using the registered database contact.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to bogguajaykumar0@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:44:25.430729+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com, bogguajaykumar0@gmail.com",
+    "subject": "Update from FounderOS (Hiring Agent)",
+    "body": "Preparing the email using the registered database contact.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com, bogguajaykumar0@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:45:49.450434+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com, owner@goldsarena.com",
+    "subject": "Update from FounderOS (FounderOS)",
+    "body": "Preparing the email using the registered database contact.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com, owner@goldsarena.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:46:35.713985+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com, owner@goldsarena.com",
+    "subject": "Update from FounderOS (FounderOS)",
+    "body": "Hello,\n\nNew agents are coming to ManO. This update was sent through the FounderOS MCP email system using the registered database contact.\n\nRegards,\nFounderOS",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com, owner@goldsarena.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:52:11.496875+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Update from FounderOS (FounderOS)",
+    "body": "Hello,\n\nNew agents are coming to ManO. This update was sent through the FounderOS MCP email system using the registered database contact.\n\nRegards,\nFounderOS",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:53:05.778142+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Update from FounderOS (FounderOS)",
+    "body": "Hello,\n\nNew agents are coming to ManO. This update was sent through the FounderOS MCP email system using the registered database contact.\n\nRegards,\nFounderOS",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-24T19:53:21.866978+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "bogguajaykumar0@gmail.com",
+    "subject": "Update from FounderOS (FounderOS)",
+    "body": "Hello,\n\nNew agents are coming to ManO. This update was sent through the FounderOS MCP email system using the registered database contact.\n\nRegards,\nFounderOS",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to bogguajaykumar0@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-25T07:44:54.698941+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "recipient@example.com",
+    "subject": "Update from FounderOS (Hiring Agent)",
+    "body": "Hello,\n\nThis is an update from FounderOS regarding your request.\n\nRegards,\nFounderOS",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to recipient@example.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-25T07:45:22.697640+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Update from FounderOS (FounderOS)",
+    "body": "Hello,\n\nThis is an update from FounderOS regarding your request.\n\nRegards,\nFounderOS",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-08-25T07:55:41.756304+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Update from FounderOS (FounderOS)",
+    "body": "Hello,\n\nThis is an update from FounderOS regarding your request.\n\nRegards,\nFounderOS",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  }
+]

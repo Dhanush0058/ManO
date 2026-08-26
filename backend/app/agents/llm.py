@@ -6,6 +6,7 @@ import httpx
 from app.config import settings
 
 OPENAI_URL = "https://api.openai.com/v1/chat/completions"
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 NVIDIA_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
 
@@ -74,6 +75,34 @@ async def call_llm_openai(system: str, user: str, max_tokens: int = 1024) -> str
         return data["choices"][0]["message"]["content"]
 
 
+async def call_llm_openrouter(system: str, user: str, max_tokens: int = 1024) -> str:
+    key = settings.openrouter_api_key.strip()
+    if not key or key == "your-openrouter-api-key-here":
+        raise LLMNotConfigured("OPENROUTER_API_KEY is not set.")
+
+    headers = {
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "http://localhost:5173",
+        "X-Title": "ManO",
+    }
+
+    payload = {
+        "model": settings.openrouter_model,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user}
+        ],
+        "max_tokens": max_tokens,
+    }
+
+    async with httpx.AsyncClient(timeout=15.0) as client:
+        resp = await client.post(OPENROUTER_URL, headers=headers, json=payload)
+        resp.raise_for_status()
+        data = resp.json()
+        return data["choices"][0]["message"]["content"]
+
+
 async def call_llm_groq(system: str, user: str, max_tokens: int = 1024) -> str:
     key = settings.groq_api_key.strip()
     if not key:
@@ -119,7 +148,7 @@ async def call_llm_nvidia(system: str, user: str, max_tokens: int = 1024) -> str
         "max_tokens": max_tokens,
     }
 
-    async with httpx.AsyncClient(timeout=4.0) as client:
+    async with httpx.AsyncClient(timeout=15.0) as client:
         resp = await client.post(NVIDIA_URL, headers=headers, json=payload)
         resp.raise_for_status()
         data = resp.json()
@@ -130,13 +159,13 @@ async def call_llm(system: str, user: str, max_tokens: int = 1024) -> str:
     """
     Resilient Multi-Model LLMRouter failover system.
     Determines order of attempt starting with the primary provider:
-    Gemini -> OpenAI -> Groq -> Nvidia
+    OpenRouter -> Gemini -> OpenAI -> Groq -> Nvidia
     and automatically falls back to alternative models on exceptions.
     """
     primary = settings.llm_provider
     
     # Establish priority list
-    providers = ["gemini", "openai", "groq", "nvidia"]
+    providers = ["openrouter", "gemini", "openai", "groq", "nvidia"]
     if primary in providers:
         # Move primary to the front of the list
         providers.remove(primary)
@@ -146,7 +175,9 @@ async def call_llm(system: str, user: str, max_tokens: int = 1024) -> str:
     for provider in providers:
         # Check if the provider is actually configured (has a key)
         has_key = False
-        if provider == "gemini" and settings.gemini_api_key.strip():
+        if provider == "openrouter" and settings.openrouter_api_key.strip() not in {"", "your-openrouter-api-key-here"}:
+            has_key = True
+        elif provider == "gemini" and settings.gemini_api_key.strip():
             has_key = True
         elif provider == "openai" and settings.openai_api_key.strip():
             has_key = True
@@ -160,7 +191,9 @@ async def call_llm(system: str, user: str, max_tokens: int = 1024) -> str:
 
         print(f"[LLMRouter] Routing query to: {provider.upper()}")
         try:
-            if provider == "gemini":
+            if provider == "openrouter":
+                return await call_llm_openrouter(system, user, max_tokens)
+            elif provider == "gemini":
                 return await call_llm_gemini(system, user, max_tokens)
             elif provider == "openai":
                 return await call_llm_openai(system, user, max_tokens)

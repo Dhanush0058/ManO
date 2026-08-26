@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.adapters import EntityLookupAdapter
 from app.agents.llm import LLMNotConfigured
 from app.agents.orchestrator import run_orchestration
 from app.models.database import Approval, AuditLogEntry, get_session, utcnow
@@ -11,6 +12,39 @@ router = APIRouter()
 
 from app.agents.tools import execute_tool
 
+
+def _resolve_email_targets(session: Session, query: str) -> list[str]:
+    seen_emails: set[str] = set()
+    resolved: list[str] = []
+
+    for raw_token in query.split():
+        cleaned = raw_token.strip(",.!?\"'")
+        if "@" in cleaned:
+            cleaned = cleaned.lower()
+            if cleaned not in seen_emails:
+                seen_emails.add(cleaned)
+                resolved.append(cleaned)
+
+    if resolved:
+        return resolved
+
+    tokens = [t.strip(",.!?\"'") for t in query.split() if len(t) > 2]
+    for token in tokens:
+        token_lower = token.lower()
+        if token_lower in {
+            "send", "email", "mail", "to", "and", "the", "hello", "founder", "what", "do", "you", "need",
+            "finance", "hiring", "legal", "gtm", "research", "agent", "agents", "manager", "new", "coming", "as", "are",
+        }:
+            continue
+        entity = EntityLookupAdapter.identify_entity_by_email_or_name(session, token)
+        if entity.get("found") and entity.get("email"):
+            email_val = entity["email"].lower()
+            if email_val not in seen_emails:
+                seen_emails.add(email_val)
+                resolved.append(email_val)
+
+    return resolved
+
 @router.post("/orchestrator/query", response_model=OrchestratorResponse)
 async def query_orchestrator(payload: QueryRequest, session: Session = Depends(get_session)):
     if not payload.query.strip():
@@ -20,6 +54,8 @@ async def query_orchestrator(payload: QueryRequest, session: Session = Depends(g
         state = await run_orchestration(payload.query)
     except LLMNotConfigured as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Orchestrator failed: {exc}") from exc
 
     pending: list[Approval] = []
     for resp in state["agent_responses"]:
@@ -31,24 +67,36 @@ async def query_orchestrator(payload: QueryRequest, session: Session = Depends(g
         if act_type == "send_email" or (any(w in payload.query.lower() for w in ["email", "mail"]) and "send" in payload.query.lower()):
             email_payload = dict(action.get("payload", {}))
             if not email_payload.get("to_email"):
-                for w in payload.query.split():
-                    if "@" in w:
-                        email_payload["to_email"] = w.strip(",.!?\"'")
-                        break
-            if not email_payload.get("to_email"):
-                email_payload["to_email"] = "recipient@example.com"
+                resolved = _resolve_email_targets(session, payload.query)
+
+                if resolved:
+                    email_payload["to_email"] = ", ".join(resolved)
+                else:
+                    email_payload["to_email"] = "recipient@example.com"
             if not email_payload.get("subject"):
                 email_payload["subject"] = f"Update from FounderOS ({resp['agent_name']})"
             if not email_payload.get("body"):
-                email_payload["body"] = resp["message"]
+                if "new agents" in payload.query.lower():
+                    email_payload["body"] = (
+                        "Hello,\n\n"
+                        "New agents are coming to ManO. This update was sent through the "
+                        "FounderOS MCP email system using the registered database contact.\n\n"
+                        "Regards,\nFounderOS"
+                    )
+                else:
+                    email_payload["body"] = (
+                        "Hello,\n\nThis is an update from FounderOS regarding your request.\n\n"
+                        "Regards,\nFounderOS"
+                    )
 
             mcp_res = await execute_tool("send_email", email_payload)
             
-            from app.adapters import EntityLookupAdapter
-            entity = EntityLookupAdapter.identify_entity_by_email_or_name(session, email_payload["to_email"])
-            recip_info = f"{entity.get('name', 'Contact')} [{entity.get('match_type', 'Recipient')}]" if entity.get("found") else email_payload["to_email"]
-            
-            resp["message"] = f"✅ Email has been sent to {recip_info} ({email_payload['to_email']})."
+            if "failed" in mcp_res.lower() or "error" in mcp_res.lower():
+                resp["message"] = f"❌ Email delivery failed: {mcp_res}"
+            else:
+                entity = EntityLookupAdapter.identify_entity_by_email_or_name(session, email_payload["to_email"])
+                recip_info = f"{entity.get('name', 'Contact')} [{entity.get('match_type', 'Recipient')}]" if entity.get("found") else email_payload["to_email"]
+                resp["message"] = f"✅ Email has been sent to {recip_info} ({email_payload['to_email']})."
             was_executed_directly = True
         elif act_type in ["place_voice_call", "trigger_call", "call_phone"] or ("call" in payload.query.lower() and any(c.isdigit() for c in payload.query)):
             call_payload = dict(action.get("payload", {}))
