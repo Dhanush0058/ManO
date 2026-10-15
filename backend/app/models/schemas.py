@@ -68,7 +68,7 @@ class AgentMeta(BaseModel):
     permissions: List[str] = []
 
 
-# --- New schemas for ManO Tables ---
+# --- New schemas for FounderOS Tables ---
 
 class CompanyOut(BaseModel):
     company_id: int

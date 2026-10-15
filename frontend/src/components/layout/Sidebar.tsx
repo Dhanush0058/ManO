@@ -49,7 +49,7 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
       <div className={`flex items-center mb-6 px-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
         {!collapsed && (
           <div className="flex items-center gap-2">
-            <span className="serif-heading text-[16px] font-bold text-white tracking-wide">ManO</span>
+            <span className="serif-heading text-[16px] font-bold text-white tracking-wide">FounderOS</span>
             <span className="text-[9px] font-bold text-[#38bdf8] bg-[#38bdf8]/10 border border-[#38bdf8]/20 rounded px-1.5 py-0.5">
               Beta
             </span>

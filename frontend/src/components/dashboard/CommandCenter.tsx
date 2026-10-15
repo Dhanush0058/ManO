@@ -199,7 +199,7 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
             <div>
               <h1 className="text-2xl font-bold text-white tracking-wide">Tell your AI CEO what you want to accomplish...</h1>
               <p className="text-xs text-gray-400 mt-2 max-w-md mx-auto leading-relaxed">
-                ManO coordinates specialist agents, retrieves live database context, and executes plans. Type or use the <span className="text-cyan-400 font-semibold">🎙️ Microphone</span> to speak your goals naturally.
+                FounderOS coordinates specialist agents, retrieves live database context, and executes plans. Type or use the <span className="text-cyan-400 font-semibold">🎙️ Microphone</span> to speak your goals naturally.
               </p>
             </div>
             

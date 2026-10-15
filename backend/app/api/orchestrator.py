@@ -74,19 +74,19 @@ async def query_orchestrator(payload: QueryRequest, session: Session = Depends(g
                 else:
                     email_payload["to_email"] = "recipient@example.com"
             if not email_payload.get("subject"):
-                email_payload["subject"] = f"Update from ManO ({resp['agent_name']})"
+                email_payload["subject"] = f"Update from FounderOS ({resp['agent_name']})"
             if not email_payload.get("body"):
                 if "new agents" in payload.query.lower():
                     email_payload["body"] = (
                         "Hello,\n\n"
                         "New agents are coming to ManO. This update was sent through the "
-                        "ManO MCP email system using the registered database contact.\n\n"
-                        "Regards,\nManO"
+                        "FounderOS MCP email system using the registered database contact.\n\n"
+                        "Regards,\nFounderOS"
                     )
                 else:
                     email_payload["body"] = (
-                        "Hello,\n\nThis is an update from ManO regarding your request.\n\n"
-                        "Regards,\nManO"
+                        "Hello,\n\nThis is an update from FounderOS regarding your request.\n\n"
+                        "Regards,\nFounderOS"
                     )
 
             mcp_res = await execute_tool("send_email", email_payload)

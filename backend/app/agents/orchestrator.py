@@ -19,7 +19,7 @@ from app.models.database import SessionLocal, Task, Approval, AuditLogEntry, utc
 # Auto-detect if API key is not configured properly, fallback to demo
 AI_MODE = os.getenv("AI_MODE", "live")
 
-CLASSIFY_SYSTEM = """You are the Orchestrator Agent inside ManO, an AI staff platform for startup
+CLASSIFY_SYSTEM = """You are the Orchestrator Agent inside FounderOS, an AI staff platform for startup
 founders. Given a founder's goal or question, decide which specialist agents should weigh in.
 
 Available agents: "finance", "hiring", "legal", "gtm", "research".
@@ -172,7 +172,7 @@ async def run_orchestration(query: str) -> OrchestratorState:
             "clarifying_question": None,
             "agent_responses": [
                 {
-                    "agent_name": "Hiring Agent" if "hiring" in query_lower else "ManO",
+                    "agent_name": "Hiring Agent" if "hiring" in query_lower else "FounderOS",
                     "message": "Preparing the email using the registered database contact.",
                     "action": {
                         "type": "send_email",
