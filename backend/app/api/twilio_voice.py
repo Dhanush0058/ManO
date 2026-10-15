@@ -12,6 +12,10 @@ from app.models.database import AuditLogEntry, get_session, utcnow
 
 router = APIRouter(prefix="/twilio/voice", tags=["Twilio Voice AI"])
 
+VOICE_NAME = os.getenv("TWILIO_VOICE", "Polly.Matthew")
+VOICE_LANG = os.getenv("TWILIO_VOICE_LANG", "en-US")
+
+
 
 class OutboundCallRequest(BaseModel):
     to_phone: str
@@ -48,7 +52,7 @@ def get_twilio_status():
         "configured": is_configured,
         "twilio_phone_number": settings.twilio_phone_number or "Not Configured",
         "webhook_url": f"{settings.twilio_webhook_base_url}/api/twilio/voice/incoming",
-        "voice": "Polly.Aditi (Indian English Natural Voice)",
+        "voice": f"{VOICE_NAME} ({VOICE_LANG})",
         "supported_features": [
             "Real-time Inbound Voice Call Q&A",
             "Outbound AI Briefing Calls",
@@ -77,13 +81,12 @@ async def handle_incoming_call(request: Request):
         "Hello Founder! Welcome to your FounderOS AI Staff Voice Assistant. "
         "What startup information do you need today? "
         "You can ask about our cash runway, hiring candidates, open positions, or sales leads.",
-        voice="Polly.Aditi",
-        language="en-IN"
+        voice=VOICE_NAME, language=VOICE_LANG
     )
     response.append(gather)
     
     # Fallback if no speech detected
-    response.say("We did not receive any input. Please call back anytime. Goodbye!", voice="Polly.Aditi", language="en-IN")
+    response.say("We did not receive any input. Please call back anytime. Goodbye!", voice=VOICE_NAME, language=VOICE_LANG)
     response.hangup()
     
     return Response(content=str(response), media_type="application/xml")
@@ -134,13 +137,13 @@ async def handle_speech_result(
             speech_timeout="auto",
             language="en-IN"
         )
-        gather.say("I didn't quite catch that. Could you please repeat your question?", voice="Polly.Aditi", language="en-IN")
+        gather.say("I didn't quite catch that. Could you please repeat your question?", voice=VOICE_NAME, language=VOICE_LANG)
         response.append(gather)
         return Response(content=str(response), media_type="application/xml")
 
     # Check for exit commands
     if any(bye in user_query.lower() for bye in ["bye", "exit", "quit", "goodbye", "hang up", "thank you that's all"]):
-        response.say("Thank you for calling FounderOS. Have a productive day ahead! Goodbye.", voice="Polly.Aditi", language="en-IN")
+        response.say("Thank you for calling FounderOS. Have a productive day ahead! Goodbye.", voice=VOICE_NAME, language=VOICE_LANG)
         response.hangup()
         return Response(content=str(response), media_type="application/xml")
 
@@ -157,7 +160,7 @@ async def handle_speech_result(
     background_tasks.add_task(log_audit_in_background, user_query, spoken_response, From)
 
     # Speak back the answer
-    response.say(spoken_response, voice="Polly.Aditi", language="en-IN")
+    response.say(spoken_response, voice=VOICE_NAME, language=VOICE_LANG)
     
     # Loop for follow-up questions
     gather = Gather(
@@ -167,10 +170,10 @@ async def handle_speech_result(
         speech_timeout="auto",
         language="en-IN"
     )
-    gather.say("Do you have any other questions for your AI staff?", voice="Polly.Aditi", language="en-IN")
+    gather.say("Do you have any other questions for your AI staff?", voice=VOICE_NAME, language=VOICE_LANG)
     response.append(gather)
     
-    response.say("Thank you for using FounderOS Voice. Goodbye!", voice="Polly.Aditi", language="en-IN")
+    response.say("Thank you for using FounderOS Voice. Goodbye!", voice=VOICE_NAME, language=VOICE_LANG)
     response.hangup()
 
     return Response(content=str(response), media_type="application/xml")
@@ -256,7 +259,7 @@ async def simulate_voice_interaction(payload: VoiceSimulateRequest):
     spoken_response = clean_text_for_speech(combined_text)
 
     response = VoiceResponse()
-    response.say(spoken_response, voice="Polly.Aditi", language="en-IN")
+    response.say(spoken_response, voice=VOICE_NAME, language=VOICE_LANG)
 
     return {
         "spoken_response": spoken_response,
