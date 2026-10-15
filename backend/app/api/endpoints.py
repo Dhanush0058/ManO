@@ -197,7 +197,7 @@ class EmailSendRequest(BaseModel):
     to_email: str
     subject: str
     body: str
-    sender: str = "FounderOS Orchestrator"
+    sender: str = "ManO Orchestrator"
 
 
 @router.get("/email/lookup")

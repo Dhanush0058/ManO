@@ -39,9 +39,9 @@ async def approve_task(task_id: int, session: Session = Depends(get_session)):
         
         payload = {
             "to_email": target_email,
-            "subject": approval.action or "Notification from FounderOS",
+            "subject": approval.action or "Notification from ManO",
             "body": approval.description or "Automated message approved by founder.",
-            "sender": f"FounderOS ({approval.agent})"
+            "sender": f"ManO ({approval.agent})"
         }
     elif "contract" in action_lower or "nda" in action_lower or "agreement" in action_lower:
         tool_name = "generate_nda"
