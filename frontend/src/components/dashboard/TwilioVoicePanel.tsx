@@ -25,9 +25,9 @@ interface OutboundCallRecord {
 }
 
 export function TwilioVoicePanel() {
-  const [selectedContact, setSelectedContact] = useState<'dhanush' | 'ajay' | 'prashanth' | 'custom'>('dhanush');
-  const [outboundPhone, setOutboundPhone] = useState('+918886544423');
-  const [recipientName, setRecipientName] = useState('Dhanush R (Hiring Manager)');
+  const [selectedContact, setSelectedContact] = useState<'dhanush' | 'ajay' | 'rahul' | 'custom'>('dhanush');
+  const [outboundPhone, setOutboundPhone] = useState('+919347249697');
+  const [recipientName, setRecipientName] = useState('Dhanush (Founder / CEO)');
   const [outboundTopic, setOutboundTopic] = useState('Startup Runway and Cash Burn Update');
   const [isDialing, setIsDialing] = useState(false);
   const [outboundNotice, setOutboundNotice] = useState<string | null>(null);
@@ -39,8 +39,8 @@ export function TwilioVoicePanel() {
     {
       id: 'call-1',
       timestamp: '2 mins ago',
-      recipientName: 'Dhanush R',
-      toPhone: '+918886544423',
+      recipientName: 'Dhanush',
+      toPhone: '+919347249697',
       topic: 'Startup Runway & Burn Briefing',
       status: 'Dispatched (SID: CA33d79f7bd92dc89a3eec6beae76f4e08)',
       callSid: 'CA33d79f7bd92dc89a3eec6beae76f4e08',
@@ -51,17 +51,17 @@ export function TwilioVoicePanel() {
   const { isSpeaking, speak, stop: stopSpeaking } = useTextToSpeech();
 
   // Contact preset selection
-  const handleSelectContact = (key: 'dhanush' | 'ajay' | 'prashanth' | 'custom') => {
+  const handleSelectContact = (key: 'dhanush' | 'ajay' | 'rahul' | 'custom') => {
     setSelectedContact(key);
     if (key === 'dhanush') {
-      setOutboundPhone('+918886544423');
-      setRecipientName('Dhanush R (Hiring Manager)');
+      setOutboundPhone('+919347249697');
+      setRecipientName('Dhanush (Founder / CEO)');
     } else if (key === 'ajay') {
       setOutboundPhone('+916281837995');
       setRecipientName('Ajay Kumar (Finance Manager)');
-    } else if (key === 'prashanth') {
-      setOutboundPhone('+919347249697');
-      setRecipientName('Prashanth Kumar (Legal Manager)');
+    } else if (key === 'rahul') {
+      setOutboundPhone('+918886544423');
+      setRecipientName('Rahul Sharma (Hiring Manager)');
     } else {
       setOutboundPhone('+91');
       setRecipientName('External Contact');
@@ -98,7 +98,7 @@ export function TwilioVoicePanel() {
     setOutboundNotice(null);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/twilio/voice/outbound', {
+      const res = await fetch('http://localhost:8000/api/twilio/voice/outbound', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -108,6 +108,9 @@ export function TwilioVoicePanel() {
         })
       });
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.detail || 'Call dispatch failed');
+      }
       
       const newSid = data.call_sid || `CA${Math.random().toString(36).substring(2, 12)}`;
       setOutboundNotice(`✅ Live Outbound Call Dispatched to ${outboundPhone}! (Twilio SID: ${newSid})`);
@@ -150,7 +153,7 @@ export function TwilioVoicePanel() {
           <div className="flex items-center gap-3">
             <div className="text-right">
               <span className="text-[10px] text-gray-500 block uppercase font-bold tracking-wider">Caller Line</span>
-              <span className="text-xs font-semibold text-blue-400 font-mono">+1 (737) 250-8034</span>
+              <span className="text-xs font-semibold text-blue-400 font-mono">+1 (737) 258-3742</span>
             </div>
           </div>
         </div>
@@ -186,11 +189,11 @@ export function TwilioVoicePanel() {
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-white block truncate">Dhanush R</span>
+                    <span className="text-xs font-bold text-white block truncate">Dhanush</span>
                     <UserCheck className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
                   </div>
-                  <span className="text-[10px] text-gray-400 block truncate">+91 8886544423</span>
-                  <span className="text-[9px] text-blue-400/80 font-medium">Hiring Manager</span>
+                  <span className="text-[10px] text-gray-400 block truncate">+91 9347249697</span>
+                  <span className="text-[9px] text-blue-400/80 font-medium">Founder / CEO</span>
                 </button>
 
                 <button
@@ -212,19 +215,19 @@ export function TwilioVoicePanel() {
 
                 <button
                   type="button"
-                  onClick={() => handleSelectContact('prashanth')}
+                  onClick={() => handleSelectContact('rahul')}
                   className={`p-3 rounded-xl border text-left transition-all ${
-                    selectedContact === 'prashanth'
+                    selectedContact === 'rahul'
                       ? 'bg-blue-600/15 border-blue-500/40 text-white shadow-md shadow-blue-600/10'
                       : 'bg-white/[0.02] border-white/5 text-gray-400 hover:bg-white/5'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-white block truncate">Prashanth K</span>
+                    <span className="text-xs font-bold text-white block truncate">Rahul Sharma</span>
                     <ShieldCheck className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
                   </div>
-                  <span className="text-[10px] text-gray-400 block truncate">+91 9347249697</span>
-                  <span className="text-[9px] text-purple-400/80 font-medium">Legal Manager</span>
+                  <span className="text-[10px] text-gray-400 block truncate">+91 8886544423</span>
+                  <span className="text-[9px] text-purple-400/80 font-medium">Hiring Manager</span>
                 </button>
 
                 <button
@@ -326,7 +329,7 @@ export function TwilioVoicePanel() {
                 <Volume2 className="w-4 h-4 text-emerald-400" />
                 <h3 className="text-sm font-bold text-white">Spoken Voice Script</h3>
               </div>
-              <span className="text-[10px] text-gray-400 font-mono">Polly.Aditi</span>
+              <span className="text-[10px] text-gray-400 font-mono">Polly.Matthew</span>
             </div>
 
             <p className="text-[11px] text-gray-400">
@@ -357,7 +360,7 @@ export function TwilioVoicePanel() {
                 <span>Twilio Outbound Verification</span>
               </div>
               <p className="text-[11px] text-gray-400 leading-relaxed">
-                Twilio dials from <span className="text-white font-mono">+17372508034</span> directly to your phone. Ensure verified caller ID status on trial numbers.
+                Twilio dials from <span className="text-white font-mono">+1 (737) 258-3742</span> directly to your phone. Ensure verified caller ID status on trial numbers.
               </p>
             </div>
           </div>
