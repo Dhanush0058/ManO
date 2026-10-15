@@ -27,9 +27,9 @@ async def execute_tool(action_type: str, payload: Dict) -> str:
         if "to_email" not in clean_payload:
             clean_payload["to_email"] = "recipient@example.com"
         if "subject" not in clean_payload:
-            clean_payload["subject"] = clean_payload.get("name", "Outreach Update") + " — FitFlow Opportunity"
+            clean_payload["subject"] = clean_payload.get("name", "Outreach Update") + " — ManO Opportunity"
         if "body" not in clean_payload:
-            clean_payload["body"] = clean_payload.get("summary") or clean_payload.get("message") or "Hello, this is an automated communication from the FitFlow team."
+            clean_payload["body"] = clean_payload.get("summary") or clean_payload.get("message") or "Hello, this is an automated communication from the ManO team."
         clean_payload = {k: v for k, v in clean_payload.items() if k in ["to_email", "subject", "body", "sender"]}
     elif action_type in ["place_voice_call", "trigger_call", "call_phone"]:
         action_type = "place_voice_call"

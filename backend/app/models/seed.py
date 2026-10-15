@@ -10,7 +10,7 @@ from app.models.database import (
 def seed_demo_company(session: Session):
     print("Checking if database seeding is required...")
     
-    # 1. Clean existing records for a fresh state (FitFlow demo workspace reset)
+    # 1. Clean existing records for a fresh state (ManO demo workspace reset)
     session.query(AuditLogEntry).delete()
     session.query(Approval).delete()
     session.query(Task).delete()
@@ -27,30 +27,30 @@ def seed_demo_company(session: Session):
     print("Database cleared. Starting seeding...")
 
     # 2. Seed Company
-    fitflow = Company(
-        name="FitFlow",
+    mano_company = Company(
+        name="ManO",
         industry="AI-powered gym-management SaaS",
         location="Hyderabad, India",
-        description="FitFlow is a next-generation SaaS startup providing AI-driven scheduling, automated billing, and member engagement metrics to modern fitness centers.",
+        description="ManO is an AI agent-staff platform for startup founders providing concurrent specialist agents and human-in-the-loop approvals.",
         cash_balance=500000.0,  # ₹5,00,000
         monthly_burn=75000.0,   # ₹75,000
         created_at=datetime.now(timezone.utc) - timedelta(days=120)
     )
-    session.add(fitflow)
+    session.add(mano_company)
     session.commit()
-    session.refresh(fitflow)
+    session.refresh(mano_company)
 
     # 3. Seed Key Managers & Employees
     employees_data = [
         ("Dhanush R", "dhanushr672@gmail.com", "Hiring Manager & Head of Talent", "Hiring", 85000.0, date(2025, 1, 15)),
         ("Ajay Kumar", "bogguajaykumar0@gmail.com", "Finance Manager & Head of Treasury", "Finance", 95000.0, date(2025, 1, 10)),
         ("Prashanth Kumar", "guntiprashanthkumar646@gmail.com", "Legal Manager & General Counsel", "Legal", 90000.0, date(2025, 1, 20)),
-        ("Sneha Reddy", "sneha.reddy@fitflow.ai", "CTO", "Engineering", 100000.0, date(2025, 1, 20)),
-        ("Amit Verma", "amit.verma@fitflow.ai", "Head of Sales", "GTM", 75000.0, date(2025, 2, 10))
+        ("Sneha Reddy", "sneha.reddy@mano.ai", "CTO", "Engineering", 100000.0, date(2025, 1, 20)),
+        ("Amit Verma", "amit.verma@mano.ai", "Head of Sales", "GTM", 75000.0, date(2025, 2, 10))
     ]
     for name, email, role, dept, sal, join_date in employees_data:
         emp = Employee(
-            company_id=fitflow.company_id,
+            company_id=mano_company.company_id,
             name=name,
             email=email,
             role=role,
@@ -227,8 +227,8 @@ def seed_demo_company(session: Session):
     # 9. Seed Documents (10 documents)
     doc_types = [
         ("NDA", "Standard Mutual NDA", "This Mutual Non-Disclosure Agreement is made and entered into..."),
-        ("Employment Agreement", "Software Engineer Employment Offer", "This Employment Contract sets forth terms for developers joining FitFlow..."),
-        ("IP Assignment", "Proprietary Information and Inventions Agreement", "Employee agrees to assign all intellectual property developed under FitFlow...")
+        ("Employment Agreement", "Software Engineer Employment Offer", "This Employment Contract sets forth terms for developers joining ManO..."),
+        ("IP Assignment", "Proprietary Information and Inventions Agreement", "Employee agrees to assign all intellectual property developed under ManO...")
     ]
     for i in range(1, 11):
         dtype, title, content = random.choice(doc_types)

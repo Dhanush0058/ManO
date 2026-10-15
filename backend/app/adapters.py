@@ -196,7 +196,7 @@ class EntityLookupAdapter:
                 "match_type": match_type,
                 "id": employee.employee_id,
                 "name": employee.name,
-                "email": employee.email or f"{employee.name.lower().replace(' ', '.')}@fitflow.ai",
+                "email": employee.email or f"{employee.name.lower().replace(' ', '.')}@mano.ai",
                 "role": employee.role,
                 "department": employee.department,
                 "status": employee.status,

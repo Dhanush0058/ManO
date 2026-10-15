@@ -195,7 +195,7 @@ export function Dashboard() {
                 Supabase PostgreSQL Database
               </h3>
               <p className="text-xs text-gray-400 leading-relaxed">
-                Reset tables and seed synthetic candidates, leads, and transaction records for FitFlow SaaS demo workspace.
+                Reset tables and seed synthetic candidates, leads, and transaction records for ManO SaaS demo workspace.
               </p>
               
               <button
@@ -233,7 +233,7 @@ export function Dashboard() {
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Workspace:</span>
             <span className="text-xs font-bold text-white bg-white/5 border border-white/5 px-2 py-0.5 rounded">
-              FitFlow (Synthetic Data)
+              ManO (Synthetic Data)
             </span>
           </div>
 
