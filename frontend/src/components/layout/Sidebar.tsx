@@ -48,9 +48,9 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
       {/* Brand Header */}
       <div className={`flex items-center mb-6 px-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
         {!collapsed && (
-          <div className="flex items-center gap-2">
-            <span className="serif-heading text-[16px] font-bold text-white tracking-wide">FounderOS</span>
-            <span className="text-[9px] font-bold text-[#38bdf8] bg-[#38bdf8]/10 border border-[#38bdf8]/20 rounded px-1.5 py-0.5">
+          <div className="founder-brand-card flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-200">
+            <span className="serif-heading text-[15px] font-extrabold text-white tracking-wide">FounderOS</span>
+            <span className="badge-beta text-[9px] font-bold text-[#38bdf8] bg-[#38bdf8]/15 border border-[#38bdf8]/30 rounded px-1.5 py-0.5">
               Beta
             </span>
           </div>
