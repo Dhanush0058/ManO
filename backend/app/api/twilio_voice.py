@@ -58,7 +58,7 @@ def get_twilio_status():
     }
 
 
-@router.post("/incoming")
+@router.api_route("/incoming", methods=["GET", "POST"])
 async def handle_incoming_call(request: Request):
     """
     Twilio Webhook for Inbound Calls.
@@ -74,7 +74,7 @@ async def handle_incoming_call(request: Request):
         language="en-IN"
     )
     gather.say(
-        "Hello Founder! Welcome to your Man-O AI Staff Voice Assistant. "
+        "Hello Founder! Welcome to your FounderOS AI Staff Voice Assistant. "
         "What startup information do you need today? "
         "You can ask about our cash runway, hiring candidates, open positions, or sales leads.",
         voice="Polly.Aditi",
@@ -140,7 +140,7 @@ async def handle_speech_result(
 
     # Check for exit commands
     if any(bye in user_query.lower() for bye in ["bye", "exit", "quit", "goodbye", "hang up", "thank you that's all"]):
-        response.say("Thank you for calling Man-O Founder OS. Have a productive day ahead! Goodbye.", voice="Polly.Aditi", language="en-IN")
+        response.say("Thank you for calling FounderOS. Have a productive day ahead! Goodbye.", voice="Polly.Aditi", language="en-IN")
         response.hangup()
         return Response(content=str(response), media_type="application/xml")
 
@@ -170,7 +170,7 @@ async def handle_speech_result(
     gather.say("Do you have any other questions for your AI staff?", voice="Polly.Aditi", language="en-IN")
     response.append(gather)
     
-    response.say("Thank you for using Man-O Voice. Goodbye!", voice="Polly.Aditi", language="en-IN")
+    response.say("Thank you for using FounderOS Voice. Goodbye!", voice="Polly.Aditi", language="en-IN")
     response.hangup()
 
     return Response(content=str(response), media_type="application/xml")
