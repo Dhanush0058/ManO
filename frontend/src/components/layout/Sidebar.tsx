@@ -45,19 +45,23 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
         collapsed ? 'w-14 px-2' : 'w-60 px-3'
       }`}
     >
-      {/* Brand Header */}
-      <div className={`flex items-center mb-6 px-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
+      {/* Brand Header - Edge-to-Edge Solid Black Block */}
+      <div className={`sidebar-brand-block -mt-5 mb-5 py-3.5 flex items-center border-b border-black/20 ${
+        collapsed ? '-mx-2 px-2 justify-center' : '-mx-3 px-3.5 justify-between'
+      }`}>
         {!collapsed && (
-          <div className="founder-brand-card flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-200">
-            <span className="serif-heading text-[15px] font-extrabold text-white tracking-wide">FounderOS</span>
-            <span className="badge-beta text-[9px] font-bold text-[#38bdf8] bg-[#38bdf8]/15 border border-[#38bdf8]/30 rounded px-1.5 py-0.5">
-              Beta
-            </span>
-          </div>
+          <span className="text-[16px] font-extrabold text-white tracking-wide font-sans select-none">
+            FounderOS
+          </span>
+        )}
+        {collapsed && (
+          <span className="text-[13px] font-black text-white select-none">
+            FO
+          </span>
         )}
         <button
           onClick={() => setCollapsed((c) => !c)}
-          className="text-gray-500 hover:text-gray-200 w-6 h-6 flex items-center justify-center rounded-md hover:bg-white/5 transition-colors"
+          className="text-gray-400 hover:text-white w-6 h-6 flex items-center justify-center rounded-md hover:bg-white/10 transition-colors"
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
@@ -179,7 +183,7 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
           </div>
           <div className="flex flex-col">
             <span className="text-[12px] font-semibold text-gray-300">ManO Workspace</span>
-            <span className="text-[10px] text-gray-500">Synthetic Data</span>
+            <span className="text-[10px] text-emerald-500 font-semibold tracking-wide">Active</span>
           </div>
         </div>
       )}

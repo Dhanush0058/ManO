@@ -296,21 +296,23 @@ button.bg-rose-600:hover {
   border: 1px solid rgba(242, 122, 48, 0.2) !important;
 }
 
-/* FounderOS Brand Title Card on Sidebar */
-.founder-brand-card {
-  background-color: #0d0f17 !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22) !important;
+/* Sidebar Full-Bleed Solid Black Brand Header Block */
+.sidebar-brand-block {
+  background-color: #090a10 !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
-.founder-brand-card span.serif-heading {
+.sidebar-brand-block span {
   color: #ffffff !important;
   font-weight: 800 !important;
-  letter-spacing: 0.02em !important;
 }
 
-.founder-brand-card span.badge-beta {
-  color: #38bdf8 !important;
-  background-color: rgba(56, 189, 248, 0.15) !important;
-  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+.sidebar-brand-block button {
+  color: #9ca3af !important;
+}
+
+.sidebar-brand-block button:hover {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
 }
