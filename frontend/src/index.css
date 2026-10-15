@@ -60,14 +60,32 @@ aside button:hover,
   color: var(--accent) !important;
 }
 
-/* Selected sidebar items */
+/* Selected sidebar items - Enhanced High Visibility Orange */
 aside button.bg-white\/10,
 aside button.bg-blue-600\/10,
+aside button.bg-indigo-600\/10,
 .bg-\[\#030307\]\/95 button.bg-white\/10,
-.bg-\[\#030307\]\/95 button.bg-blue-600\/10 {
-  background-color: rgba(242, 122, 48, 0.08) !important;
-  color: var(--accent) !important;
-  border-left: 3px solid var(--accent) !important;
+.bg-\[\#030307\]\/95 button.bg-blue-600\/10,
+.bg-\[\#030307\]\/95 button.bg-indigo-600\/10 {
+  background-color: rgba(242, 122, 48, 0.22) !important;
+  color: #C85006 !important;
+  font-weight: 700 !important;
+  border-left: 4px solid #F27A30 !important;
+  box-shadow: 0 2px 10px rgba(242, 122, 48, 0.16) !important;
+}
+
+aside button.bg-white\/10 span,
+aside button.bg-blue-600\/10 span,
+aside button.bg-indigo-600\/10 span {
+  color: #C85006 !important;
+  font-weight: 700 !important;
+}
+
+aside button.bg-white\/10 svg,
+aside button.bg-blue-600\/10 svg,
+aside button.bg-indigo-600\/10 svg {
+  color: #F27A30 !important;
+  stroke-width: 2.3px !important;
 }
 
 aside .text-blue-400,

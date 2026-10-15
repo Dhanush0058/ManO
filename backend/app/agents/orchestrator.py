@@ -158,47 +158,9 @@ _GRAPH = build_graph()
 
 
 async def run_orchestration(query: str) -> OrchestratorState:
-    # Email delivery can be handled deterministically by the MCP tool and database lookup.
-    query_lower = query.lower()
-    is_email_command = (
-        any(word in query_lower for word in ["email", "mail"])
-        and ("send" in query_lower or "email to" in query_lower or "mail to" in query_lower)
-    )
-    if is_email_command:
-        return {
-            "query": query,
-            "relevant_agents": ["hiring"] if "hiring" in query_lower else ["research"],
-            "needs_clarification": False,
-            "clarifying_question": None,
-            "agent_responses": [
-                {
-                    "agent_name": "Hiring Agent" if "hiring" in query_lower else "FounderOS",
-                    "message": "Preparing the email using the registered database contact.",
-                    "action": {
-                        "type": "send_email",
-                        "payload": {},
-                        "requires_approval": False,
-                    },
-                }
-            ],
-        }
+    # Always use live AI state machine for all queries, including email commands
 
-    # 1. Determine if we should run in live mode or simulated mode
-    # Check if AI_MODE is 'demo' or if all API keys are missing/mocked
-    has_any_key = bool(
-        (settings.gemini_api_key.strip() and settings.gemini_api_key.strip() != "your-key-here")
-        or (settings.openrouter_api_key.strip() and settings.openrouter_api_key.strip() != "your-openrouter-api-key-here")
-        or settings.openai_api_key.strip()
-        or settings.groq_api_key.strip()
-        or settings.nvidia_api_key.strip()
-    )
-    is_demo = AI_MODE == "demo" or not has_any_key
-
-    if is_demo:
-        print("Running in DEMO SIMULATION MODE")
-        return await run_demo_simulation(query)
-
-    print("Running in LIVE AI MODE")
+    print("Running in 100% DYNAMIC LIVE AI MODE")
     initial: OrchestratorState = {
         "query": query,
         "relevant_agents": [],
@@ -210,8 +172,28 @@ async def run_orchestration(query: str) -> OrchestratorState:
     try:
         return await _GRAPH.ainvoke(initial)
     except Exception as exc:
-        print(f"Live AI mode failed due to exception: {exc}. Falling back to demo simulation...")
-        return await run_demo_simulation(query)
+        print(f"[Orchestrator] Graph execution warning: {exc}. Generating dynamic response via AI router...")
+        try:
+            dynamic_answer = await call_llm(
+                "You are the FounderOS Orchestrator AI. Answer the founder clearly, concisely, and dynamically with no static templates.",
+                query,
+                max_tokens=600
+            )
+            return {
+                "query": query,
+                "relevant_agents": ["research"],
+                "needs_clarification": False,
+                "clarifying_question": None,
+                "agent_responses": [
+                    {
+                        "agent_name": "FounderOS",
+                        "message": dynamic_answer.strip(),
+                        "action": {"type": "none", "requires_approval": False, "payload": {}}
+                    }
+                ]
+            }
+        except Exception as e2:
+            raise RuntimeError(f"All AI LLMs failed: {e2}")
 
 
 async def run_demo_simulation(query: str) -> OrchestratorState:
