@@ -73,21 +73,33 @@ async def query_orchestrator(payload: QueryRequest, session: Session = Depends(g
                     email_payload["to_email"] = ", ".join(resolved)
                 else:
                     email_payload["to_email"] = "recipient@example.com"
-            if not email_payload.get("subject"):
-                email_payload["subject"] = f"Update from FounderOS ({resp['agent_name']})"
-            if not email_payload.get("body"):
-                if "new agents" in payload.query.lower():
-                    email_payload["body"] = (
-                        "Hello,\n\n"
-                        "New agents are coming to ManO. This update was sent through the "
-                        "FounderOS MCP email system using the registered database contact.\n\n"
-                        "Regards,\nFounderOS"
+            if not email_payload.get("subject") or not email_payload.get("body"):
+                email_prompt = (
+                    f"You are the FounderOS executive assistant writing an email on behalf of the startup founder.\n"
+                    f"Founder's command: '{payload.query}'\n"
+                    f"Recipient: {email_payload.get('to_email')}\n\n"
+                    f"Compose a clear, professional, personalized email body and subject line directly addressing this request.\n"
+                    f"Output strictly valid JSON with 'subject' and 'body' keys only.\n"
+                    '{"subject": "...", "body": "..."}'
+                )
+                try:
+                    from app.agents.llm import call_llm, parse_json_response
+                    raw_email = await call_llm(
+                        "You are an executive email drafting specialist. Reply with ONLY a JSON object containing 'subject' and 'body'.",
+                        email_prompt,
+                        max_tokens=600
                     )
-                else:
-                    email_payload["body"] = (
-                        "Hello,\n\nThis is an update from FounderOS regarding your request.\n\n"
-                        "Regards,\nFounderOS"
-                    )
+                    parsed = parse_json_response(raw_email)
+                    if parsed.get("subject"):
+                        email_payload["subject"] = parsed["subject"]
+                    if parsed.get("body"):
+                        email_payload["body"] = parsed["body"]
+                except Exception as ex:
+                    print(f"[Orchestrator] Dynamic email generation fallback error: {ex}")
+                    if not email_payload.get("subject"):
+                        email_payload["subject"] = f"Update regarding {payload.query[:40]}"
+                    if not email_payload.get("body"):
+                        email_payload["body"] = f"Hello,\n\nHere is an update regarding your recent note: '{payload.query}'.\n\nBest regards,\nFounderOS"
 
             mcp_res = await execute_tool("send_email", email_payload)
             

@@ -5,6 +5,10 @@ load_dotenv(override=True)
 
 
 class Settings:
+
+    # ---------- Ollama (Local) ----------
+    ollama_url: str = os.getenv("OLLAMA_URL", "http://localhost:11434").strip()
+    ollama_model: str = os.getenv("OLLAMA_MODEL", "qwen2.5-coder:1.5b").strip()
     # ---------- LLM Provider ----------
     llm_provider: str = os.getenv("LLM_PROVIDER", "gemini").lower()
 
@@ -22,7 +26,7 @@ class Settings:
 
     # ---------- Groq ----------
     groq_api_key: str = os.getenv("GROQ_API_KEY", "")
-    groq_model: str = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+    groq_model: str = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
 
     # ---------- NVIDIA NIM ----------
     nvidia_api_key: str = os.getenv("NVIDIA_API_KEY", "")

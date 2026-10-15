@@ -38,7 +38,7 @@ async def call_llm_gemini(system: str, user: str, max_tokens: int = 1024) -> str
         ]
     }
 
-    async with httpx.AsyncClient(timeout=4.0) as client:
+    async with httpx.AsyncClient(timeout=25.0) as client:
         resp = await client.post(url, json=payload)
         resp.raise_for_status()
         data = resp.json()
@@ -68,7 +68,7 @@ async def call_llm_openai(system: str, user: str, max_tokens: int = 1024) -> str
         "max_tokens": max_tokens,
     }
 
-    async with httpx.AsyncClient(timeout=4.0) as client:
+    async with httpx.AsyncClient(timeout=25.0) as client:
         resp = await client.post(OPENAI_URL, headers=headers, json=payload)
         resp.raise_for_status()
         data = resp.json()
@@ -122,7 +122,7 @@ async def call_llm_groq(system: str, user: str, max_tokens: int = 1024) -> str:
         "max_tokens": max_tokens,
     }
 
-    async with httpx.AsyncClient(timeout=4.0) as client:
+    async with httpx.AsyncClient(timeout=25.0) as client:
         resp = await client.post(GROQ_URL, headers=headers, json=payload)
         resp.raise_for_status()
         data = resp.json()
@@ -155,6 +155,25 @@ async def call_llm_nvidia(system: str, user: str, max_tokens: int = 1024) -> str
         return data["choices"][0]["message"]["content"]
 
 
+
+async def call_llm_ollama(system: str, user: str, max_tokens: int = 1024) -> str:
+    url = f"{settings.ollama_url.rstrip('/')}/api/generate"
+    prompt = f"{system}\n\nUser Request: {user}"
+    payload = {
+        "model": settings.ollama_model,
+        "prompt": prompt,
+        "stream": False,
+        "options": {
+            "num_predict": max_tokens,
+            "temperature": 0.7,
+        }
+    }
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        resp = await client.post(url, json=payload)
+        resp.raise_for_status()
+        data = resp.json()
+        return data.get("response", "").strip()
+
 async def call_llm(system: str, user: str, max_tokens: int = 1024) -> str:
     """
     Resilient Multi-Model LLMRouter failover system.
@@ -165,7 +184,7 @@ async def call_llm(system: str, user: str, max_tokens: int = 1024) -> str:
     primary = settings.llm_provider
     
     # Establish priority list
-    providers = ["openrouter", "gemini", "openai", "groq", "nvidia"]
+    providers = ["gemini", "groq", "ollama", "openai", "openrouter", "nvidia"]
     if primary in providers:
         # Move primary to the front of the list
         providers.remove(primary)
@@ -180,6 +199,8 @@ async def call_llm(system: str, user: str, max_tokens: int = 1024) -> str:
         elif provider == "gemini" and settings.gemini_api_key.strip():
             has_key = True
         elif provider == "openai" and settings.openai_api_key.strip():
+            has_key = True
+        elif provider == "ollama":
             has_key = True
         elif provider == "groq" and settings.groq_api_key.strip():
             has_key = True
@@ -197,6 +218,8 @@ async def call_llm(system: str, user: str, max_tokens: int = 1024) -> str:
                 return await call_llm_gemini(system, user, max_tokens)
             elif provider == "openai":
                 return await call_llm_openai(system, user, max_tokens)
+            elif provider == "ollama":
+                return await call_llm_ollama(system, user, max_tokens)
             elif provider == "groq":
                 return await call_llm_groq(system, user, max_tokens)
             elif provider == "nvidia":
