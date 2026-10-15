@@ -1,3 +1,4 @@
+from app.adapters import get_company_snapshot
 from app.agents.llm import call_llm, parse_agent_json
 
 AGENT_NAME = "Research Agent"

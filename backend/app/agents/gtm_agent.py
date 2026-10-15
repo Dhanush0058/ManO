@@ -1,11 +1,11 @@
 from app.agents.llm import call_llm, parse_agent_json
 from app.models.database import SessionLocal
-from app.adapters import CRMAdapter, EntityLookupAdapter
+from app.adapters import CRMAdapter, EntityLookupAdapter, get_company_snapshot
 
 AGENT_NAME = "GTM Agent"
 
 SYSTEM_PROMPT = """You are the Go-To-Market (GTM) Agent inside ManO, an AI staff platform for startup founders.
-You handle sales strategies, lead generation, customer outreach, and email delivery.
+You handle sales strategies, lead generation, customer outreach, email delivery, and drafting marketing messages. When asked to give or draft a ready-made message or announcement for any team or campaign, always provide a complete, polished, ready-to-send draft in your response.
 
 You have access to MCP tools:
 1. 'save_lead': Save lead to CRM (payload: {"name": "<string>", "email": "<string>", "company": "<string>"})
@@ -43,8 +43,9 @@ async def run_gtm_agent(query: str) -> dict:
         ])
         
         entity_context = f"\n[DATABASE RECIPIENT MATCH: {entity_info['summary']} | {entity_info['details']}]" if entity_info else ""
+        company_info = get_company_snapshot(session)
         context = (
-            f"\n\n[CONTEXT: Top Leads in '{loc or 'all'}':\n{leads_str}{entity_context}]"
+            f"{company_info}\n\n[CONTEXT: Top Leads in '{loc or 'all'}':\n{leads_str}{entity_context}]"
         )
     except Exception:
         context = ""

@@ -309,3 +309,20 @@ class OutreachAdapter:
     @staticmethod
     def trigger_calling_agent(to_phone: str, goal: str) -> str:
         return f"Outreach status: Calling provider not connected. Unable to place outbound call to {to_phone} for goal: '{goal}'."
+
+
+def get_company_snapshot(session: Session) -> str:
+    """Provides unified company, team, and operational context to all agents."""
+    try:
+        from app.models.database import Employee, Company, Job, Customer, Lead
+        emps = session.query(Employee).all()
+        emp_list = ", ".join([f"{e.name} ({e.role})" for e in emps])
+        jobs = session.query(Job).filter(Job.status == "open").count()
+        leads = session.query(Lead).count()
+        cust = session.query(Customer).count()
+        return (
+            f"\n[INTERNAL COMPANY DATA: Total Employees: {len(emps)} [Members: {emp_list}] | "
+            f"Open Job Positions: {jobs} | Total Registered Leads: {leads} | Active Customers: {cust}]"
+        )
+    except Exception as e:
+        return ""
