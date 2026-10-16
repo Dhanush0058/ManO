@@ -330,16 +330,6 @@ export const SpaceOSDashboard: React.FC = () => {
         {/* Primary Action Buttons */}
         <div className="flex items-center gap-3">
           
-          {/* Distinct Live Button */}
-          <button
-            id="spaceos-live-btn"
-            onClick={() => setIsLiveModalOpen(true)}
-            className="btn-secondary flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xs transition-all cursor-pointer"
-          >
-            <Tv className="w-4 h-4 text-[#F27A30]" />
-            <span className="text-[#1E1E24]">Live Feed</span>
-            <span className="w-2 h-2 rounded-full bg-[#F27A30] animate-ping" />
-          </button>
 
           {/* Primary Action Button: Analyse Incident */}
           <button
