@@ -381,20 +381,13 @@ export function TwilioVoicePanel() {
                       )}
                     </div>
                     <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`text-xs font-black uppercase tracking-wider ${
-                            outboundAlert.type === 'success' ? 'text-emerald-300' : 'text-rose-300'
-                          }`}
-                        >
-                          {outboundAlert.title}
-                        </span>
-                        {outboundAlert.phone && (
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-white font-medium">
-                            {outboundAlert.phone}
-                          </span>
-                        )}
-                      </div>
+                      <span
+                        className={`text-xs font-black uppercase tracking-wider block ${
+                          outboundAlert.type === 'success' ? 'text-emerald-300' : 'text-rose-300'
+                        }`}
+                      >
+                        {outboundAlert.title}
+                      </span>
                       <p
                         className={`text-xs font-medium leading-relaxed ${
                           outboundAlert.type === 'success' ? 'text-emerald-100' : 'text-rose-100'
@@ -402,15 +395,6 @@ export function TwilioVoicePanel() {
                       >
                         {outboundAlert.message}
                       </p>
-
-                      {outboundAlert.sid && (
-                        <div className="pt-2 flex items-center gap-2 text-[11px] font-mono text-emerald-400">
-                          <span className="text-gray-400 font-sans">Twilio SID:</span>
-                          <span className="bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded text-white select-all">
-                            {outboundAlert.sid}
-                          </span>
-                        </div>
-                      )}
 
                       {outboundAlert.type === 'error' && (
                         <div className="pt-2 mt-2 border-t border-rose-500/20 flex flex-wrap items-center gap-2 text-[11px]">
