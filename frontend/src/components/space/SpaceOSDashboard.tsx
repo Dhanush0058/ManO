@@ -393,16 +393,6 @@ export const SpaceOSDashboard: React.FC = () => {
           
           {/* Left 2 Cols: Central Spacecraft Monitoring HUD */}
           <div className="col-span-2 spaceos-card rounded-xl p-5 shadow-sm flex flex-col justify-between relative overflow-hidden">
-            
-            {/* Background Orbital Trajectory Path Illustration */}
-            <div className="absolute right-0 top-0 w-80 h-80 opacity-15 pointer-events-none">
-              <svg viewBox="0 0 100 100" className="w-full h-full text-white fill-none stroke-current stroke-1">
-                <circle cx="50" cy="50" r="45" strokeDasharray="2 3" />
-                <ellipse cx="50" cy="50" rx="42" ry="22" transform="rotate(-30 50 50)" />
-                <circle cx="50" cy="50" r="14" fill="currentColor" fillOpacity="0.2" />
-              </svg>
-            </div>
-
             {/* Satellite Selector & Orbit Profile Header */}
             <div className="flex items-center justify-between pb-4 border-b border-white/20 relative z-10">
               <div className="flex items-center gap-3">

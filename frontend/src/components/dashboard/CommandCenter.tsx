@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Send, Bot, Loader2, Mic, MicOff, Volume2, VolumeX, AlertCircle } from 'lucide-react';
-import { fetchDashboardStats, type DashboardStats } from '../../lib/api';
 import { useVoiceRecognition } from '../../lib/useVoiceRecognition';
 import { useTextToSpeech } from '../../lib/useTextToSpeech';
 
@@ -25,27 +24,23 @@ interface CommandCenterProps {
 
 const getAgentTheme = (agentName?: string) => {
   const name = (agentName || '').toLowerCase();
-  if (name.includes('finance')) {
-    return { border: '#10b981', bg: 'rgba(16, 185, 129, 0.05)', text: '#34d399', badgeBg: 'rgba(16, 185, 129, 0.1)', label: 'Finance' };
+  if (name.includes('finance') || name.includes('detection')) {
+    return { border: '#3b82f6', bg: 'rgba(59, 130, 246, 0.05)', text: '#60a5fa', badgeBg: 'rgba(59, 130, 246, 0.1)', label: 'Detection Agent' };
   }
-  if (name.includes('legal')) {
-    return { border: '#f43f5e', bg: 'rgba(244, 63, 94, 0.05)', text: '#fb7185', badgeBg: 'rgba(244, 63, 94, 0.1)', label: 'Legal' };
+  if (name.includes('legal') || name.includes('reporting')) {
+    return { border: '#a855f7', bg: 'rgba(168, 85, 247, 0.05)', text: '#c084fc', badgeBg: 'rgba(168, 85, 247, 0.1)', label: 'Mission Reporting' };
   }
-  if (name.includes('gtm')) {
-    return { border: '#06b6d4', bg: 'rgba(6, 181, 212, 0.05)', text: '#22d3ee', badgeBg: 'rgba(6, 181, 212, 0.1)', label: 'GTM' };
+  if (name.includes('gtm') || name.includes('incident')) {
+    return { border: '#f97316', bg: 'rgba(249, 115, 22, 0.05)', text: '#fb923c', badgeBg: 'rgba(249, 115, 22, 0.1)', label: 'Incident Diagnostics' };
   }
-  if (name.includes('hiring')) {
-    return { border: '#a855f7', bg: 'rgba(168, 85, 247, 0.05)', text: '#c084fc', badgeBg: 'rgba(168, 85, 247, 0.1)', label: 'Hiring' };
+  if (name.includes('hiring') || name.includes('risk')) {
+    return { border: '#10b981', bg: 'rgba(16, 185, 129, 0.05)', text: '#34d399', badgeBg: 'rgba(16, 185, 129, 0.1)', label: 'Risk Assessment' };
   }
-  if (name.includes('research')) {
-    return { border: '#3b82f6', bg: 'rgba(59, 130, 246, 0.05)', text: '#60a5fa', badgeBg: 'rgba(59, 130, 246, 0.1)', label: 'Research' };
-  }
-  return { border: '#6366f1', bg: 'rgba(99, 102, 241, 0.05)', text: '#818cf8', badgeBg: 'rgba(99, 102, 241, 0.1)', label: agentName || 'Orchestrator' };
+  return { border: '#6366f1', bg: 'rgba(99, 102, 241, 0.05)', text: '#818cf8', badgeBg: 'rgba(99, 102, 241, 0.1)', label: agentName || 'SpaceXOS Orchestrator' };
 };
 
 export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCenterProps) {
   const [input, setInput] = useState('');
-  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -74,19 +69,6 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
       setInput(transcript);
     }
   }, [transcript]);
-
-  // 1. Fetch dashboard stats
-  const loadStats = () => {
-    fetchDashboardStats()
-      .then(setStats)
-      .catch(console.error);
-  };
-
-  useEffect(() => {
-    loadStats();
-    const interval = setInterval(loadStats, 5000);
-    return () => clearInterval(interval);
-  }, []);
 
   // 2. Manage SSE timeline streaming when load starts
   useEffect(() => {
@@ -147,43 +129,41 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
 
   return (
     <div className="flex-grow flex flex-col h-full bg-[#000000]/10 overflow-hidden">
-      {/* 1. Startup Overview Metrics Grid */}
-      {stats && (
-        <div className="grid grid-cols-8 gap-3 p-4 border-b border-white/5 bg-[#020205]/45">
-          <div className="glass-panel p-2.5 rounded-xl text-center">
-            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Cash</span>
-            <span className="text-[12px] font-bold text-emerald-400 mt-1 block">₹{stats.cash_balance.toLocaleString()}</span>
-          </div>
-          <div className="glass-panel p-2.5 rounded-xl text-center">
-            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Monthly Burn</span>
-            <span className="text-[12px] font-bold text-rose-400 mt-1 block">₹{stats.monthly_burn.toLocaleString()}</span>
-          </div>
-          <div className="glass-panel p-2.5 rounded-xl text-center">
-            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Runway</span>
-            <span className="text-[12px] font-bold text-blue-400 mt-1 block">{stats.runway_months} mos</span>
-          </div>
-          <div className="glass-panel p-2.5 rounded-xl text-center">
-            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Employees</span>
-            <span className="text-[12px] font-bold text-white mt-1 block">{stats.employees_count}</span>
-          </div>
-          <div className="glass-panel p-2.5 rounded-xl text-center">
-            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Open Positions</span>
-            <span className="text-[12px] font-bold text-white mt-1 block">{stats.open_positions}</span>
-          </div>
-          <div className="glass-panel p-2.5 rounded-xl text-center">
-            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Leads</span>
-            <span className="text-[12px] font-bold text-white mt-1 block">{stats.active_leads}</span>
-          </div>
-          <div className="glass-panel p-2.5 rounded-xl text-center">
-            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Customers</span>
-            <span className="text-[12px] font-bold text-white mt-1 block">{stats.customers_count}</span>
-          </div>
-          <div className="glass-panel p-2.5 rounded-xl text-center border-rose-500/10">
-            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Approvals</span>
-            <span className="text-[12px] font-bold text-rose-400 mt-1 block">{stats.pending_approvals}</span>
-          </div>
+      {/* 1. Spacecraft Overview Metrics Grid */}
+      <div className="grid grid-cols-8 gap-3 p-4 border-b border-white/5 bg-[#020205]/45">
+        <div className="glass-panel p-2.5 rounded-xl text-center">
+          <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Satellites</span>
+          <span className="text-[12px] font-bold text-blue-400 mt-1 block">4 Active</span>
         </div>
-      )}
+        <div className="glass-panel p-2.5 rounded-xl text-center">
+          <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Ingestion</span>
+          <span className="text-[12px] font-bold text-emerald-400 mt-1 block">42 ms</span>
+        </div>
+        <div className="glass-panel p-2.5 rounded-xl text-center">
+          <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Solar Bus</span>
+          <span className="text-[12px] font-bold text-white mt-1 block">1850 W</span>
+        </div>
+        <div className="glass-panel p-2.5 rounded-xl text-center">
+          <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Pointing Jitter</span>
+          <span className="text-[12px] font-bold text-white mt-1 block">0.048°</span>
+        </div>
+        <div className="glass-panel p-2.5 rounded-xl text-center">
+          <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">X-Band SNR</span>
+          <span className="text-[12px] font-bold text-emerald-400 mt-1 block">26.9 dB</span>
+        </div>
+        <div className="glass-panel p-2.5 rounded-xl text-center">
+          <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Thermal Bus</span>
+          <span className="text-[12px] font-bold text-white mt-1 block">18.8 °C</span>
+        </div>
+        <div className="glass-panel p-2.5 rounded-xl text-center">
+          <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Conjunction</span>
+          <span className="text-[12px] font-bold text-emerald-400 mt-1 block">SAFE</span>
+        </div>
+        <div className="glass-panel p-2.5 rounded-xl text-center border-yellow-500/10">
+          <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider block">Detections</span>
+          <span className="text-[12px] font-bold text-yellow-400 mt-1 block">3 Logged</span>
+        </div>
+      </div>
 
       {/* 2. Chat Area */}
       <div ref={scrollRef} className="flex-1 min-h-0 p-5 overflow-y-auto space-y-5">
@@ -197,40 +177,40 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
               </div>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white tracking-wide">Tell your AI CEO what you want to accomplish...</h1>
+              <h1 className="text-2xl font-bold text-white tracking-wide">Tell SpaceXOS Flight Commander what to coordinate...</h1>
               <p className="text-xs text-gray-400 mt-2 max-w-md mx-auto leading-relaxed">
-                FounderOS coordinates specialist agents, retrieves live database context, and executes plans. Type or use the <span className="text-cyan-400 font-semibold">🎙️ Microphone</span> to speak your goals naturally.
+                SpaceXOS coordinates Detection, Incident Diagnostics, Risk Assessment, and Reporting agents. Type or use the <span className="text-cyan-400 font-semibold">🎙️ Microphone</span> to speak your commands naturally.
               </p>
             </div>
             
             <div className="w-full grid grid-cols-2 gap-3 text-left">
               <button 
-                onClick={() => handleSuggestedPrompt("I want to get 20 new gym customers in Hyderabad within 30 days and hire 2 React developers under ₹60,000 per month.")}
+                onClick={() => handleSuggestedPrompt("Evaluate CartoSat-1 and Cartosat-3 solar bus deviations and flag any Kalman filter spikes.")}
                 className="glass-panel p-3.5 rounded-xl border border-white/5 hover:border-blue-500/30 text-xs text-gray-300 hover:text-white transition-all text-left col-span-2 sm:col-span-1"
               >
-                <span className="font-semibold text-blue-400 block mb-1">💡 Main Hackathon Demo Goal</span>
-                &ldquo;Get 20 customers in Hyderabad + hire 2 React developers under ₹60k/month.&rdquo;
+                <span className="font-semibold text-blue-400 block mb-1">🛰️ Orbital Telemetry Scan</span>
+                &ldquo;Evaluate CartoSat-1 and Cartosat-3 solar bus deviations and flag any Kalman filter spikes.&rdquo;
               </button>
               <button 
-                onClick={() => handleSuggestedPrompt("Send an email to dhanushr672@gmail.com with an update on candidate hiring status and next interviews.")}
+                onClick={() => handleSuggestedPrompt("Run physical subsystem correlation for RISAT-2BR1 gyro pointing jitter anomaly.")}
                 className="glass-panel p-3.5 rounded-xl border border-white/5 hover:border-emerald-500/30 text-xs text-gray-300 hover:text-white transition-all text-left"
               >
-                <span className="font-semibold text-emerald-400 block mb-1">👥 Hiring Manager (dhanushr672@gmail.com)</span>
-                &ldquo;Auto-recognize Dhanush R & send candidate hiring pipeline status.&rdquo;
+                <span className="font-semibold text-emerald-400 block mb-1">🔍 Incident Diagnostics</span>
+                &ldquo;Run physical subsystem correlation for RISAT-2BR1 gyro pointing jitter anomaly.&rdquo;
               </button>
               <button 
-                onClick={() => handleSuggestedPrompt("Send an email to bogguajaykumar0@gmail.com summarizing our monthly burn rate and runway calculation.")}
+                onClick={() => handleSuggestedPrompt("Calculate collision probability against space debris track #48812 in proximity cone.")}
                 className="glass-panel p-3.5 rounded-xl border border-white/5 hover:border-amber-500/30 text-xs text-gray-300 hover:text-white transition-all text-left"
               >
-                <span className="font-semibold text-amber-400 block mb-1">💰 Finance Manager (bogguajaykumar0@gmail.com)</span>
-                &ldquo;Auto-recognize Ajay Kumar & send live runway & burn analysis.&rdquo;
+                <span className="font-semibold text-amber-400 block mb-1">🛡️ Safety of Flight</span>
+                &ldquo;Calculate collision probability against space debris track #48812 in proximity cone.&rdquo;
               </button>
               <button 
-                onClick={() => handleSuggestedPrompt("Send an email to guntiprashanthkumar646@gmail.com requesting NDA drafts and employee contract templates.")}
+                onClick={() => handleSuggestedPrompt("Compile incident dossier for EVT-434DB3BE and prepare Twilio voice briefing dispatch.")}
                 className="glass-panel p-3.5 rounded-xl border border-white/5 hover:border-purple-500/30 text-xs text-gray-300 hover:text-white transition-all text-left"
               >
-                <span className="font-semibold text-purple-400 block mb-1">⚖️ Legal Manager (guntiprashanthkumar646@gmail.com)</span>
-                &ldquo;Auto-recognize Prashanth Kumar & request standard NDA/contracts.&rdquo;
+                <span className="font-semibold text-purple-400 block mb-1">📞 Operator Briefing</span>
+                &ldquo;Compile incident dossier for EVT-434DB3BE and prepare Twilio voice briefing dispatch.&rdquo;
               </button>
             </div>
           </div>

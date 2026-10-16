@@ -4,7 +4,12 @@ import { SpaceOSDashboard } from '../components/space/SpaceOSDashboard';
 import { CommandCenter } from '../components/dashboard/CommandCenter';
 import { FinancialWidget } from '../components/dashboard/FinancialWidget';
 import { TaskTracker } from '../components/dashboard/TaskTracker';
-import { FinanceDesk, GTMDesk, HiringDesk, LegalDesk } from '../components/dashboard/AgentDesks';
+import { 
+  DetectionAgentDesk, 
+  IncidentDiagnosticsDesk, 
+  RiskAssessmentDesk, 
+  MissionReportingDesk 
+} from '../components/dashboard/SpaceAgentDesks';
 import { IntegrationsPanel } from '../components/dashboard/IntegrationsPanel';
 import { AnalyticsPanel } from '../components/dashboard/AnalyticsPanel';
 import { AuditLogPanel } from '../components/dashboard/AuditLogPanel';
@@ -25,7 +30,7 @@ export function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [aiMode, setAiMode] = useState<'live' | 'demo'>('demo');
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { id: 'welcome', role: 'assistant', text: "Hello Founder. I'm ready to coordinate your agents. What do you need?" },
+    { id: 'welcome', role: 'assistant', text: "SpaceXOS Flight Intelligence active. Multi-agent space orbital telemetry and incident response online." },
   ]);
   const [seedingText, setSeedingText] = useState<string | null>(null);
 
@@ -112,13 +117,17 @@ export function Dashboard() {
       case 'orchestrator':
         return <AIOrchestratorPanel />;
       case 'finance':
-        return <FinanceDesk />;
+      case 'detection_agent':
+        return <DetectionAgentDesk />;
       case 'gtm':
-        return <GTMDesk />;
+      case 'incident_agent':
+        return <IncidentDiagnosticsDesk />;
       case 'hiring':
-        return <HiringDesk />;
+      case 'risk_agent':
+        return <RiskAssessmentDesk />;
       case 'legal':
-        return <LegalDesk />;
+      case 'reporting_agent':
+        return <MissionReportingDesk />;
       case 'tasks':
       case 'approvals':
         return (

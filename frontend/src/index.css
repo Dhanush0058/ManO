@@ -110,6 +110,186 @@ header span {
   color: var(--foreground) !important;
 }
 
+/* Inner Card Panels (Scoped within workspace to not affect glows) */
+.flex-1.flex.flex-col.min-h-0.relative .glass-panel,
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#111221\]\/50,
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#161214\]\/50,
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#111612\]\/50,
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#111221\]\/40,
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#030307\]\/30,
+.flex-1.flex.flex-col.min-h-0.relative .bg-white\/5,
+.flex-1.flex.flex-col.min-h-0.relative .bg-black\/20 {
+  background: var(--widget-bg) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: none !important;
+  color: var(--foreground) !important;
+  border-radius: 16px !important;
+}
+
+/* Make specialist desk headers transparent to align text cleanly */
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#0a0c18\]\/25 {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* Financial Widget boxes overrides */
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#0c0e1a\]\/80 {
+  background-color: var(--widget-bg) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: none !important;
+}
+
+/* Approvals & Tasks header bar override */
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#020205\]\/45 {
+  background-color: var(--sidebar) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* Approvals & Tasks item boxes overrides */
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#1b111e\]\/40 {
+  background-color: var(--sidebar) !important;
+  border: 1px solid rgba(242, 122, 48, 0.15) !important;
+}
+
+/* Hover effects for cards */
+.flex-1.flex.flex-col.min-h-0.relative .glass-panel:hover {
+  border-color: rgba(242, 122, 48, 0.25) !important;
+}
+
+/* Enforce dark text contrast inside workspace panels */
+.flex-1.flex.flex-col.min-h-0.relative .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-100,
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-200,
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-300 {
+  color: var(--foreground) !important;
+}
+
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-400,
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-500 {
+  color: var(--muted) !important;
+}
+
+/* Overrides for specific text inside task trackers to keep them legible */
+.flex-1.flex.flex-col.min-h-0.relative .text-rose-300 {
+  color: #CF492D !important; /* Rich readable dark terra cotta/rose */
+}
+
+.flex-1.flex.flex-col.min-h-0.relative .text-rose-400 {
+  color: var(--accent) !important;
+}
+
+/* Guard White text color on solid backgrounds (buttons/bubbles) */
+.flex-1.flex.flex-col.min-h-0.relative button .text-white,
+.flex-1.flex.flex-col.min-h-0.relative button.text-white,
+.flex-1.flex.flex-col.min-h-0.relative .bg-blue-600 .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .bg-indigo-600 .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .bg-rose-600 .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .bg-red-600 .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .user-bubble .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .user-bubble span,
+.flex-1.flex.flex-col.min-h-0.relative .user-bubble p {
+  color: #FFFFFF !important;
+}
+
+/* Form and input elements */
+input, textarea, select {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+  border-radius: 12px !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px rgba(242, 122, 48, 0.08) !important;
+}
+
+/* Standard Buttons - enforce orange accent */
+button.bg-blue-600, 
+button.bg-indigo-600, 
+button.bg-purple-600,
+button.bg-indigo-700,
+button.bg-rose-600,
+button.bg-red-600 {
+  background-color: var(--accent) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(242, 122, 48, 0.15) !important;
+  transition: all 0.2s ease !important;
+}
+
+button.bg-blue-600:hover, 
+button.bg-indigo-600:hover, 
+button.bg-purple-600:hover,
+button.bg-rose-600:hover {
+  background-color: #DE671C !important;
+  box-shadow: 0 4px 12px rgba(242, 122, 48, 0.25) !important;
+}
+
+/* Chat Bubbles */
+.user-bubble {
+  background: var(--accent) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 3px 10px rgba(242, 122, 48, 0.12) !important;
+  border-radius: 16px 16px 2px 16px !important;
+}
+
+.assistant-bubble {
+  background: var(--widget-bg) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+  border-radius: 16px 16px 16px 2px !important;
+}
+
+/* Data Tables inside cards */
+.glass-panel table th {
+  color: var(--foreground) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.glass-panel table td {
+  color: var(--foreground) !important;
+  border-bottom: 1px solid rgba(30, 30, 36, 0.04) !important;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(242, 122, 48, 0.15) !important;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(242, 122, 48, 0.35) !important;
+}
+
+/* Recharts styling */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--border) !important;
+}
+
+.recharts-text {
+  fill: var(--muted) !important;
+}
+
+/* Operation Mode Toggle Badge */
+.bg-yellow-500\/20 {
+  background-color: rgba(242, 122, 48, 0.08) !important;
+  color: var(--accent) !important;
+  border: 1px solid rgba(242, 122, 48, 0.2) !important;
+}
+
 /* Sidebar Full-Bleed Solid Black Brand Header Block */
 .sidebar-brand-block {
   background-color: #090a10 !important;
@@ -237,4 +417,3 @@ header span {
   background-color: #1A1A1A !important;
   border-color: #FFFFFF !important;
 }
-

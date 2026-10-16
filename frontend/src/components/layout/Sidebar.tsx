@@ -180,11 +180,11 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
       {/* Profile Footer */}
       {!collapsed && (
         <div className="mt-auto pt-4 border-t border-white/5 flex items-center gap-2 px-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-600 to-indigo-600 border border-indigo-400/20 flex items-center justify-center text-xs font-semibold text-white shadow-md">
-            MO
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 border border-blue-400/20 flex items-center justify-center text-xs font-bold text-white shadow-md font-mono">
+            SX
           </div>
           <div className="flex flex-col">
-            <span className="text-[12px] font-semibold text-gray-300">ManO Workspace</span>
+            <span className="text-[12px] font-semibold text-gray-300">SpaceXOS Workspace</span>
             <span className="text-[10px] text-emerald-500 font-semibold tracking-wide">Active</span>
           </div>
         </div>
