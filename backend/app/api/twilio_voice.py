@@ -214,9 +214,13 @@ async def trigger_outbound_call(payload: OutboundCallRequest, session: Session =
             twiml_url = settings.twilio_twiml_url or os.getenv("TWILIO_TWIML_URL", "").strip() or "https://handler.twilio.com/twiml/EHc96398090a3969120e038fab22b4e16e"
             
         client = Client(settings.twilio_account_sid, settings.twilio_auth_token)
+        caller_number = settings.twilio_phone_number
+        if not caller_number or caller_number == "+17372583742":
+            caller_number = "+17372508034"
+
         call = client.calls.create(
             to=payload.to_phone,
-            from_=settings.twilio_phone_number,
+            from_=caller_number,
             url=twiml_url
         )
         
@@ -237,10 +241,18 @@ async def trigger_outbound_call(payload: OutboundCallRequest, session: Session =
             "call_sid": call.sid,
             "call_status": call.status,
             "to": payload.to_phone,
-            "from": settings.twilio_phone_number
+            "from": caller_number
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Twilio outbound call failed: {str(e)}")
+        import re
+        raw_err = str(e)
+        # Strip terminal ANSI escape sequences
+        clean_err = re.sub(r'\x1b\[[0-9;]*m', '', raw_err)
+        clean_err = clean_err.replace('HTTP Error ', '').strip()
+        # Clean Twilio common prefix
+        if "Twilio returned the following information:" in clean_err:
+            clean_err = clean_err.split("Twilio returned the following information:")[-1].strip()
+        raise HTTPException(status_code=500, detail=clean_err or "Outbound call failed")
 
 
 @router.post("/simulate")

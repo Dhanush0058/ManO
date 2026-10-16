@@ -9,7 +9,10 @@ import {
   Clock, 
   RefreshCw,
   UserCheck,
-  Coins
+  Coins,
+  AlertCircle,
+  CheckCircle2,
+  X
 } from 'lucide-react';
 import { useTextToSpeech } from '../../lib/useTextToSpeech';
 
@@ -30,7 +33,16 @@ export function TwilioVoicePanel() {
   const [recipientName, setRecipientName] = useState('Dhanush (Administrator)');
   const [outboundTopic, setOutboundTopic] = useState('Critical Orbital Anomaly Incident Briefing');
   const [isDialing, setIsDialing] = useState(false);
-  const [outboundNotice, setOutboundNotice] = useState<string | null>(null);
+  
+  interface OutboundAlert {
+    type: 'success' | 'error';
+    title: string;
+    message: string;
+    sid?: string;
+    phone?: string;
+  }
+  const [outboundAlert, setOutboundAlert] = useState<OutboundAlert | null>(null);
+
   const [previewText, setPreviewText] = useState(
     "Critical Flight Alert: SpaceXOS telemetry detection identified a Level 4 thermal anomaly in the Cartosat-3 optical sector. Incident Diagnostics and Risk Assessment corroborate severe sensor flare. Manual flight director review requested."
   );
@@ -49,6 +61,24 @@ export function TwilioVoicePanel() {
   ]);
 
   const { isSpeaking, speak, stop: stopSpeaking } = useTextToSpeech();
+
+  // Helper to clean raw terminal ANSI codes & boilerplate errors
+  const cleanErrorMessage = (msg: string): string => {
+    if (!msg) return 'Failed to initiate outbound call.';
+    let cleaned = msg
+      .replace(/\u001b\[[0-9;]*m/g, '')
+      .replace(/≡\[[0-9;]*m/g, '')
+      .replace(/\[[0-9;]*m/g, '')
+      .replace(/HTTP Error/gi, '')
+      .replace(/POST \/Accounts\/[^\s]+/gi, '')
+      .replace(/Twilio returned the following information:/gi, '')
+      .replace(/Twilio outbound call failed:/gi, '')
+      .replace(/Unable to create record:/gi, '')
+      .trim();
+
+    cleaned = cleaned.replace(/More information may be available here:[^\s]*/gi, '').trim();
+    return cleaned || 'Twilio voice request was rejected. Please verify the recipient number is registered in Twilio Console.';
+  };
 
   // Contact preset selection
   const handleSelectContact = (key: 'dhanush' | 'ajay' | 'rahul' | 'custom') => {
@@ -95,7 +125,7 @@ export function TwilioVoicePanel() {
     if (!outboundPhone) return;
 
     setIsDialing(true);
-    setOutboundNotice(null);
+    setOutboundAlert(null);
 
     try {
       const apiBase = (import.meta as any).env?.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
@@ -114,7 +144,13 @@ export function TwilioVoicePanel() {
       }
       
       const newSid = data.call_sid || `CA${Math.random().toString(36).substring(2, 12)}`;
-      setOutboundNotice(`✅ Live Outbound Call Dispatched to ${outboundPhone}! (Twilio SID: ${newSid})`);
+      setOutboundAlert({
+        type: 'success',
+        title: 'Outbound Call Dispatched',
+        message: `Ringing ${recipientName}`,
+        phone: outboundPhone,
+        sid: newSid
+      });
       
       setCallHistory(prev => [
         {
@@ -130,7 +166,13 @@ export function TwilioVoicePanel() {
         ...prev
       ]);
     } catch (err: any) {
-      setOutboundNotice(`❌ Outbound call failed: ${err.message}`);
+      const cleanMsg = cleanErrorMessage(err.message);
+      setOutboundAlert({
+        type: 'error',
+        title: 'Call Dispatch Alert',
+        message: cleanMsg,
+        phone: outboundPhone
+      });
     } finally {
       setIsDialing(false);
     }
@@ -314,9 +356,81 @@ export function TwilioVoicePanel() {
               </button>
             </form>
 
-            {outboundNotice && (
-              <div className="p-3 rounded-xl bg-blue-950/40 border border-blue-500/30 text-blue-300 text-xs leading-relaxed">
-                {outboundNotice}
+            {/* High-Visibility Outbound Alert Display - Zero Muddy Gray, Crisp Contrast */}
+            {outboundAlert && (
+              <div
+                className={`relative overflow-hidden rounded-xl border p-4 transition-all duration-300 shadow-xl ${
+                  outboundAlert.type === 'success'
+                    ? 'bg-[#04160c] border-emerald-500/50 shadow-emerald-950/40'
+                    : 'bg-[#18080d] border-rose-500/60 shadow-rose-950/40'
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <div
+                      className={`p-2 rounded-lg mt-0.5 shrink-0 ${
+                        outboundAlert.type === 'success'
+                          ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                          : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
+                      }`}
+                    >
+                      {outboundAlert.type === 'success' ? (
+                        <CheckCircle2 className="w-5 h-5 stroke-[2.5]" />
+                      ) : (
+                        <AlertCircle className="w-5 h-5 stroke-[2.5]" />
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`text-xs font-black uppercase tracking-wider ${
+                            outboundAlert.type === 'success' ? 'text-emerald-300' : 'text-rose-300'
+                          }`}
+                        >
+                          {outboundAlert.title}
+                        </span>
+                        {outboundAlert.phone && (
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-white font-medium">
+                            {outboundAlert.phone}
+                          </span>
+                        )}
+                      </div>
+                      <p
+                        className={`text-xs font-medium leading-relaxed ${
+                          outboundAlert.type === 'success' ? 'text-emerald-100' : 'text-rose-100'
+                        }`}
+                      >
+                        {outboundAlert.message}
+                      </p>
+
+                      {outboundAlert.sid && (
+                        <div className="pt-2 flex items-center gap-2 text-[11px] font-mono text-emerald-400">
+                          <span className="text-gray-400 font-sans">Twilio SID:</span>
+                          <span className="bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded text-white select-all">
+                            {outboundAlert.sid}
+                          </span>
+                        </div>
+                      )}
+
+                      {outboundAlert.type === 'error' && (
+                        <div className="pt-2 mt-2 border-t border-rose-500/20 flex flex-wrap items-center gap-2 text-[11px]">
+                          <span className="text-rose-300/80 font-medium">Verified Caller ID:</span>
+                          <span className="font-mono bg-white/10 px-2 py-0.5 rounded text-white font-bold">
+                            +1 (737) 250-8034
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setOutboundAlert(null)}
+                    className="p-1 rounded-md text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -361,7 +475,7 @@ export function TwilioVoicePanel() {
                 <span>Twilio Outbound Verification</span>
               </div>
               <p className="text-[11px] text-gray-400 leading-relaxed">
-                Twilio dials from <span className="text-white font-mono">+1 (737) 258-3742</span> directly to your phone. Ensure verified caller ID status on trial numbers.
+                Twilio dials from <span className="text-white font-mono">+1 (737) 250-8034</span> directly to your phone. Ensure verified caller ID status on trial numbers.
               </p>
             </div>
           </div>
