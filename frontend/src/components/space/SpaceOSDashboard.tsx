@@ -384,7 +384,52 @@ export const SpaceOSDashboard: React.FC = () => {
       {/* 2. Main Workspace Layout */}
       <div className="p-6 space-y-6">
         
-        {/* Top Grid: Satellite HUD & Live Orbital Telemetry */}
+        {/* Top: Embedded Live Space Observation Stream */}
+        <div className="bg-white border border-[#E5E5E7] rounded-2xl p-4 shadow-xs space-y-3">
+          <div className="flex items-center justify-between pb-2 border-b border-[#E5E5E7]">
+            <div className="flex items-center gap-2.5">
+              <Tv className="w-4 h-4 text-[#F27A30]" />
+              <h2 className="font-bold text-[#1E1E24] text-xs uppercase tracking-wide">
+                Live Space Observation Stream
+              </h2>
+              <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#FFF4ED] text-[10px] font-mono font-bold text-[#C85006] border border-[#F27A30]/30">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#F27A30] animate-ping" />
+                ORBITAL FEED ACTIVE
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-xs font-mono text-[#6E6E73]">
+              <span>OPTICAL LINK: LOCKED</span>
+              <span className="text-[#E5E5E7]">|</span>
+              <span>1080P • 60 FPS</span>
+            </div>
+          </div>
+
+          {/* 16:9 Responsive Video Viewport */}
+          <div className="relative aspect-video max-h-[380px] w-full bg-black rounded-xl overflow-hidden border border-[#E5E5E7] shadow-inner">
+            <iframe
+              src="https://www.youtube.com/embed/I3sa2kiEpkA?autoplay=1&mute=1&loop=1&playlist=I3sa2kiEpkA&controls=1&rel=0"
+              title="SpaceOS Live Space Stream"
+              className="w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+            
+            {/* Live Telemetry Overlay HUD */}
+            <div className="absolute bottom-2.5 left-3 right-3 pointer-events-none flex items-center justify-between text-[11px] font-mono text-white/90 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-lg border border-white/10">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#F27A30] animate-pulse" />
+                <span>SPACECRAFT: {activeSat?.name || 'Cartosat-3'} (NORAD #{activeSat?.norad_id || '44804'})</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span>ALT: {currentTelemetry?.telemetry.altitude_km.toFixed(1) || '505.2'} km</span>
+                <span className="text-white/30">|</span>
+                <span>LATENCY: 42 ms</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Middle Grid: Satellite HUD & Live Orbital Telemetry */}
         <div className="grid grid-cols-3 gap-6">
           
           {/* Left 2 Cols: Central Spacecraft Monitoring HUD */}
