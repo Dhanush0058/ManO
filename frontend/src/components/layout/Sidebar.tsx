@@ -43,42 +43,37 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
 
   return (
     <div
-      className={`h-screen shrink-0 bg-[#000000] border-r border-white/10 flex flex-col py-5 transition-all duration-300 ease-in-out z-10 font-sans ${
+      className={`h-screen shrink-0 bg-[#030307]/95 border-r border-white/5 flex flex-col py-5 transition-all duration-300 ease-in-out z-10 ${
         collapsed ? 'w-14 px-2' : 'w-60 px-3'
       }`}
     >
-      {/* Brand Header */}
-      <div className={`-mt-5 mb-5 py-3.5 flex items-center border-b border-white/10 bg-black ${
+      {/* Brand Header - Edge-to-Edge Solid Black Block */}
+      <div className={`sidebar-brand-block -mt-5 mb-5 py-3.5 flex items-center border-b border-black/20 ${
         collapsed ? '-mx-2 px-2 justify-center' : '-mx-3 px-3.5 justify-between'
       }`}>
         {!collapsed && (
-          <div className="flex items-center gap-2">
-            <span className="text-[15px] font-black text-white tracking-widest uppercase select-none">
-              SPACEOS
-            </span>
-            <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-white text-black">
-              v0.2
-            </span>
-          </div>
+          <span className="text-[16px] font-extrabold text-white tracking-wide font-sans select-none">
+            FounderOS
+          </span>
         )}
         {collapsed && (
           <span className="text-[13px] font-black text-white select-none">
-            SO
+            FO
           </span>
         )}
         <button
           onClick={() => setCollapsed((c) => !c)}
-          className="text-zinc-400 hover:text-white w-6 h-6 flex items-center justify-center rounded-md hover:bg-zinc-900 transition-colors"
+          className="text-gray-400 hover:text-white w-6 h-6 flex items-center justify-center rounded-md hover:bg-white/10 transition-colors"
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
         </button>
       </div>
 
-      {/* Navigation Groups in Black and White */}
+      {/* Navigation Groups */}
       <div className="flex-1 overflow-y-auto space-y-4 pr-1">
         {/* Main Section */}
-        <div className="space-y-1">
+        <div className="space-y-0.5">
           {menuItems.filter(item => !item.category).map((item) => {
             const Icon = item.icon;
             const isSelected = activeView === item.id;
@@ -86,14 +81,14 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
               <button
                 key={item.id}
                 onClick={() => setActiveView(item.id)}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] font-bold transition-all duration-150 ${
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-150 ${
                   isSelected
-                    ? 'bg-white text-black shadow-sm'
-                    : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'
+                    ? 'bg-blue-600/10 text-blue-400 border-l-2 border-blue-500'
+                    : 'text-gray-400 hover:bg-white/5 hover:text-gray-200 border-l-2 border-transparent'
                 }`}
                 title={item.label}
               >
-                <Icon size={16} className={isSelected ? 'text-black' : 'text-zinc-400'} />
+                <Icon size={16} className={isSelected ? 'text-blue-400' : 'text-gray-500'} />
                 {!collapsed && <span>{item.label}</span>}
               </button>
             );
@@ -103,9 +98,9 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
         {/* Specialists Section */}
         <div>
           {!collapsed && (
-            <p className="text-[10px] font-bold text-zinc-600 tracking-wider uppercase px-3 mb-1.5 font-mono">Specialists</p>
+            <p className="text-[10px] font-semibold text-gray-600 tracking-wider uppercase px-3 mb-1.5">Specialists</p>
           )}
-          <div className="space-y-1">
+          <div className="space-y-0.5">
             {menuItems.filter(item => item.category === 'specialists').map((item) => {
               const Icon = item.icon;
               const isSelected = activeView === item.id;
@@ -113,14 +108,14 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
                 <button
                   key={item.id}
                   onClick={() => setActiveView(item.id)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] font-medium transition-all duration-150 ${
+                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-150 ${
                     isSelected
-                      ? 'bg-white text-black font-bold shadow-sm'
-                      : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'
+                      ? 'bg-indigo-600/10 text-indigo-400 border-l-2 border-indigo-500'
+                      : 'text-gray-400 hover:bg-white/5 hover:text-gray-200 border-l-2 border-transparent'
                   }`}
                   title={item.label}
                 >
-                  <Icon size={16} className={isSelected ? 'text-black' : 'text-zinc-400'} />
+                  <Icon size={16} className={isSelected ? 'text-indigo-400' : 'text-gray-500'} />
                   {!collapsed && <span>{item.label}</span>}
                 </button>
               );
@@ -131,9 +126,9 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
         {/* Management Section */}
         <div>
           {!collapsed && (
-            <p className="text-[10px] font-bold text-zinc-600 tracking-wider uppercase px-3 mb-1.5 font-mono">Management</p>
+            <p className="text-[10px] font-semibold text-gray-600 tracking-wider uppercase px-3 mb-1.5">Management</p>
           )}
-          <div className="space-y-1">
+          <div className="space-y-0.5">
             {menuItems.filter(item => item.category === 'management').map((item) => {
               const Icon = item.icon;
               const isSelected = activeView === item.id;
@@ -141,14 +136,14 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
                 <button
                   key={item.id}
                   onClick={() => setActiveView(item.id)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] font-medium transition-all duration-150 ${
+                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-150 ${
                     isSelected
-                      ? 'bg-white text-black font-bold shadow-sm'
-                      : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'
+                      ? 'bg-purple-600/10 text-purple-400 border-l-2 border-purple-500'
+                      : 'text-gray-400 hover:bg-white/5 hover:text-gray-200 border-l-2 border-transparent'
                   }`}
                   title={item.label}
                 >
-                  <Icon size={16} className={isSelected ? 'text-black' : 'text-zinc-400'} />
+                  <Icon size={16} className={isSelected ? 'text-purple-400' : 'text-gray-500'} />
                   {!collapsed && <span>{item.label}</span>}
                 </button>
               );
@@ -157,8 +152,8 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
         </div>
 
         {/* System Section */}
-        <div className="pt-2 border-t border-white/10">
-          <div className="space-y-1">
+        <div className="pt-2 border-t border-white/5">
+          <div className="space-y-0.5">
             {menuItems.filter(item => item.category === 'system').map((item) => {
               const Icon = item.icon;
               const isSelected = activeView === item.id;
@@ -166,14 +161,14 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
                 <button
                   key={item.id}
                   onClick={() => setActiveView(item.id)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] font-medium transition-all duration-150 ${
+                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-150 ${
                     isSelected
-                      ? 'bg-white text-black font-bold shadow-sm'
-                      : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'
+                      ? 'bg-gray-800 text-gray-200 border-l-2 border-gray-500'
+                      : 'text-gray-400 hover:bg-white/5 hover:text-gray-200 border-l-2 border-transparent'
                   }`}
                   title={item.label}
                 >
-                  <Icon size={16} className={isSelected ? 'text-black' : 'text-zinc-400'} />
+                  <Icon size={16} className={isSelected ? 'text-gray-200' : 'text-gray-500'} />
                   {!collapsed && <span>{item.label}</span>}
                 </button>
               );
@@ -184,13 +179,13 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
 
       {/* Profile Footer */}
       {!collapsed && (
-        <div className="mt-auto pt-4 border-t border-white/10 flex items-center gap-2 px-2">
-          <div className="w-8 h-8 rounded bg-white text-black font-bold flex items-center justify-center text-xs">
-            SO
+        <div className="mt-auto pt-4 border-t border-white/5 flex items-center gap-2 px-2">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-600 to-indigo-600 border border-indigo-400/20 flex items-center justify-center text-xs font-semibold text-white shadow-md">
+            MO
           </div>
           <div className="flex flex-col">
-            <span className="text-[12px] font-bold text-white uppercase font-mono">Flight Control</span>
-            <span className="text-[10px] text-zinc-400 font-mono">ISTRAC LINK</span>
+            <span className="text-[12px] font-semibold text-gray-300">ManO Workspace</span>
+            <span className="text-[10px] text-emerald-500 font-semibold tracking-wide">Active</span>
           </div>
         </div>
       )}
