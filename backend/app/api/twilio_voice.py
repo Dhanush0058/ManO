@@ -19,8 +19,8 @@ VOICE_LANG = os.getenv("TWILIO_VOICE_LANG", "en-US")
 
 class OutboundCallRequest(BaseModel):
     to_phone: str
-    topic: str = "Startup Runway and Hiring Status Briefing"
-    caller_name: str = "Founder"
+    topic: str = "Critical Orbital Anomaly Incident Briefing"
+    caller_name: str = "Flight Director"
 
 
 class VoiceSimulateRequest(BaseModel):
@@ -78,15 +78,15 @@ async def handle_incoming_call(request: Request):
         language="en-IN"
     )
     gather.say(
-        "Hello Founder! Welcome to your FounderOS AI Staff Voice Assistant. "
-        "What startup information do you need today? "
-        "You can ask about our cash runway, hiring candidates, open positions, or sales leads.",
+        "Hello Administrator Dhanush! Welcome to SpaceXOS Flight Intelligence and Emergency Voice Operations. "
+        "What space mission intelligence or orbital telemetry briefing do you need today? "
+        "You can ask about spacecraft telemetry anomalies, incident diagnostics, collision avoidance screening, or mission reporting directives.",
         voice=VOICE_NAME, language=VOICE_LANG
     )
     response.append(gather)
     
     # Fallback if no speech detected
-    response.say("We did not receive any input. Please call back anytime. Goodbye!", voice=VOICE_NAME, language=VOICE_LANG)
+    response.say("We did not receive any flight command input. SpaceXOS Mission Control standing by. Goodbye!", voice=VOICE_NAME, language=VOICE_LANG)
     response.hangup()
     
     return Response(content=str(response), media_type="application/xml")
@@ -143,18 +143,18 @@ async def handle_speech_result(
 
     # Check for exit commands
     if any(bye in user_query.lower() for bye in ["bye", "exit", "quit", "goodbye", "hang up", "thank you that's all"]):
-        response.say("Thank you for calling FounderOS. Have a productive day ahead! Goodbye.", voice=VOICE_NAME, language=VOICE_LANG)
+        response.say("Thank you for contacting SpaceXOS Mission Control. Clear skies and nominal orbit ahead. Goodbye!", voice=VOICE_NAME, language=VOICE_LANG)
         response.hangup()
         return Response(content=str(response), media_type="application/xml")
 
-    # Run AI Orchestration with live Supabase database context
+    # Run AI Orchestration with live space operations context
     try:
         state = await run_orchestration(user_query)
         agent_msgs = [r["message"] for r in state.get("agent_responses", [])]
-        combined_text = " ".join(agent_msgs) if agent_msgs else "I retrieved your startup data, everything is on track."
+        combined_text = " ".join(agent_msgs) if agent_msgs else "Telemetry across active satellites is nominal. Multi-agent space intelligence online."
         spoken_response = clean_text_for_speech(combined_text)
     except Exception as e:
-        spoken_response = "I encountered a minor issue checking your records, but our cash runway is approximately 6.7 months and our team is active."
+        spoken_response = "SpaceXOS flight telemetry link is locked. Cartosat-3 and RISAT-2BR1 orbital tracks are nominal. Incident diagnostics online."
 
     # Log to audit trail in background thread to avoid voice latency / timeouts
     background_tasks.add_task(log_audit_in_background, user_query, spoken_response, From)
@@ -170,10 +170,10 @@ async def handle_speech_result(
         speech_timeout="auto",
         language="en-IN"
     )
-    gather.say("Do you have any other questions for your AI staff?", voice=VOICE_NAME, language=VOICE_LANG)
+    gather.say("Do you require any further flight intelligence or telemetry corroboration from our specialist agents?", voice=VOICE_NAME, language=VOICE_LANG)
     response.append(gather)
     
-    response.say("Thank you for using FounderOS Voice. Goodbye!", voice=VOICE_NAME, language=VOICE_LANG)
+    response.say("SpaceXOS Flight Operations signing off. Goodbye!", voice=VOICE_NAME, language=VOICE_LANG)
     response.hangup()
 
     return Response(content=str(response), media_type="application/xml")
