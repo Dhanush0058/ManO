@@ -57,7 +57,7 @@ export function TwilioVoicePanel() {
       setOutboundPhone('+919347249697');
       setRecipientName('Dhanush (Administrator)');
     } else if (key === 'ajay') {
-      setOutboundPhone('+916281837995');
+      setOutboundPhone('+917730838447');
       setRecipientName('Ajay Kumar (EPS & Power Flight Controller)');
     } else if (key === 'rahul') {
       setOutboundPhone('+918886544423');
@@ -209,8 +209,8 @@ export function TwilioVoicePanel() {
                     <span className="text-xs font-bold text-white block truncate">Ajay Kumar</span>
                     <Coins className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
                   </div>
-                  <span className="text-[10px] text-gray-400 block truncate">+91 6281837995</span>
-                  <span className="text-[9px] text-emerald-400/80 font-medium">Finance Manager</span>
+                  <span className="text-[10px] text-gray-400 block truncate">+91 7730838447</span>
+                  <span className="text-[9px] text-emerald-400/80 font-medium">EPS & Power Controller</span>
                 </button>
 
                 <button
