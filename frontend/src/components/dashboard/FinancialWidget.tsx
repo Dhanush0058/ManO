@@ -8,10 +8,6 @@ export function FinancialWidget() {
           <Satellite className="w-4 h-4 text-[#F27A30]" />
           Orbital Telemetry Pulse
         </h2>
-        <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 bg-[#FFF4ED] text-[#C85006] rounded-full border border-[#F27A30]/30 flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#F27A30] animate-ping" />
-          Live ISRO Stream
-        </span>
       </div>
 
       <div className="grid grid-cols-2 gap-3.5">
