@@ -3,11 +3,15 @@ import { Send, Bot, Loader2, Mic, MicOff, Volume2, VolumeX, AlertCircle } from '
 import { useVoiceRecognition } from '../../lib/useVoiceRecognition';
 import { useTextToSpeech } from '../../lib/useTextToSpeech';
 
+import type { SpaceAnomaly } from '../../lib/anomalies';
+
 interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   agent?: string;
   text: string;
+  image?: string;
+  badge?: string;
 }
 
 interface TimelineEvent {
@@ -18,28 +22,30 @@ interface TimelineEvent {
 
 interface CommandCenterProps {
   messages: ChatMessage[];
-  onSendMessage: (msg: string) => void;
+  onSendMessage: (msg: string, anomalyPayload?: SpaceAnomaly) => void;
   isLoading: boolean;
+  stagedAnomaly?: SpaceAnomaly | null;
+  onClearStagedAnomaly?: () => void;
 }
 
 const getAgentTheme = (agentName?: string) => {
   const name = (agentName || '').toLowerCase();
   if (name.includes('finance') || name.includes('detection')) {
-    return { border: '#3b82f6', bg: 'rgba(59, 130, 246, 0.05)', text: '#60a5fa', badgeBg: 'rgba(59, 130, 246, 0.1)', label: 'Detection Agent' };
+    return { border: '#3b82f6', bg: 'rgba(59, 130, 246, 0.05)', text: '#60a5fa', badgeBg: 'rgba(59, 130, 246, 0.1)', label: 'Detection Analysis Agent' };
   }
   if (name.includes('legal') || name.includes('reporting')) {
-    return { border: '#a855f7', bg: 'rgba(168, 85, 247, 0.05)', text: '#c084fc', badgeBg: 'rgba(168, 85, 247, 0.1)', label: 'Mission Reporting' };
+    return { border: '#a855f7', bg: 'rgba(168, 85, 247, 0.05)', text: '#c084fc', badgeBg: 'rgba(168, 85, 247, 0.1)', label: 'Mission Reporting & Flight Director' };
   }
-  if (name.includes('gtm') || name.includes('incident')) {
-    return { border: '#f97316', bg: 'rgba(249, 115, 22, 0.05)', text: '#fb923c', badgeBg: 'rgba(249, 115, 22, 0.1)', label: 'Incident Diagnostics' };
+  if (name.includes('gtm') || name.includes('incident') || name.includes('diagnostic')) {
+    return { border: '#f97316', bg: 'rgba(249, 115, 22, 0.05)', text: '#fb923c', badgeBg: 'rgba(249, 115, 22, 0.1)', label: 'Incident Diagnostics Agent' };
   }
   if (name.includes('hiring') || name.includes('risk')) {
-    return { border: '#10b981', bg: 'rgba(16, 185, 129, 0.05)', text: '#34d399', badgeBg: 'rgba(16, 185, 129, 0.1)', label: 'Risk Assessment' };
+    return { border: '#10b981', bg: 'rgba(16, 185, 129, 0.05)', text: '#34d399', badgeBg: 'rgba(16, 185, 129, 0.1)', label: 'Risk Assessment Agent' };
   }
-  return { border: '#6366f1', bg: 'rgba(99, 102, 241, 0.05)', text: '#818cf8', badgeBg: 'rgba(99, 102, 241, 0.1)', label: agentName || 'SpaceXOS Orchestrator' };
+  return { border: '#6366f1', bg: 'rgba(99, 102, 241, 0.05)', text: '#818cf8', badgeBg: 'rgba(99, 102, 241, 0.1)', label: agentName || 'SpaceXOS Flight Intelligence' };
 };
 
-export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCenterProps) {
+export function CommandCenter({ messages, onSendMessage, isLoading, stagedAnomaly, onClearStagedAnomaly }: CommandCenterProps) {
   const [input, setInput] = useState('');
   const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -109,6 +115,16 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
     e.preventDefault();
     if (isListening) {
       stopListening();
+    }
+    if (stagedAnomaly) {
+      const textToSend = input.trim() || `Analyze captured optical anomaly frame: ${stagedAnomaly.title} (${stagedAnomaly.spacecraft})`;
+      onSendMessage(textToSend, stagedAnomaly);
+      setInput('');
+      resetTranscript();
+      if (onClearStagedAnomaly) {
+        onClearStagedAnomaly();
+      }
+      return;
     }
     if (input.trim() && !isLoading) {
       onSendMessage(input);
@@ -259,19 +275,33 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
                 </div>
 
                 <div 
-                  className="assistant-bubble text-[13px] text-gray-100 p-4 rounded-2xl rounded-tl-none border-l-4 leading-relaxed relative"
+                  className="assistant-bubble text-[13px] text-gray-100 p-4 rounded-2xl rounded-tl-none border-l-4 leading-relaxed relative whitespace-pre-line"
                   style={{ 
                     borderLeftColor: theme.border,
                     backgroundColor: theme.bg,
                   }}
                 >
-                  {m.text}
+                  {m.badge && (
+                    <div className="mb-2 text-[10px] font-mono font-bold text-gray-400 uppercase tracking-wider bg-white/5 inline-block px-2 py-0.5 rounded border border-white/10">
+                      {m.badge}
+                    </div>
+                  )}
+                  <div>{m.text}</div>
                 </div>
               </div>
             );
           } else {
             return (
-              <div key={m.id} className="max-w-[85%] ml-auto animate-fade-in">
+              <div key={m.id} className="max-w-[85%] ml-auto animate-fade-in space-y-2">
+                {m.image && (
+                  <div className="rounded-xl overflow-hidden border border-orange-500/50 shadow-lg max-w-sm ml-auto">
+                    <img src={m.image} alt="Staged Telemetry Anomaly" className="w-full h-44 object-cover" />
+                    <div className="bg-black/90 px-3 py-1.5 text-[11px] font-mono text-orange-400 flex items-center justify-between border-t border-white/10">
+                      <span className="font-bold">🛰️ OPTICAL ANOMALY CAPTURE</span>
+                      <span className="text-gray-400">{m.badge || 'TELEMETRY FRAME'}</span>
+                    </div>
+                  </div>
+                )}
                 <div className="user-bubble text-[13px] text-white p-3.5 bg-[#1b1e36]/60 rounded-2xl rounded-tr-none border border-white/5 leading-relaxed">
                   {m.text}
                 </div>
@@ -306,6 +336,46 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
 
       {/* 4. Goal Input Composer Form with Voice Recognition */}
       <div className="p-4 bg-[#020205]/45 border-t border-white/5">
+        {/* Staged Optical Telemetry Frame Preview */}
+        {stagedAnomaly && (
+          <div className="mb-3 p-3 rounded-xl bg-[#171108] border border-orange-500/50 flex items-center justify-between gap-3 animate-fade-in shadow-lg shadow-orange-950/20">
+            <div className="flex items-center gap-3">
+              <img
+                src={stagedAnomaly.image}
+                alt="Captured Optical Evidence"
+                className="w-16 h-16 object-cover rounded-lg border border-orange-500/60 shadow-md shrink-0"
+              />
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20">
+                    🛰️ Optical Telemetry Frame Staged
+                  </span>
+                  <span className="text-[11px] font-mono text-gray-300">{stagedAnomaly.spacecraft}</span>
+                </div>
+                <div className="text-xs font-bold text-white mt-1">{stagedAnomaly.title}</div>
+                <div className="text-[11px] text-gray-400 font-mono mt-0.5">
+                  LOC: {stagedAnomaly.coordinates} • Sensor: {stagedAnomaly.sensor}
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[11px] font-semibold text-orange-300 bg-orange-500/10 px-2.5 py-1 rounded-lg border border-orange-500/20 hidden sm:inline">
+                Press Enter to Dispatch 4 Agents
+              </span>
+              {onClearStagedAnomaly && (
+                <button
+                  type="button"
+                  onClick={onClearStagedAnomaly}
+                  className="text-gray-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                  title="Remove staged frame"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Voice Error Warning Banner */}
         {voiceError && (
           <div className="mb-3 px-3 py-2 bg-rose-950/40 border border-rose-500/30 rounded-xl flex items-center gap-2 text-rose-300 text-xs animate-fade-in">

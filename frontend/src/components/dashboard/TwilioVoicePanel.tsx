@@ -27,24 +27,24 @@ interface OutboundCallRecord {
 export function TwilioVoicePanel() {
   const [selectedContact, setSelectedContact] = useState<'dhanush' | 'ajay' | 'rahul' | 'custom'>('dhanush');
   const [outboundPhone, setOutboundPhone] = useState('+919347249697');
-  const [recipientName, setRecipientName] = useState('Dhanush (Founder / CEO)');
-  const [outboundTopic, setOutboundTopic] = useState('Startup Runway and Cash Burn Update');
+  const [recipientName, setRecipientName] = useState('Dhanush (Administrator)');
+  const [outboundTopic, setOutboundTopic] = useState('Critical Orbital Anomaly Incident Briefing');
   const [isDialing, setIsDialing] = useState(false);
   const [outboundNotice, setOutboundNotice] = useState<string | null>(null);
   const [previewText, setPreviewText] = useState(
-    "Hello Founder! Here is your live startup briefing: our current cash balance is ₹500,000 with a monthly burn rate of ₹75,000, giving us approximately 6.7 months of runway."
+    "Critical Flight Alert: SpaceXOS telemetry detection identified a Level 4 thermal anomaly in the Cartosat-3 optical sector. Incident Diagnostics and Risk Assessment corroborate severe sensor flare. Manual flight director review requested."
   );
 
   const [callHistory, setCallHistory] = useState<OutboundCallRecord[]>([
     {
       id: 'call-1',
-      timestamp: '2 mins ago',
+      timestamp: 'Just now',
       recipientName: 'Dhanush',
       toPhone: '+919347249697',
-      topic: 'Startup Runway & Burn Briefing',
+      topic: 'Cartosat-3 Optical & Thermal Incident Briefing',
       status: 'Dispatched (SID: CA33d79f7bd92dc89a3eec6beae76f4e08)',
       callSid: 'CA33d79f7bd92dc89a3eec6beae76f4e08',
-      spokenText: 'Your cash runway is 6.7 months based on ₹500,000 cash and ₹75,000 monthly burn.'
+      spokenText: 'Level 4 optical anomaly detected on Cartosat-3. Multi-agent diagnostic corroboration active. Flight authorization required.'
     }
   ]);
 
@@ -55,36 +55,36 @@ export function TwilioVoicePanel() {
     setSelectedContact(key);
     if (key === 'dhanush') {
       setOutboundPhone('+919347249697');
-      setRecipientName('Dhanush (Founder / CEO)');
+      setRecipientName('Dhanush (Administrator)');
     } else if (key === 'ajay') {
       setOutboundPhone('+916281837995');
-      setRecipientName('Ajay Kumar (Finance Manager)');
+      setRecipientName('Ajay Kumar (EPS & Power Flight Controller)');
     } else if (key === 'rahul') {
       setOutboundPhone('+918886544423');
-      setRecipientName('Rahul Sharma (Hiring Manager)');
+      setRecipientName('Rahul Sharma (ADCS & Flight Dynamics Lead)');
     } else {
       setOutboundPhone('+91');
-      setRecipientName('External Contact');
+      setRecipientName('External Space Command');
     }
   };
 
   // Update preview text when topic changes
   useEffect(() => {
-    if (outboundTopic.includes('Runway')) {
+    if (outboundTopic.includes('Anomaly') || outboundTopic.includes('Incident')) {
       setPreviewText(
-        "Hello! The finance team has prepared your latest runway update: with ₹500,000 cash and ₹75,000 monthly burn, we have 6.7 months of runway remaining."
+        "Critical Flight Alert: SpaceXOS telemetry detection identified a Level 4 thermal anomaly in the Cartosat-3 optical sector. Incident Diagnostics and Risk Assessment corroborate severe sensor flare. Manual flight director review requested."
       );
-    } else if (outboundTopic.includes('Candidate') || outboundTopic.includes('Hiring')) {
+    } else if (outboundTopic.includes('Collision') || outboundTopic.includes('Maneuver')) {
       setPreviewText(
-        "Hi! Here is your hiring pipeline update: Rajesh Kumar (React/Node) is at 91% match, Divya Gupta is at 88% match. 2 candidate offers are pending review."
+        "Emergency Collision Avoidance Notice: Close-approach conjunction detected with orbital track #48812. Miss distance 340 meters. Flight Director authorization required for 12-second delta-V thruster burn."
       );
-    } else if (outboundTopic.includes('Sales') || outboundTopic.includes('Leads')) {
+    } else if (outboundTopic.includes('Volcano') || outboundTopic.includes('Ash')) {
       setPreviewText(
-        "Hi! Here is your GTM sales briefing: We identified 12 high-intent fitness gym leads across Hyderabad and Bangalore ready for product outreach."
+        "Space Situational Awareness Warning: Sub-orbital ash plume elevation detected exceeding 14.5 kilometers. Lower LEO optical star tracker protection protocol activated."
       );
     } else {
       setPreviewText(
-        "Hi! Legal update: Standard Mutual Non-Disclosure Agreement templates are active and ready for vendor execution."
+        "Spacecraft Telemetry Status: Subsystem telemetry nominal across solar array generation and battery state-of-charge. Optical downlink locked at 1080P 60 frames per second."
       );
     }
   }, [outboundTopic]);
@@ -145,9 +145,9 @@ export function TwilioVoicePanel() {
               <PhoneForwarded className="w-3.5 h-3.5 animate-pulse" />
               <span>Twilio Outbound AI Voice Telephony</span>
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-wide">Outbound AI Phone Calls</h1>
+            <h1 className="text-2xl font-bold text-white tracking-wide">Emergency Outbound Flight Briefings</h1>
             <p className="text-xs text-gray-400 mt-1 max-w-xl">
-              Initiate automated phone calls to founders, managers, and candidates. The AI voice delivers real-time startup briefings, hiring updates, and financial metrics over cellular calls.
+              Initiate automated voice briefings to space flight directors, mission administrators, and payload controllers. The AI voice delivers real-time orbital anomaly notifications, collision avoidance alerts, and safe-mode contingency directives.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -287,10 +287,10 @@ export function TwilioVoicePanel() {
                   onChange={(e) => setOutboundTopic(e.target.value)}
                   className="w-full bg-[#0b0e1c] border border-white/10 rounded-xl px-3 py-2 text-xs text-gray-200 focus:outline-none focus:border-blue-500"
                 >
-                  <option value="Startup Runway and Cash Burn Update">💰 Financial Runway & Monthly Burn Briefing</option>
-                  <option value="Candidate Pipeline and Interview Screening">👥 Candidate Screening & Interview Schedule</option>
-                  <option value="Sales Outreach to Fitness Gym Leads">🎯 GTM Sales Outreach to Gym Leads</option>
-                  <option value="Legal Mutual NDA & Contract Status">⚖️ Legal Mutual NDA Compliance Status</option>
+                  <option value="Critical Orbital Anomaly Incident Briefing">🚨 Critical Orbital Anomaly Incident Briefing</option>
+                  <option value="Collision Avoidance Burn Order (COLA-2026-08)">🛰️ Collision Avoidance Burn Order (COLA-2026-08)</option>
+                  <option value="Active Volcanic Ash Plume Flight Hazard Warning">🌋 Active Volcanic Ash Plume Flight Hazard Warning</option>
+                  <option value="Spacecraft Safe-Mode Contingency Directive">🛡️ Spacecraft Safe-Mode Contingency Directive</option>
                 </select>
               </div>
 

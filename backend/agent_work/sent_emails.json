@@ -466,5 +466,68 @@
     "body": "Dear Rahul,\n\nI hope this email finds you well. I am writing to discuss our management strategy for the fourth quarter of 2023. As the founder of FounderOS, I am excited to share some key initiatives and challenges we are currently facing, as well as the steps we are taking to address them.\n\nPlease let me know if you have any questions or concerns. Thank you for your time and consideration.\n\nBest regards,\n[Your Name]",
     "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
     "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-16T13:41:41.391486+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "SpaceXOS Telemetry Test Verification",
+    "body": "Test verification of emergency email dispatch pipeline.",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-16T13:42:46.911040+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "test",
+    "body": "test",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-16T13:43:38.240227+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "test",
+    "body": "test",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-16T13:46:38.788705+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Test Subject",
+    "body": "Test content",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-16T13:47:15.377273+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Test",
+    "body": "Test body",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-16T13:49:10.897927+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Test Space Alert",
+    "body": "Test telemetry anomaly",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-16T13:49:32.131686+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "SpaceXOS Live HTTP Test",
+    "body": "Thermal anomaly notification",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
   }
 ]

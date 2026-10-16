@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import datetime, timezone
 
 from app.models.database import (
     get_session, Company, Employee, Candidate, Job, Lead,
@@ -9,7 +10,7 @@ from app.models.database import (
 from app.models.schemas import (
     DashboardStatsOut, LeadOut, CandidateOut, DocumentOut,
     AuditLogEntryOut, SettingsModeOut, SettingsModeRequest,
-    CompanyOut, EmployeeOut, JobOut, CustomerOut, TaskOut
+    CompanyOut, EmployeeOut, JobOut, CustomerOut, TaskOut, EmailSendRequest
 )
 from app.models.seed import seed_demo_company
 import app.agents.orchestrator

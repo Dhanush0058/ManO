@@ -18,6 +18,11 @@ import {
 } from 'lucide-react';
 import { LiveMonitoringModal } from './LiveMonitoringModal';
 import { IncidentReportModal } from './IncidentReportModal';
+import { SPACE_ANOMALIES, type SpaceAnomaly } from '../../lib/anomalies';
+
+interface SpaceOSDashboardProps {
+  onTriggerAnomalyRedirect?: (anomaly: SpaceAnomaly) => void;
+}
 
 interface SatelliteData {
   satellite_id: string;
@@ -149,20 +154,58 @@ const DEFAULT_EVENTS: SpaceEventItem[] = [
   }
 ];
 
-export const SpaceOSDashboard: React.FC = () => {
+export const SpaceOSDashboard: React.FC<SpaceOSDashboardProps> = ({ onTriggerAnomalyRedirect }) => {
   const [satellites, setSatellites] = useState<SatelliteData[]>(DEFAULT_SATELLITES);
   const [selectedSatId, setSelectedSatId] = useState<string>('ISRO-44804');
   const [currentTelemetry, setCurrentTelemetry] = useState<TelemetryFrame | null>(null);
   const [events, setEvents] = useState<SpaceEventItem[]>(DEFAULT_EVENTS);
   const [selectedEventId, setSelectedEventId] = useState<string | null>('EVT-C3-8902');
   
-  // Modals
+  // Modals & Stream state
   const [isLiveModalOpen, setIsLiveModalOpen] = useState<boolean>(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
   const [currentIncident, setCurrentIncident] = useState<any>(null);
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [analyzingAgentStep, setAnalyzingAgentStep] = useState<string>('');
   const [activeFeed, setActiveFeed] = useState<'feed1' | 'feed2'>('feed1');
+
+  // 10-Second Anomaly Trigger State
+  const [hasTriggeredAnomaly, setHasTriggeredAnomaly] = useState<boolean>(false);
+  const [activeAnomalyFrame, setActiveAnomalyFrame] = useState<SpaceAnomaly | null>(null);
+  const [playbackSeconds, setPlaybackSeconds] = useState<number>(0);
+
+  const triggerAnomalySequence = (anomaly: SpaceAnomaly) => {
+    setActiveAnomalyFrame(anomaly);
+    // Display raw anomalous frame cleanly, then redirect to Command Center staging
+    setTimeout(() => {
+      if (onTriggerAnomalyRedirect) {
+        onTriggerAnomalyRedirect(anomaly);
+      }
+    }, 2200);
+  };
+
+  const handleVideoTimeUpdate = (currentTime: number) => {
+    const sec = Math.floor(currentTime);
+    setPlaybackSeconds(sec);
+    if (currentTime >= 10 && !hasTriggeredAnomaly) {
+      setHasTriggeredAnomaly(true);
+      const chosen = activeFeed === 'feed1' ? SPACE_ANOMALIES[0] : SPACE_ANOMALIES[1];
+      triggerAnomalySequence(chosen);
+    }
+  };
+
+  // 10-Second Timer trigger guarantee
+  useEffect(() => {
+    if (hasTriggeredAnomaly) return;
+    const timer = setTimeout(() => {
+      if (!hasTriggeredAnomaly) {
+        setHasTriggeredAnomaly(true);
+        const chosen = activeFeed === 'feed1' ? SPACE_ANOMALIES[0] : SPACE_ANOMALIES[1];
+        triggerAnomalySequence(chosen);
+      }
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, [hasTriggeredAnomaly, activeFeed]);
 
   // 1. Load Satellites Registry
   useEffect(() => {
@@ -389,72 +432,108 @@ export const SpaceOSDashboard: React.FC = () => {
               </span>
             </div>
 
-            {/* Video Feed Switcher: Switch between Feed 1 and Feed 2 */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center bg-[#F4F4F6] p-1 rounded-xl border border-[#E5E5E7] text-xs font-semibold">
-                <button
-                  type="button"
-                  onClick={() => setActiveFeed('feed1')}
-                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                    activeFeed === 'feed1'
-                      ? 'bg-[#F27A30] text-white shadow-xs'
-                      : 'text-[#6E6E73] hover:text-[#1E1E24]'
-                  }`}
+              {/* Video Feed Switcher: Switch between Feed 1 and Feed 2 */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center bg-[#F4F4F6] p-1 rounded-xl border border-[#E5E5E7] text-xs font-semibold">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveFeed('feed1');
+                      setActiveAnomalyFrame(null);
+                    }}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      activeFeed === 'feed1'
+                        ? 'bg-[#F27A30] text-white shadow-xs'
+                        : 'text-[#6E6E73] hover:text-[#1E1E24]'
+                    }`}
+                  >
+                    CAM 01 • Cartosat-3
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveFeed('feed2');
+                      setActiveAnomalyFrame(null);
+                    }}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      activeFeed === 'feed2'
+                        ? 'bg-[#F27A30] text-white shadow-xs'
+                        : 'text-[#6E6E73] hover:text-[#1E1E24]'
+                    }`}
+                  >
+                    CAM 02 • ISS EarthCam
+                  </button>
+                </div>
+
+                {/* Quick Telemetry Frame Selector for Instant Testing */}
+                <select
+                  aria-label="Inject Optical Telemetry Frame"
+                  onChange={(e) => {
+                    const found = SPACE_ANOMALIES.find(a => a.id === e.target.value);
+                    if (found) {
+                      setHasTriggeredAnomaly(true);
+                      triggerAnomalySequence(found);
+                    }
+                  }}
+                  defaultValue=""
+                  className="hidden md:inline-block bg-[#F4F4F6] text-[#1E1E24] border border-[#E5E5E7] rounded-xl px-2.5 py-1 text-xs font-semibold cursor-pointer hover:border-[#F27A30]/50 focus:outline-none"
                 >
-                  CAM 01 • Cartosat-3
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveFeed('feed2')}
-                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                    activeFeed === 'feed2'
-                      ? 'bg-[#F27A30] text-white shadow-xs'
-                      : 'text-[#6E6E73] hover:text-[#1E1E24]'
-                  }`}
-                >
-                  CAM 02 • ISS EarthCam
-                </button>
-              </div>
-              <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-[#6E6E73] pl-2 border-l border-[#E5E5E7]">
-                <span>OPTICAL LINK: LOCKED</span>
-                <span className="text-[#E5E5E7]">|</span>
-                <span>1080P • 60 FPS</span>
+                  <option value="" disabled>Sample Telemetry Frames...</option>
+                  <option value="anomaly-1">Frame 1: Wildfire Thermal Plume</option>
+                  <option value="anomaly-2">Frame 2: Volcanic Eruption & Ash</option>
+                  <option value="anomaly-3">Frame 3: Seismic Fault Rupture</option>
+                  <option value="anomaly-4">Frame 4: Arctic Sea Ice Calving</option>
+                </select>
+
+                <div className="hidden lg:flex items-center gap-2 text-xs font-mono text-[#6E6E73] pl-2 border-l border-[#E5E5E7]">
+                  <span>OPTICAL LINK: LOCKED</span>
+                  <span className="text-[#E5E5E7]">|</span>
+                  <span>1080P • 60 FPS</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Edge-to-Edge Full Fill Live Video Viewport (Authentic Recorded Feed) */}
-          <div className="relative w-full h-[400px] md:h-[480px] bg-black rounded-xl overflow-hidden border border-[#E5E5E7] shadow-inner">
-            <video
-              key={activeFeed}
-              src={activeFeed === 'feed1' ? '/space-feed-1.mp4' : '/space-feed-2.mp4'}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-full object-cover"
-            />
+            {/* Edge-to-Edge Full Fill Live Video Viewport (Authentic Recorded Feed) */}
+            <div className="relative w-full h-[400px] md:h-[480px] bg-black rounded-xl overflow-hidden border border-[#E5E5E7] shadow-inner">
+              {activeAnomalyFrame ? (
+                <img
+                  src={activeAnomalyFrame.image}
+                  alt="Satellite Evidence"
+                  className="w-full h-full object-cover animate-fade-in"
+                />
+              ) : (
+                <video
+                  key={activeFeed}
+                  src={activeFeed === 'feed1' ? '/space-feed-1.mp4' : '/space-feed-2.mp4'}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  onTimeUpdate={(e) => handleVideoTimeUpdate(e.currentTarget.currentTime)}
+                  className="w-full h-full object-cover"
+                />
+              )}
 
-            {/* Live Telemetry Overlay HUD with Matching Spacecraft Info */}
-            <div className="absolute bottom-3 left-4 right-4 z-20 pointer-events-none flex items-center justify-between text-[11px] font-mono text-white/95 bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 shadow-lg">
-              <div className="flex items-center gap-2.5">
-                <span className="w-2 h-2 rounded-full bg-[#F27A30] animate-pulse" />
-                <span className="font-bold tracking-wide">
-                  SPACECRAFT: {activeFeed === 'feed1' ? 'Cartosat-3 (NORAD #44804)' : 'ISS / Earth Recon (NORAD #25544)'}
-                </span>
-                <span className="hidden md:inline px-2 py-0.5 rounded bg-white/10 text-white/80 text-[10px]">
-                  {activeFeed === 'feed1' ? 'AURORA & LIMB VIEW' : 'MOZAMBIQUE CHANNEL TRACK'}
-                </span>
-              </div>
-              <div className="flex items-center gap-4">
-                <span>ALT: {activeFeed === 'feed1' ? (currentTelemetry?.telemetry.altitude_km.toFixed(1) || '505.2') : '418.6'} km</span>
-                <span className="text-white/30">|</span>
-                <span>ORBIT: {activeFeed === 'feed1' ? 'LEO (SSO)' : 'LEO (51.6° INC)'}</span>
-                <span className="text-white/30">|</span>
-                <span>LATENCY: {activeFeed === 'feed1' ? '42 ms' : '38 ms'}</span>
+              {/* Live Telemetry Overlay HUD with Matching Spacecraft Info (No text saying 'anomaly detected' on video) */}
+              <div className="absolute bottom-3 left-4 right-4 z-20 pointer-events-none flex items-center justify-between text-[11px] font-mono text-white/95 bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 shadow-lg">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-2 h-2 rounded-full bg-[#F27A30] animate-pulse" />
+                  <span className="font-bold tracking-wide">
+                    SPACECRAFT: {activeAnomalyFrame ? activeAnomalyFrame.spacecraft : (activeFeed === 'feed1' ? 'Cartosat-3 (NORAD #44804)' : 'ISS / Earth Recon (NORAD #25544)')}
+                  </span>
+                  <span className="hidden md:inline px-2 py-0.5 rounded bg-white/10 text-white/80 text-[10px]">
+                    {activeAnomalyFrame ? `COORDS: ${activeAnomalyFrame.coordinates}` : (activeFeed === 'feed1' ? 'AURORA & LIMB VIEW' : 'MOZAMBIQUE CHANNEL TRACK')}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span>ALT: {activeFeed === 'feed1' ? (currentTelemetry?.telemetry.altitude_km.toFixed(1) || '505.2') : '418.6'} km</span>
+                  <span className="text-white/30">|</span>
+                  <span>ORBIT: {activeFeed === 'feed1' ? 'LEO (SSO)' : 'LEO (51.6° INC)'}</span>
+                  <span className="text-white/30">|</span>
+                  <span>T+{playbackSeconds < 10 ? `0${playbackSeconds}` : playbackSeconds}s</span>
+                </div>
               </div>
             </div>
-          </div>
         </div>
 
         {/* Middle Grid: Satellite HUD & Live Orbital Telemetry */}

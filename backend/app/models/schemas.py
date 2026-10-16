@@ -225,3 +225,9 @@ class SettingsModeRequest(BaseModel):
 
 class SettingsModeOut(BaseModel):
     mode: str
+
+
+class EmailSendRequest(BaseModel):
+    to_email: str
+    subject: str
+    body: str

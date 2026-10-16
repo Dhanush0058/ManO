@@ -33,7 +33,7 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
     { id: 'gtm', label: 'Incident Diagnostics Agent', icon: ShieldAlert, category: 'specialists' },
     { id: 'hiring', label: 'Risk Assessment Agent', icon: ShieldCheck, category: 'specialists' },
     { id: 'legal', label: 'Mission Reporting Agent', icon: FileSpreadsheet, category: 'specialists' },
-    { id: 'voice_calling', label: 'Operator Voice Briefing', icon: PhoneCall, category: 'specialists' },
+    { id: 'voice_calling', label: 'Emergency Voice Briefing', icon: PhoneCall, category: 'specialists' },
     { id: 'tasks', label: 'Tasks', icon: ListTodo, category: 'management' },
     { id: 'integrations', label: 'Integrations', icon: Blocks, category: 'management' },
     { id: 'analytics', label: 'Analytics', icon: BarChart3, category: 'management' },

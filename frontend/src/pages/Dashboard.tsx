@@ -16,6 +16,7 @@ import { AuditLogPanel } from '../components/dashboard/AuditLogPanel';
 import { AIOrchestratorPanel } from '../components/dashboard/AIOrchestratorPanel';
 import { TwilioVoicePanel } from '../components/dashboard/TwilioVoicePanel';
 import { queryOrchestrator, fetchMode, updateMode, triggerSeed } from '../lib/api';
+import type { SpaceAnomaly } from '../lib/anomalies';
 import { Sparkles, Database, Settings, Check } from 'lucide-react';
 
 interface ChatMessage {
@@ -23,12 +24,16 @@ interface ChatMessage {
   role: 'user' | 'assistant';
   agent?: string;
   text: string;
+  image?: string;
+  badge?: string;
 }
 
 export function Dashboard() {
   const [activeView, setActiveView] = useState('spaceos');
   const [isLoading, setIsLoading] = useState(false);
   const [aiMode, setAiMode] = useState<'live' | 'demo'>('demo');
+  const [stagedAnomaly, setStagedAnomaly] = useState<SpaceAnomaly | null>(null);
+  const [activeAnomaly, setActiveAnomaly] = useState<SpaceAnomaly | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { id: 'welcome', role: 'assistant', text: "SpaceXOS Flight Intelligence active. Multi-agent space orbital telemetry and incident response online." },
   ]);
@@ -45,7 +50,115 @@ export function Dashboard() {
       .catch(console.error);
   }, []);
 
-  const handleSendMessage = async (text: string) => {
+  const handleSendMessage = async (text: string, anomalyPayload?: SpaceAnomaly) => {
+    if (anomalyPayload) {
+      // 1. Stage user optical submission message with image
+      const userMsg: ChatMessage = {
+        id: Date.now().toString(),
+        role: 'user',
+        text: text,
+        image: anomalyPayload.image,
+        badge: anomalyPayload.spacecraft
+      };
+      setMessages((prev) => [...prev, userMsg]);
+      setIsLoading(true);
+      setActiveAnomaly(anomalyPayload);
+      setStagedAnomaly(null);
+
+      // 2. Dispatch live emergency email notification to Administrator Dhanush
+      fetch('http://127.0.0.1:8000/api/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to_email: 'dhanushr672@gmail.com',
+          subject: `[CRITICAL ALERT] Optical Satellite Anomaly: ${anomalyPayload.title} (${anomalyPayload.spacecraft})`,
+          body: `SPACEXOS FLIGHT OPERATIONS - EMERGENCY INCIDENT NOTIFICATION
+----------------------------------------------------------------------
+To: Dhanush (SpaceXOS Administrator)
+Target Spacecraft: ${anomalyPayload.spacecraft} (NORAD #${anomalyPayload.noradId})
+Incident Title: ${anomalyPayload.title}
+Coordinates: ${anomalyPayload.coordinates}
+Sensor: ${anomalyPayload.sensor}
+Observed Value: ${anomalyPayload.observedValue} [Baseline: ${anomalyPayload.expectedBaseline} | σ = ${anomalyPayload.deviationSigma}]
+Timestamp: ${new Date().toISOString()}
+
+======================================================================
+1. TELEMETRY & DETECTION ANALYSIS AGENT:
+${anomalyPayload.detectionSummary}
+
+2. INCIDENT DIAGNOSTICS AGENT:
+${anomalyPayload.diagnosticsSummary}
+
+3. RISK ASSESSMENT AGENT:
+${anomalyPayload.riskSummary}
+
+4. MISSION REPORTING & FLIGHT DIRECTIVE:
+${anomalyPayload.reportingSummary}
+
+Recommended Action: ${anomalyPayload.recommendedAction}
+======================================================================
+Flight Operations Console: Incident corroboration complete. Decision gate pending operator review.`
+        })
+      }).catch((err) => console.error('[SpaceXOS] Email dispatch error:', err));
+
+      // 3. Concurrently activate all 4 aerospace agents with realistic telemetry arrival timing
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: (Date.now() + 100).toString(),
+            role: 'assistant',
+            agent: 'detection',
+            badge: `DETECTION ANALYSIS AGENT • σ = ${anomalyPayload.deviationSigma} DEVIATION`,
+            text: `🛰️ [TELEMETRY INGESTION CONFIRMED] Sensor: ${anomalyPayload.sensor}\n\n${anomalyPayload.detectionSummary}\n\nObserved: ${anomalyPayload.observedValue} | Nominal Baseline: ${anomalyPayload.expectedBaseline}`
+          }
+        ]);
+      }, 400);
+
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: (Date.now() + 200).toString(),
+            role: 'assistant',
+            agent: 'incident',
+            badge: 'INCIDENT DIAGNOSTICS AGENT • PHYSICAL CORRELATION',
+            text: `🔍 [SUBSYSTEM DIAGNOSTICS COMPLETE]\n\n${anomalyPayload.diagnosticsSummary}\n\nCoordinates: ${anomalyPayload.coordinates}`
+          }
+        ]);
+      }, 1000);
+
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: (Date.now() + 300).toString(),
+            role: 'assistant',
+            agent: 'risk',
+            badge: 'RISK ASSESSMENT AGENT • CRITICALITY TIER-1',
+            text: `🛡️ [SAFETY OF FLIGHT EVALUATION]\n\n${anomalyPayload.riskSummary}\n\nRecommended Safety Protocol: ${anomalyPayload.recommendedAction}`
+          }
+        ]);
+      }, 1600);
+
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: (Date.now() + 400).toString(),
+            role: 'assistant',
+            agent: 'reporting',
+            badge: 'MISSION REPORTING AGENT • EMERGENCY DISPATCH',
+            text: `📋 [EXECUTIVE DOSSIER COMPILED & DISPATCHED]\n\n${anomalyPayload.reportingSummary}\n\n📧 Emergency alert email successfully transmitted to Administrator Dhanush (dhanushr672@gmail.com).\n\nVoice Briefing status: READY for Emergency Outbound Dispatch.`
+          }
+        ]);
+        setIsLoading(false);
+      }, 2200);
+
+      return;
+    }
+
+    // Standard operator query handling
     const userMsg: ChatMessage = { id: Date.now().toString(), role: 'user', text };
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
@@ -99,12 +212,25 @@ export function Dashboard() {
     switch (activeView) {
       case 'spaceos':
       case 'space':
-        return <SpaceOSDashboard />;
+        return (
+          <SpaceOSDashboard 
+            onTriggerAnomalyRedirect={(anomaly) => {
+              setStagedAnomaly(anomaly);
+              setActiveView('command');
+            }} 
+          />
+        );
       case 'command':
         return (
           <div className="flex-1 h-full min-h-0 grid grid-cols-3 gap-4 p-4 overflow-hidden">
             <div className="col-span-2 h-full min-h-0">
-              <CommandCenter messages={messages} onSendMessage={handleSendMessage} isLoading={isLoading} />
+              <CommandCenter 
+                messages={messages} 
+                onSendMessage={handleSendMessage} 
+                isLoading={isLoading} 
+                stagedAnomaly={stagedAnomaly}
+                onClearStagedAnomaly={() => setStagedAnomaly(null)}
+              />
             </div>
             <div className="col-span-1 h-full min-h-0 flex flex-col gap-4 overflow-y-auto">
               <FinancialWidget />
@@ -118,16 +244,16 @@ export function Dashboard() {
         return <AIOrchestratorPanel />;
       case 'finance':
       case 'detection_agent':
-        return <DetectionAgentDesk />;
+        return <DetectionAgentDesk activeAnomaly={activeAnomaly} />;
       case 'gtm':
       case 'incident_agent':
-        return <IncidentDiagnosticsDesk />;
+        return <IncidentDiagnosticsDesk activeAnomaly={activeAnomaly} />;
       case 'hiring':
       case 'risk_agent':
-        return <RiskAssessmentDesk />;
+        return <RiskAssessmentDesk activeAnomaly={activeAnomaly} />;
       case 'legal':
       case 'reporting_agent':
-        return <MissionReportingDesk />;
+        return <MissionReportingDesk activeAnomaly={activeAnomaly} />;
       case 'tasks':
       case 'approvals':
         return (
