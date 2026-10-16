@@ -19,23 +19,19 @@ from app.models.database import SessionLocal, Task, Approval, AuditLogEntry, utc
 # Auto-detect if API key is not configured properly, fallback to demo
 AI_MODE = os.getenv("AI_MODE", "live")
 
-CLASSIFY_SYSTEM = """You are the Orchestrator Agent inside FounderOS, an AI staff platform for startup
-founders. Given a founder's goal or question, decide which specialist agents should weigh in.
+CLASSIFY_SYSTEM = """You are the Flight Intelligence Orchestrator inside SpaceXOS, an aerospace decision-support platform for satellite operations leads, ISRO flight controllers, and space situational awareness (SSA) teams. Given a flight director's command or inquiry, decide which specialist aerospace agents should weigh in.
 
-Available agents: "finance", "hiring", "legal", "gtm", "research".
-- finance: runway, budgets, burn rate, financial risk
-- hiring: job descriptions, screening, offers, headcount planning
-- legal: contracts, compliance, legal risk
-- gtm: launch plans, pricing, positioning, marketing/sales
-- research: market research, competitor intel, or anything that doesn't fit the above
+Available agents: "gtm", "finance", "hiring", "legal", "research".
+- gtm: space & defense market strategy, sovereign contracts (ISRO, DSA, DoD), commercial mega-constellations (Pixxel, Planet Labs, OneWeb), and partnership roadmaps
+- finance: spacecraft power budget, telemetry nominal envelopes, battery depth-of-discharge, solar array wattage, delta-V propellant budgets
+- hiring: flight operations crew, satellite subsystem controllers, attitude determination and control (ADCS) specialists, orbital analysts
+- legal: orbital compliance, space debris mitigation (IADC 25-year guidelines), ITU spectrum coordination, emergency collision avoidance approvals
+- research: space situational awareness, ISRO satellite registry (Cartosat, RISAT, GSAT), orbital ephemeris, solar weather (geomagnetic storms, solar flux)
 
 Respond with ONLY valid JSON, no markdown fences, no commentary outside the JSON:
-{"relevant_agents": ["finance", "legal"], "needs_clarification": false, "clarifying_question": null}
+{"relevant_agents": ["gtm"], "needs_clarification": false, "clarifying_question": null}
 
-Pick 1 to 4 relevant agents ordered by relevance. Set needs_clarification to true ONLY if the goal
-is genuinely too vague to route anywhere (e.g. a single ambiguous word) — in that case leave
-relevant_agents empty and fill in clarifying_question. Most real questions, even short ones, CAN be
-routed — prefer routing over asking for clarification.
+Pick 1 to 4 relevant agents ordered by relevance. Set needs_clarification to true ONLY if the command is completely blank or undecipherable.
 """
 
 AGENT_FUNCS = {
@@ -47,11 +43,11 @@ AGENT_FUNCS = {
 }
 
 AGENT_DISPLAY_NAMES = {
-    "finance": "Finance Agent",
-    "hiring": "Hiring Agent",
-    "legal": "Legal Agent",
-    "gtm": "GTM Agent",
-    "research": "Research Agent",
+    "finance": "Telemetry & Power Agent",
+    "hiring": "Flight Dynamics Agent",
+    "legal": "Orbital Compliance Agent",
+    "gtm": "Mission Strategy Agent",
+    "research": "Space Domain Intel Agent",
 }
 
 
@@ -175,18 +171,18 @@ async def run_orchestration(query: str) -> OrchestratorState:
         print(f"[Orchestrator] Graph execution warning: {exc}. Generating dynamic response via AI router...")
         try:
             dynamic_answer = await call_llm(
-                "You are the FounderOS Orchestrator AI. Answer the founder clearly, concisely, and dynamically with no static templates.",
+                "You are the SpaceXOS Flight Intelligence Orchestrator. Answer the flight director clearly, concisely, and dynamically regarding space missions, orbital telemetry, defense partner strategy, or constellation operations.",
                 query,
                 max_tokens=600
             )
             return {
                 "query": query,
-                "relevant_agents": ["research"],
+                "relevant_agents": ["gtm"],
                 "needs_clarification": False,
                 "clarifying_question": None,
                 "agent_responses": [
                     {
-                        "agent_name": "FounderOS",
+                        "agent_name": "SpaceXOS Flight Intelligence",
                         "message": dynamic_answer.strip(),
                         "action": {"type": "none", "requires_approval": False, "payload": {}}
                     }
@@ -197,105 +193,65 @@ async def run_orchestration(query: str) -> OrchestratorState:
 
 
 async def run_demo_simulation(query: str) -> OrchestratorState:
-    """Deterministic simulation fallback containing high-fidelity templates for the hackathon."""
-    # Add a short simulated delay to make it feel premium
-    await asyncio.sleep(1.5)
-    
+    """High-fidelity aerospace fallback simulation for SpaceXOS Flight Intelligence."""
+    await asyncio.sleep(1.2)
     q_lower = query.lower()
     
-    # Check if they are running the main End-to-End Hackathon Scenario
-    is_main_scenario = "20" in q_lower or "customers" in q_lower or "developers" in q_lower or "hyderabad" in q_lower
+    # Check if they are inquiring about Market Strategy, Defense, or Partners
+    is_market_strategy = any(w in q_lower for w in ["market", "strategy", "gtm", "defense", "partner", "commercial", "sales", "customer"])
     
-    if is_main_scenario:
+    if is_market_strategy:
         responses = [
             {
-                "agent_name": "Finance Agent",
-                "message": "Based on current cash of ₹5,00,000 and monthly burn of ₹75,000, adding 2 React developers at ₹60,000/month (total ₹1,20,000) will increase burn to ₹1,95,000/month. Runway will drop from 6.7 months to 2.6 months. Recommended approach: hire 1 developer first to preserve cash.",
+                "agent_name": "Mission Strategy Agent",
+                "message": "SpaceXOS commercialization and mission partner strategy centers on three core aerospace pillars:\n1. Sovereign Defense & Space Agency Partnerships: Providing automated telemetry anomaly triage, space situational awareness (SSA), and threat detection for ISRO (ISTRAC), Indian Defence Space Agency (DSA), and international space commands.\n2. Commercial Mega-Constellation Operations: Delivering autonomous decision-support software for LEO constellation operators (e.g. Pixxel, Planet Labs, OneWeb) to reduce flight controller cognitive load, prevent satellite loss, and automate collision avoidance maneuvers.\n3. Space Domain Awareness (SDA) Data Feeds: Providing real-time orbital debris conjunction analysis (<500m miss distance alerts) and space weather resilience modeling.",
                 "action": {
-                    "type": "calculate_burn_rate",
-                    "payload": {"cash": 500000.0, "monthly_expenses": 195000.0},
+                    "type": "none",
                     "requires_approval": False
-                }
-            },
-            {
-                "agent_name": "GTM Agent",
-                "message": "I identified 250 local fitness centers in Hyderabad. Filtered down to 100 qualified prospects and 18 high-intent opportunities for outreach. Direct email and WhatsApp demo outreach is ready to launch.",
-                "action": {
-                    "type": "send_outreach",
-                    "payload": {"name": "Alpha Gym", "email": "owner@alphagym.com", "company": "Alpha Gym"},
-                    "requires_approval": True,
-                    "summary": "Send outreach campaign to 100 Hyderabad prospects"
-                }
-            },
-            {
-                "agent_name": "Hiring Agent",
-                "message": "I scanned 50 candidates in the HR/ATS integration. Found 8 candidates matching React, TypeScript, and salary budget of ₹60,000. Top recommended: Rahul Sharma (94% Match, ₹55,000/mo) and Vikram Reddy (88% Match, ₹58,000/mo). Ready to extend interview requests.",
-                "action": {
-                    "type": "screen_resume",
-                    "payload": {"candidate_name": "Rahul Sharma"},
-                    "requires_approval": False
-                }
-            },
-            {
-                "agent_name": "Legal Agent",
-                "message": "I prepared the required hiring documents for the Hyderabad React Developer roles. Drafts generated: 1. Employment Agreement, 2. Non-Disclosure Agreement (NDA). Ready for founder signature.",
-                "action": {
-                    "type": "sign_contract",
-                    "payload": {"company_name": "Rahul Sharma"},
-                    "requires_approval": True,
-                    "summary": "Approve and Sign Employment Agreement & NDA for Rahul Sharma"
                 }
             }
         ]
         return {
             "query": query,
-            "relevant_agents": ["finance", "gtm", "hiring", "legal"],
+            "relevant_agents": ["gtm"],
             "needs_clarification": False,
             "clarifying_question": None,
             "agent_responses": responses
         }
         
-    # Default fallback for other queries
+    # Default aerospace fallbacks
     agents = []
     responses = []
     
-    if any(w in q_lower for w in ["runway", "burn", "budget", "finance", "money", "afford"]):
+    if any(w in q_lower for w in ["power", "telemetry", "solar", "battery", "voltage", "eps", "runway", "burn"]):
         agents.append("finance")
         responses.append({
-            "agent_name": "Finance Agent",
-            "message": "I checked our ledger records. We have ₹500,000 cash balance with ₹75,000 burn rate, giving us 6.7 months of runway. No high-risk financial commitments were found.",
+            "agent_name": "Telemetry & Power Agent",
+            "message": "Cartosat-3 and RISAT-2BR1 telemetry streams are nominal. Solar array bus generation is at 1,850 W with battery state-of-charge at 98.4%. No anomalous bus impedance or thermal shunt degradation detected.",
             "action": {"type": "none", "requires_approval": False}
         })
         
-    if any(w in q_lower for w in ["hire", "recruiting", "recruit", "candidate", "developer", "resume"]):
+    if any(w in q_lower for w in ["crew", "controller", "hire", "personnel", "adcs", "dynamics", "mechanics"]):
         agents.append("hiring")
         responses.append({
-            "agent_name": "Hiring Agent",
-            "message": "I scanned candidate applications. We have 50 active candidates. The highest rated for open development positions is Rahul Sharma (94% Match).",
+            "agent_name": "Flight Dynamics Agent",
+            "message": "Orbital flight operations staffing is fully allocated. Primary console positions active: Astrodynamics & Orbit Determination Controller, Spacecraft ADCS Controller, and Ground Station Link Lead.",
             "action": {"type": "none", "requires_approval": False}
         })
         
-    if any(w in q_lower for w in ["nda", "contract", "agreement", "legal", "compliance"]):
+    if any(w in q_lower for w in ["contract", "legal", "approval", "cola", "debris", "compliance", "itu", "burn"]):
         agents.append("legal")
         responses.append({
-            "agent_name": "Legal Agent",
-            "message": "I drafted the standard mutual NDA contract draft. It is stored as an internal document ready for signing.",
-            "action": {"type": "none", "requires_approval": False}
+            "agent_name": "Orbital Compliance Agent",
+            "message": "Space Debris Mitigation protocol verified under IADC 25-year deorbit guidelines. ITU frequency coordination active for X-band 8.2 GHz payload downlink. Collision avoidance burn directive queued for Flight Director review.",
+            "action": {"type": "none", "requires_approval": True, "summary": "Authorize Collision Avoidance Burn Sequence"}
         })
         
-    if any(w in q_lower for w in ["gtm", "market", "sales", "leads", "customer"]):
-        agents.append("gtm")
-        responses.append({
-            "agent_name": "GTM Agent",
-            "message": "We have 150 local leads and 20 active customers. I recommend setting up email outreach to target the high-scoring leads (lead score > 80).",
-            "action": {"type": "none", "requires_approval": False}
-        })
-        
-    if not agents:
+    if not responses:
         agents.append("research")
         responses.append({
-            "agent_name": "Research Agent",
-            "message": "I analyzed your request. As your startup assistant, I can coordinate Finance, Hiring, Legal, and GTM tasks. Please specify which area you need support with.",
+            "agent_name": "Space Domain Intel Agent",
+            "message": "SpaceXOS Flight Intelligence active. Monitoring 4 active spacecraft across SSO, GEO, and LEO orbits. Tracking solar flux F10.7 (142 sfu) and space weather geomagnetic Kp index (2.1 - Quiet). Ready for flight commands.",
             "action": {"type": "none", "requires_approval": False}
         })
         

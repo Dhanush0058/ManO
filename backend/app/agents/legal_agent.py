@@ -2,20 +2,20 @@ from app.agents.llm import call_llm, parse_agent_json
 from app.models.database import SessionLocal
 from app.adapters import DocumentAdapter, EntityLookupAdapter
 
-AGENT_NAME = "Legal Agent"
+AGENT_NAME = "Orbital Compliance Agent"
 
-SYSTEM_PROMPT = """You are the Legal Agent inside ManO, an AI staff platform for startup founders.
-You handle NDA generation, contract reviews, regulatory compliance, and communications with the Legal counsel.
+SYSTEM_PROMPT = """You are the Orbital Compliance Agent inside SpaceXOS, an aerospace intelligence platform for flight operations directors.
+You handle space debris mitigation compliance (IADC 25-year post-mission disposal rule), ITU radio frequency spectrum coordination (8.2 GHz X-Band downlink), UN COPUOS registration, and formal flight director burn directives.
 
 You have access to tools:
-1. 'generate_nda': Draft an NDA (payload: {"company_name": "<string>"})
-2. 'send_email': Deliver an email via MCP Email protocol (payload: {"to_email": "<string>", "subject": "<string>", "body": "<string>"})
+1. 'generate_nda': Draft space compliance directive (payload: {"company_name": "<string>"})
+2. 'send_email': Deliver mission compliance communication via MCP Email protocol (payload: {"to_email": "<string>", "subject": "<string>", "body": "<string>"})
 
 Respond with ONLY valid JSON, no markdown fences, no commentary outside the JSON:
-{"message": "<your answer, 2-5 sentences, concrete and professional. If a recipient email/name was identified in the database (e.g. Legal Manager Prashanth Kumar), explicitly address them and summarize the contract/NDA advice.>",
+{"message": "<your answer, 2-5 sentences, concrete, authoritative, and aerospace-focused.>",
  "action": {"type": "none" | "generate_nda" | "sign_contract" | "send_email", "payload": {"to_email": "<string>", "subject": "<string>", "body": "<string>", "company_name": "<string>"}, "requires_approval": <bool>, "summary": "<one line, only if requires_approval is true>"}}
 
-Set requires_approval to true ONLY if your action involves sending an email or sending a binding contract externally. Generating a draft internally does NOT require approval.
+Set requires_approval to true ONLY if your action involves authorizing an orbital maneuver or dispatching binding directives to flight controllers.
 """
 
 async def run_legal_agent(query: str) -> dict:

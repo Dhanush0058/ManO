@@ -61,10 +61,10 @@ def seed_demo_company(session: Session):
         )
         session.add(emp)
     
-    # 4. Seed Open Jobs (2 positions)
+    # 4. Seed Open Jobs (Flight Operations & Space Mission Roles)
     jobs_data = [
-        ("React Developer", "React, TypeScript, Tailwind CSS, State Management", "1-3 years", 60000.0, "Hyderabad"),
-        ("Python/FastAPI Developer", "Python, FastAPI, SQLAlchemy, PostgreSQL, LangGraph", "2-4 years", 75000.0, "Hyderabad")
+        ("Orbital Flight Dynamics Controller", "Astrodynamics, Orbit Determination, TLE Ephemeris, SGP4, Python", "3-5 years", 140000.0, "Bengaluru / ISTRAC"),
+        ("Satellite ADCS & Propulsion Specialist", "Attitude Determination, Star Trackers, Reaction Wheels, Cold Gas Thrusters", "4-6 years", 160000.0, "Bengaluru")
     ]
     for title, skills, exp, budget, loc in jobs_data:
         job = Job(
@@ -78,40 +78,39 @@ def seed_demo_company(session: Session):
         session.add(job)
     session.commit()
 
-    # 5. Seed Candidates (50 candidates)
+    # 5. Seed Candidates (50 aerospace & flight operations specialists)
     first_names = ["Rohan", "Vikram", "Anjali", "Neha", "Arjun", "Aditya", "Pooja", "Siddharth", "Meera", "Karan", 
                    "Divya", "Suresh", "Ramesh", "Deepak", "Swati", "Nikhil", "Preeti", "Sunil", "Rajesh", "Sandhya"]
     last_names = ["Verma", "Reddy", "Sharma", "Nair", "Rao", "Joshi", "Kumar", "Patel", "Singh", "Choudhury",
                   "Mishra", "Gupta", "Sen", "Bose", "Das", "Deshmukh", "Pillai", "Kulkarni", "Mehta", "Grover"]
     
     skills_pool = [
-        ["React", "JavaScript", "CSS", "Tailwind CSS"],
-        ["React", "TypeScript", "Redux", "HTML"],
-        ["Python", "FastAPI", "SQLAlchemy", "PostgreSQL"],
-        ["Python", "Django", "Flask", "MongoDB"],
-        ["JavaScript", "Node.js", "Express", "React"],
-        ["React Native", "iOS", "Android", "JavaScript"],
-        ["AWS", "Docker", "Kubernetes", "CI/CD"],
-        ["SQL", "Data Analysis", "Python", "Tableau"],
-        ["Product Management", "Agile", "User Research", "Wireframing"],
-        ["Sales", "CRM", "Lead Generation", "Negotiation"]
+        ["Astrodynamics", "Orbit Determination", "TLE", "SGP4 Propagation"],
+        ["Satellite ADCS", "Star Trackers", "Reaction Wheels", "Attitude Quaternions"],
+        ["Spacecraft EPS", "Solar Array Regulators", "Lithium-Ion Battery Balancing"],
+        ["TT&C", "X-Band Downlink", "S-Band Telemetry", "CCSDS Packet Protocol"],
+        ["Thermal Control Subsystem", "Heat Pipes", "MLI Blankets", "Radiator Panels"],
+        ["Space Situational Awareness", "Conjunction Screening", "Debris Tracking", "TLE Ephemeris"],
+        ["Space Radiation Hardening", "Single-Event Upsets (SEU)", "Total Ionizing Dose"],
+        ["Aerospace Guidance & Navigation", "Kalman Filters", "Orbital Maneuver Optimization"],
+        ["Satellite Flight Director", "Mission Control Operations", "Ground Station Passes"],
+        ["Space Propulsion", "Hydrazine Monopropellant", "Hall Effect Thrusters"]
     ]
     
-    locations = ["Hyderabad", "Bengaluru", "Pune", "Remote", "Chennai", "Mumbai", "Delhi"]
+    locations = ["Bengaluru / ISTRAC", "Hyderabad", "Thiruvananthapuram / VSSC", "Sriharikota / SDSC", "Ahmedabad / SAC", "Pune"]
     
     for i in range(1, 51):
         fn = random.choice(first_names)
         ln = random.choice(last_names)
         name = f"{fn} {ln}"
-        email = f"{fn.lower()}.{ln.lower()}{i}@example.com"
+        email = f"{fn.lower()}.{ln.lower()}{i}@isro-defense.gov.in"
         phone = f"+91 98765 {random.randint(10000, 99999)}"
         skills = ", ".join(random.choice(skills_pool))
-        exp = round(random.uniform(0.5, 6.0), 1)
-        expected_sal = round(random.uniform(30000, 90000), -3)
+        exp = round(random.uniform(2.5, 10.0), 1)
+        expected_sal = round(random.uniform(70000, 180000), -3)
         loc = random.choice(locations)
-        score = random.randint(35, 95)
+        score = random.randint(55, 98)
         
-        # Determine status based on score to make it look realistic
         if score > 85:
             status = random.choice(["screened", "interviewed", "offered"])
         elif score > 60:
@@ -127,33 +126,55 @@ def seed_demo_company(session: Session):
             experience=exp,
             expected_salary=expected_sal,
             location=loc,
-            resume=f"Resume summary for {name}. Strong background with {exp} years of industry experience. Core competencies in {skills}.",
+            resume=f"Flight Operations Dossier for {name}. Aerospace background with {exp} years mission control experience. Core competencies in {skills}.",
             status=status,
             match_score=score
         )
         session.add(candidate)
     
-    # 6. Seed Leads (150 leads)
-    gym_prefixes = ["Alpha", "Fit", "Iron", "Gold's", "Pulse", "Evolution", "ProFit", "Elite", "Titan", "Core", "Vibe", "Zest", "Cross", "Body", "Peak"]
-    gym_suffixes = ["Gym", "Fitness Studio", "Wellness Center", "Crossfit Box", "Club", "Arena", "Zone", "House"]
+    # 6. Seed Mission Partners & Defense Leads (150 aerospace and constellation leads)
+    space_partners = [
+        ("Defence Space Agency (DSA)", "Integrated Tri-Services Space Command", "New Delhi"),
+        ("ISRO Telemetry, Tracking and Command (ISTRAC)", "Sovereign Satellite Ground Station", "Bengaluru"),
+        ("IN-SPACe Authorization Authority", "National Space Promotion Center", "Ahmedabad"),
+        ("Pixxel Space Technologies", "Hyperspectral Constellation Operations", "Bengaluru"),
+        ("Dhruva Space Mission Operations", "Satellite Bus & In-Orbit Test Grid", "Hyderabad"),
+        ("Skyroot Aerospace Orbital Logistics", "Upper Stage Orbital Injection", "Hyderabad"),
+        ("Bellatrix Aerospace In-Orbit Propulsion", "Satellite Mobility & Orbit Elevation", "Bengaluru"),
+        ("Agnikul Cosmos Mission Control", "Custom Orbital Insertion Control", "Chennai"),
+        ("Planet Labs Earth Observation", "Dove Satellite Constellation Fleet", "Bengaluru / Global"),
+        ("Satellogic High-Resolution Imaging", "Autonomous Sub-Meter Orbit Constellation", "Global"),
+        ("OneWeb LEO Network Operations", "Broadband Constellation SSA Triage", "New Delhi / Global"),
+        ("National Remote Sensing Centre (NRSC)", "Strategic Geospatial Earth Reconnaissance", "Hyderabad"),
+        ("Space Applications Centre (SAC)", "Payload Sensor Development & Telemetry", "Ahmedabad"),
+        ("GalaxEye Space SAR Constellations", "Multi-Sensor Optical & Radar Constellation", "Bengaluru"),
+        ("US Space Command Commercial SSA", "Space Track Conjunction Data Messages", "Colorado / International")
+    ]
     
-    industries = ["Gym", "Yoga Studio", "Pilates Studio", "Crossfit Center", "Personal Training Studio"]
+    industries = [
+        "Sovereign Space Command",
+        "Space Situational Awareness (SSA)",
+        "Commercial Mega-Constellation",
+        "Hyperspectral Earth Observation",
+        "Satellite Propulsion & Bus Logistics"
+    ]
+    
     pain_points = [
-        "Currently using manual excel sheets to track member subscriptions and attendance.",
-        "Experiencing high churn rate because they lack automated payment reminders.",
-        "Frustrated with their current heavy/clunky software which takes too long to load.",
-        "Wants to expand but lacks member engagement stats and metrics to verify profitability.",
-        "Struggling to schedule personal training sessions and manage trainer timetables."
+        "Requires automated telemetry anomaly classification to prevent false operator panic during solar eclipse transits.",
+        "Needs real-time orbital conjunction assessment with <500m miss distance alerts to automate collision avoidance burns.",
+        "Struggling with high operator fatigue monitoring concurrent multi-satellite telemetry streams at ISTRAC.",
+        "Requires automated cross-correlation between solar weather flares (Kp index) and sensor single-event upsets.",
+        "Seeking automated ITU radio frequency coordination and IADC 25-year space debris mitigation compliance dossier generation."
     ]
     
     for i in range(1, 151):
-        comp_name = f"{random.choice(gym_prefixes)} {random.choice(gym_suffixes)}"
-        email_prefix = comp_name.lower().replace(" ", "").replace("'", "")
+        partner_tpl = random.choice(space_partners)
+        comp_name = f"{partner_tpl[0]} - Unit #{random.randint(1, 9)}" if i > 15 else partner_tpl[0]
+        email_prefix = comp_name.lower().replace(" ", "").replace("'", "").replace("(", "").replace(")", "").replace("-", "")[:12]
         contact_name = f"{random.choice(first_names)} {random.choice(last_names)}"
         
-        # Ensure a cluster of leads in Hyderabad for the demo scenario
-        loc = "Hyderabad" if i <= 40 else random.choice(locations)
-        score = random.randint(10, 95)
+        loc = partner_tpl[2]
+        score = random.randint(40, 99)
         status = "new"
         
         if score > 80:
@@ -167,8 +188,8 @@ def seed_demo_company(session: Session):
             company_name=comp_name,
             industry=random.choice(industries),
             location=loc,
-            phone=f"+91 91234 {random.randint(10000, 99999)}",
-            email=f"owner@{email_prefix}.com",
+            phone=f"+91 80 2800 {random.randint(1000, 9999)}",
+            email=f"operations@{email_prefix}.space",
             lead_score=score,
             status=status,
             pain_point=random.choice(pain_points),
@@ -176,45 +197,52 @@ def seed_demo_company(session: Session):
         )
         session.add(lead)
 
-    # 7. Seed Customers (20 customers)
-    plans = [("Starter", 2500.0), ("Growth", 6000.0), ("Enterprise", 12000.0)]
+    # 7. Seed Mission Operational Contracts (20 active space contracts)
+    contracts = [
+        ("ISRO ISTRAC Ground Station Telemetry Grid", "Enterprise Orbit Grid", 1200000.0),
+        ("Defence Space Agency (DSA) Sentinel Node", "Defense Mission Tier", 600000.0),
+        ("Pixxel Hyperspectral Constellation Monitor", "Constellation Tier", 350000.0),
+        ("Dhruva Space Orbital Bus Operations", "Constellation Tier", 280000.0),
+        ("National Remote Sensing Centre (NRSC)", "Defense Mission Tier", 550000.0),
+        ("Planet Labs Dove Fleet Conjunction Node", "Constellation Tier", 420000.0),
+        ("GalaxEye Space SAR Early Warning", "Defense Mission Tier", 500000.0),
+        ("Bellatrix Propulsion Health Telemetry", "Constellation Tier", 250000.0)
+    ]
     for i in range(1, 21):
-        comp_name = f"Active {random.choice(gym_prefixes)} {random.choice(gym_suffixes)}"
-        plan_name, revenue = random.choice(plans)
+        ct = random.choice(contracts)
+        comp_name = f"{ct[0]} #{i}" if i > 8 else ct[0]
         customer = Customer(
             company_name=comp_name,
-            plan=plan_name,
-            revenue=revenue,
+            plan=ct[1],
+            revenue=ct[2],
             status="active"
         )
         session.add(customer)
 
-    # 8. Seed Financial Transactions (50 transactions)
+    # 8. Seed Financial Transactions (Spacecraft operations & ground tracking)
     categories = {
-        "payroll": "Monthly salary payout",
-        "marketing": "Facebook & Google Ad Campaigns",
-        "software": "Supabase & AWS Cloud Hosting infrastructure",
-        "office": "WeWork workspace rent",
-        "misc": "Hardware and office supplies"
+        "ground_station": "ISTRAC & Svalbard Downlink Dish Antenna Array Rental",
+        "propellant": "High-Purity Hydrazine & Xenon Propulsion Resupply",
+        "software": "Orbital Ephemeris & Conjunction Supercomputing Cloud Cluster",
+        "payload": "Optical Star Tracker & Multispectral Sensor Calibration",
+        "payroll": "Flight Operations Specialists & Mission Control Engineers"
     }
     
-    # Add revenue transaction (subscriptions)
     for i in range(1, 26):
         date_tx = datetime.now(timezone.utc) - timedelta(days=random.randint(1, 60))
         tx = FinancialTransaction(
             type="revenue",
-            category="subscription",
-            amount=random.choice([2500.0, 6000.0, 12000.0]),
-            description=f"SaaS Monthly Subscription Fee payment received",
+            category="contract",
+            amount=random.choice([350000.0, 600000.0, 1200000.0]),
+            description="Mission Telemetry Monitoring & Conjunction Screening Contract Revenue",
             date=date_tx
         )
         session.add(tx)
         
-    # Add expense transaction
     for i in range(1, 26):
         cat = random.choice(list(categories.keys()))
         date_tx = datetime.now(timezone.utc) - timedelta(days=random.randint(1, 60))
-        amt = random.randint(2000, 35000) if cat != "payroll" else 75000
+        amt = random.randint(25000, 150000) if cat != "payroll" else 350000
         tx = FinancialTransaction(
             type="expense",
             category=cat,
@@ -224,20 +252,21 @@ def seed_demo_company(session: Session):
         )
         session.add(tx)
 
-    # 9. Seed Documents (10 documents)
+    # 9. Seed Space Mission Documents (10 flight directives & compliance dossiers)
     doc_types = [
-        ("NDA", "Standard Mutual NDA", "This Mutual Non-Disclosure Agreement is made and entered into..."),
-        ("Employment Agreement", "Software Engineer Employment Offer", "This Employment Contract sets forth terms for developers joining ManO..."),
-        ("IP Assignment", "Proprietary Information and Inventions Agreement", "Employee agrees to assign all intellectual property developed under ManO...")
+        ("Flight Directive", "Collision Avoidance Burn Procedure (COLA-2026-08)", "Flight operations procedure authorizing 12-second delta-V burn to increase orbital radial separation by +4.2 km..."),
+        ("ITU Coordination", "X-Band Payload Frequency Allocation Accord", "International Telecommunication Union frequency assignment for 8.2 GHz high-throughput telemetry downlink..."),
+        ("Compliance Dossier", "IADC Space Debris Mitigation Certification", "Certification confirming post-mission disposal compliance within 25-year deorbit timeline per UN COPUOS guidelines..."),
+        ("Nominal Envelope", "Cartosat-3 Subsystem Operating Telemetry Baseline", "Baseline power curves, battery charging C-rate limits, and ADCS pointing jitter tolerances (+/- 0.05 deg)...")
     ]
     for i in range(1, 11):
         dtype, title, content = random.choice(doc_types)
         doc = Document(
             type=dtype,
-            title=f"{title} - Draft v{i}",
-            content=content + f"\n\nDocument serial hash verification ref: #{random.randint(1000, 9999)}.",
+            title=f"{title} - Rev {i}.0",
+            content=content + f"\n\nSpaceXOS Cryptographic Signature: #SXOS-{random.randint(10000, 99999)}-ORBIT.",
             status=random.choice(["draft", "pending_review", "approved"]),
-            created_by="Legal Agent",
+            created_by="Orbital Compliance Agent",
             approval_status=random.choice(["pending", "signed"])
         )
         session.add(doc)

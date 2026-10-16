@@ -327,7 +327,7 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
                 <span className="w-1 bg-cyan-400 rounded-full animate-[pulse_0.7s_ease-in-out_infinite_0.15s] h-3" />
               </div>
               <span className="text-xs font-semibold text-cyan-300">
-                Listening to founder voice... <span className="text-[11px] text-gray-400 font-normal">Speak your vision</span>
+                Listening to Flight Director voice... <span className="text-[11px] text-gray-400 font-normal">Speak your mission command</span>
               </span>
             </div>
             <button
@@ -353,7 +353,7 @@ export function CommandCenter({ messages, onSendMessage, isLoading }: CommandCen
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={isListening ? "Transcribing your voice in real time..." : "Tell your AI CEO what you want to accomplish (or click mic to speak)..."}
+            placeholder={isListening ? "Transcribing your voice in real time..." : "Ask Flight Director / SpaceXOS Mission Control what you want to accomplish (or click mic to speak)..."}
             className={`w-full bg-[#0c0e21] border text-gray-100 rounded-xl py-3.5 pl-4 pr-24 focus:outline-none text-sm transition-all placeholder:text-gray-500 shadow-inner ${
               isListening
                 ? 'border-cyan-500/50 ring-2 ring-cyan-500/20 bg-[#0e122b]'

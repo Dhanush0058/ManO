@@ -149,16 +149,14 @@ from app.config import settings
 async def live_events_stream():
     async def event_generator():
         events = [
-            ("TaskCreated", "Goal received from founder"),
-            ("AgentStarted", "Orchestrator created execution plan"),
-            ("AgentStarted", "GTM Agent activated"),
-            ("AgentStarted", "Hiring Agent activated"),
-            ("AgentStarted", "Finance Agent activated"),
-            ("LeadQualified", "GTM Agent retrieved and scored 250 leads in Hyderabad"),
-            ("CandidateShortlisted", "Hiring Agent retrieved 50 candidates and shortlisted 8"),
-            ("DataUpdated", "Finance Agent checked budget and calculated runway (6.7 months)"),
-            ("DocumentGenerated", "Legal Agent generated Employment Agreement and NDA drafts"),
-            ("ApprovalRequired", "System marked high-risk legal and outreach tasks as Awaiting Approval")
+            ("TelemetryIngested", "Flight Intelligence received orbital telemetry stream from ISTRAC Ground Station"),
+            ("OrchestratorActive", "SpaceXOS Flight Intelligence initialized multi-agent decision graph"),
+            ("AgentStarted", "Telemetry Detection Agent evaluating sensor streams against nominal envelopes"),
+            ("AnomalyCorroborated", "Incident Diagnostics Agent cross-referencing orbital ephemeris and space weather"),
+            ("RiskEvaluated", "Risk Assessment Agent computing collision probability and flight safety envelope"),
+            ("CatalogChecked", "ISRO Satellite Registry verified for active constellation orbit parameters"),
+            ("DirectiveDrafted", "Flight Director Agent generated maneuver sequence & voice briefing"),
+            ("ApprovalRequired", "Flight Operations Approval required before commanding spacecraft bus")
         ]
         for event, msg in events:
             data = {"event": event, "message": msg, "timestamp": datetime.now().strftime("%H:%M:%S")}
