@@ -26,14 +26,14 @@ def seed_demo_company(session: Session):
     
     print("Database cleared. Starting seeding...")
 
-    # 2. Seed Company
+    # 2. Seed Mission Organization
     mano_company = Company(
-        name="ManO",
-        industry="AI-powered gym-management SaaS",
-        location="Hyderabad, India",
-        description="ManO is an AI agent-staff platform for startup founders providing concurrent specialist agents and human-in-the-loop approvals.",
-        cash_balance=500000.0,  # ₹5,00,000
-        monthly_burn=75000.0,   # ₹75,000
+        name="SpaceXOS",
+        industry="Orbital Telemetry Monitoring & Space Situational Awareness",
+        location="Bengaluru / ISTRAC Ground Station, India",
+        description="SpaceXOS is an AI decision-support platform for flight operations leads, providing concurrent aerospace specialist agents and human-in-the-loop mission controls.",
+        cash_balance=45000000.0,
+        monthly_burn=1250000.0,
         created_at=datetime.now(timezone.utc) - timedelta(days=120)
     )
     session.add(mano_company)
@@ -242,15 +242,15 @@ def seed_demo_company(session: Session):
         )
         session.add(doc)
 
-    # 10. Seed Tasks (20 tasks)
+    # 10. Seed Tasks (20 space mission tasks)
     tasks_pool = [
-        ("GTM", "Qualify leads in Hyderabad", "Analyze lead pool of gyms in Hyderabad and identify top 20 prospects.", "high", "completed"),
-        ("Hiring", "Screen React resumes", "Filter React developer candidates based on experience and budget limits.", "medium", "completed"),
-        ("Finance", "Runway and Burn projection", "Compute runaway projection adjusting for potential new engineer hires.", "high", "completed"),
-        ("Legal", "Draft NDA templates", "Generate NDA files for business development vendor evaluations.", "low", "completed"),
-        ("GTM", "Cold email campaign", "Draft marketing email templates tailored to gym pain points.", "medium", "pending"),
-        ("Hiring", "Schedule developer interviews", "Arrange screening interviews for top 3 ranked React applicants.", "high", "pending"),
-        ("Legal", "Hiring Document Review", "Inspect Draft employment agreement clauses for state labor law compliance.", "high", "awaiting_approval")
+        ("Detection Agent", "Process ISTRAC Telemetry Stream", "Ingest 42ms telemetry packet stream for Cartosat-3 and RISAT-2BR1.", "high", "completed"),
+        ("Incident Agent", "Subsystem Diagnostics Envelope", "Verify EPS solar bus voltages against ISRO baseline power envelope.", "high", "completed"),
+        ("Risk Agent", "Conjunction Screening Pass", "Screen 42 space objects in LEO orbit corridor for miss-distance violations.", "high", "completed"),
+        ("Reporting Agent", "Draft Incident Dossier EVT-C3", "Compile multi-agent findings and executive incident voice briefing.", "medium", "completed"),
+        ("Detection Agent", "Downlink SNR Jitter Tracking", "Filter Kalman residual deviations on GSAT-7A X-band transponder.", "medium", "pending"),
+        ("Risk Agent", "Orbital Decay Propagation", "Model atmospheric drag trajectory across SSO 505km perigee.", "high", "pending"),
+        ("Incident Agent", "Reaction Wheel 3 Health Review", "Analyze fine pointing gyro rate jitter exceeding 0.08 deg threshold.", "high", "awaiting_approval")
     ]
     for i in range(1, 21):
         agent, title, desc, prio, status = random.choice(tasks_pool)
@@ -264,11 +264,11 @@ def seed_demo_company(session: Session):
         )
         session.add(task)
 
-    # 11. Seed Approvals (3 approvals - from initial company state specification)
+    # 11. Seed Approvals (Space Mission Operational Approvals)
     approvals_pool = [
-        ("Sign Employment Agreement", "Hiring", "High", "Approve contract offer for shortlisted Frontend React Developer (Rahul Sharma)."),
-        ("Sign NDA for Gym Corp", "Legal", "Medium", "Mutual Non-Disclosure Agreement for vendor partner evaluations."),
-        ("Disburse Marketing Ad Spend", "Finance", "High", "Approve ₹50,000 budget allocation for local Meta advertisement campaigns.")
+        ("Collision Avoidance Burn", "Risk Agent", "High", "Authorize 0.8 m/s delta-v thruster burn on RISAT-2BR1 to clear Cosmos-2251 orbital debris conjunction."),
+        ("EPS Shunt Regulator Failover", "Incident Agent", "High", "Authorize automated EPS bus failover on Cartosat-3 following 58% voltage sag detection on primary shunt."),
+        ("Flight Director Emergency Call", "Reporting Agent", "Medium", "Authorize automated Twilio voice briefing dispatch to Flight Operations Director for GSAT-7A SNR carrier margin drop.")
     ]
     for action, agent, risk, desc in approvals_pool:
         app = Approval(
