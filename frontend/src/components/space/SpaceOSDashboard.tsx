@@ -404,24 +404,29 @@ export const SpaceOSDashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* 16:9 Responsive Video Viewport */}
-          <div className="relative aspect-video max-h-[380px] w-full bg-black rounded-xl overflow-hidden border border-[#E5E5E7] shadow-inner">
-            <iframe
-              src="https://www.youtube.com/embed/I3sa2kiEpkA?autoplay=1&mute=1&loop=1&playlist=I3sa2kiEpkA&controls=1&rel=0"
-              title="SpaceOS Live Space Stream"
-              className="w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
+          {/* Edge-to-Edge Full Fill Live Video Viewport (Authentic Recorded Feed) */}
+          <div className="relative w-full h-[400px] md:h-[480px] bg-black rounded-xl overflow-hidden border border-[#E5E5E7] shadow-inner">
+            <video
+              src="/space-feed.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
             />
-            
+
             {/* Live Telemetry Overlay HUD */}
-            <div className="absolute bottom-2.5 left-3 right-3 pointer-events-none flex items-center justify-between text-[11px] font-mono text-white/90 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-lg border border-white/10">
-              <div className="flex items-center gap-2">
+            <div className="absolute bottom-3 left-4 right-4 z-20 pointer-events-none flex items-center justify-between text-[11px] font-mono text-white/95 bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 shadow-lg">
+              <div className="flex items-center gap-2.5">
                 <span className="w-2 h-2 rounded-full bg-[#F27A30] animate-pulse" />
-                <span>SPACECRAFT: {activeSat?.name || 'Cartosat-3'} (NORAD #{activeSat?.norad_id || '44804'})</span>
+                <span className="font-bold tracking-wide">
+                  SPACECRAFT: {activeSat?.name || 'Cartosat-3'} (NORAD #{activeSat?.norad_id || '44804'})
+                </span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <span>ALT: {currentTelemetry?.telemetry.altitude_km.toFixed(1) || '505.2'} km</span>
+                <span className="text-white/30">|</span>
+                <span>ORBIT: LEO (SSO)</span>
                 <span className="text-white/30">|</span>
                 <span>LATENCY: 42 ms</span>
               </div>
