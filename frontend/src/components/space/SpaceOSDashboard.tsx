@@ -162,6 +162,7 @@ export const SpaceOSDashboard: React.FC = () => {
   const [currentIncident, setCurrentIncident] = useState<any>(null);
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [analyzingAgentStep, setAnalyzingAgentStep] = useState<string>('');
+  const [activeFeed, setActiveFeed] = useState<'feed1' | 'feed2'>('feed1');
 
   // 1. Load Satellites Registry
   useEffect(() => {
@@ -397,17 +398,46 @@ export const SpaceOSDashboard: React.FC = () => {
                 ORBITAL FEED ACTIVE
               </span>
             </div>
-            <div className="flex items-center gap-2 text-xs font-mono text-[#6E6E73]">
-              <span>OPTICAL LINK: LOCKED</span>
-              <span className="text-[#E5E5E7]">|</span>
-              <span>1080P • 60 FPS</span>
+
+            {/* Video Feed Switcher: Switch between Feed 1 and Feed 2 */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center bg-[#F4F4F6] p-1 rounded-xl border border-[#E5E5E7] text-xs font-semibold">
+                <button
+                  type="button"
+                  onClick={() => setActiveFeed('feed1')}
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    activeFeed === 'feed1'
+                      ? 'bg-[#F27A30] text-white shadow-xs'
+                      : 'text-[#6E6E73] hover:text-[#1E1E24]'
+                  }`}
+                >
+                  CAM 01 • Cartosat-3
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveFeed('feed2')}
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    activeFeed === 'feed2'
+                      ? 'bg-[#F27A30] text-white shadow-xs'
+                      : 'text-[#6E6E73] hover:text-[#1E1E24]'
+                  }`}
+                >
+                  CAM 02 • ISS EarthCam
+                </button>
+              </div>
+              <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-[#6E6E73] pl-2 border-l border-[#E5E5E7]">
+                <span>OPTICAL LINK: LOCKED</span>
+                <span className="text-[#E5E5E7]">|</span>
+                <span>1080P • 60 FPS</span>
+              </div>
             </div>
           </div>
 
           {/* Edge-to-Edge Full Fill Live Video Viewport (Authentic Recorded Feed) */}
           <div className="relative w-full h-[400px] md:h-[480px] bg-black rounded-xl overflow-hidden border border-[#E5E5E7] shadow-inner">
             <video
-              src="/space-feed.mp4"
+              key={activeFeed}
+              src={activeFeed === 'feed1' ? '/space-feed-1.mp4' : '/space-feed-2.mp4'}
               autoPlay
               loop
               muted
@@ -415,20 +445,23 @@ export const SpaceOSDashboard: React.FC = () => {
               className="w-full h-full object-cover"
             />
 
-            {/* Live Telemetry Overlay HUD */}
+            {/* Live Telemetry Overlay HUD with Matching Spacecraft Info */}
             <div className="absolute bottom-3 left-4 right-4 z-20 pointer-events-none flex items-center justify-between text-[11px] font-mono text-white/95 bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 shadow-lg">
               <div className="flex items-center gap-2.5">
                 <span className="w-2 h-2 rounded-full bg-[#F27A30] animate-pulse" />
                 <span className="font-bold tracking-wide">
-                  SPACECRAFT: {activeSat?.name || 'Cartosat-3'} (NORAD #{activeSat?.norad_id || '44804'})
+                  SPACECRAFT: {activeFeed === 'feed1' ? 'Cartosat-3 (NORAD #44804)' : 'ISS / Earth Recon (NORAD #25544)'}
+                </span>
+                <span className="hidden md:inline px-2 py-0.5 rounded bg-white/10 text-white/80 text-[10px]">
+                  {activeFeed === 'feed1' ? 'AURORA & LIMB VIEW' : 'MOZAMBIQUE CHANNEL TRACK'}
                 </span>
               </div>
               <div className="flex items-center gap-4">
-                <span>ALT: {currentTelemetry?.telemetry.altitude_km.toFixed(1) || '505.2'} km</span>
+                <span>ALT: {activeFeed === 'feed1' ? (currentTelemetry?.telemetry.altitude_km.toFixed(1) || '505.2') : '418.6'} km</span>
                 <span className="text-white/30">|</span>
-                <span>ORBIT: LEO (SSO)</span>
+                <span>ORBIT: {activeFeed === 'feed1' ? 'LEO (SSO)' : 'LEO (51.6° INC)'}</span>
                 <span className="text-white/30">|</span>
-                <span>LATENCY: 42 ms</span>
+                <span>LATENCY: {activeFeed === 'feed1' ? '42 ms' : '38 ms'}</span>
               </div>
             </div>
           </div>
