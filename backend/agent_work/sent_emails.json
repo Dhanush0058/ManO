@@ -412,5 +412,59 @@
     "body": "Hello,\n\nThis is an update from FounderOS regarding your request.\n\nRegards,\nFounderOS",
     "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
     "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-15T08:19:29.761725+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "ManO AI Platform - Live Email Test",
+    "body": "Hello Rahul,\n\nThis is a live test email sent directly from the ManO AI Agent Platform to verify SMTP delivery.\n\nAll systems are operational.\n\nBest regards,\nManO Autonomous Agent",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-15T08:25:13.172127+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushreddy52006@gmail.com",
+    "subject": "Update from FounderOS (FounderOS)",
+    "body": "Hello,\n\nThis is an update from FounderOS regarding your request.\n\nRegards,\nFounderOS",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushreddy52006@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-15T08:25:42.246102+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushreddy52006@gmail.com",
+    "subject": "Update from FounderOS (FounderOS)",
+    "body": "Hello,\n\nThis is an update from FounderOS regarding your request.\n\nRegards,\nFounderOS",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushreddy52006@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-15T08:28:08.122564+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Update from FounderOS (FounderOS)",
+    "body": "Hello,\n\nThis is an update from FounderOS regarding your request.\n\nRegards,\nFounderOS",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-15T09:08:03.808840+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Update on Our New Management Strategies",
+    "body": "Hi Dhanush,\n\nI hope this email finds you well.\n\nI wanted to share some exciting developments regarding our internal operations. We've recently begun implementing a refined set of new management strategies that we believe will significantly enhance our team's collaboration, efficiency, and overall growth trajectory.\n\nThese strategies are designed to foster greater agility, streamline decision-making, and empower our teams even further. I'm personally very enthusiastic about the positive impact we're already seeing and the potential they hold for our future.\n\nI'd be keen to connect briefly next week to walk you through some of the key aspects and gather your valuable insights. Please let me know if there's a day or time that works best for you.\n\nBest regards,\n\nThe Founder",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
+  },
+  {
+    "timestamp": "2026-10-15T09:08:16.785304+00:00",
+    "sender": "dhanushreddy52006@gmail.com",
+    "to_email": "dhanushr672@gmail.com",
+    "subject": "Management Strategy for Q4: Addressing Key Initiatives and Challenges",
+    "body": "Dear Rahul,\n\nI hope this email finds you well. I am writing to discuss our management strategy for the fourth quarter of 2023. As the founder of FounderOS, I am excited to share some key initiatives and challenges we are currently facing, as well as the steps we are taking to address them.\n\nPlease let me know if you have any questions or concerns. Thank you for your time and consideration.\n\nBest regards,\n[Your Name]",
+    "status": "Dispatched live via SMTP server (smtp.gmail.com) to dhanushr672@gmail.com",
+    "protocol": "SMTP / MCP Protocol"
   }
 ]

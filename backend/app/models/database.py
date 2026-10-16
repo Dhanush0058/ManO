@@ -163,6 +163,8 @@ class AuditLogEntry(Base):
     status = Column(String(50), default="success")
 
 
+from app.models.space_models import SpaceEvent, SpaceIncident
+
 def init_db() -> None:
     Base.metadata.create_all(bind=engine)
     session = SessionLocal()

@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import agents, finance, health, orchestrator, tasks, endpoints, twilio_voice
+from app.api import agents, finance, health, orchestrator, tasks, endpoints, twilio_voice, space
 from app.config import settings
 from app.models.database import init_db
 
-app = FastAPI(title="ManO API", version="0.1.0")
+app = FastAPI(title="ManO API & SpaceOS", version="0.2.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,7 +25,7 @@ def on_startup() -> None:
 
 @app.get("/")
 def root() -> dict[str, str]:
-    return {"status": "ok", "message": "ManO API is running"}
+    return {"status": "ok", "message": "ManO API with SpaceOS Intelligence is running"}
 
 
 app.include_router(health.router, prefix="/api", tags=["health"])
@@ -35,3 +35,4 @@ app.include_router(agents.router, prefix="/api", tags=["agents"])
 app.include_router(finance.router, prefix="/api", tags=["finance"])
 app.include_router(endpoints.router, prefix="/api")
 app.include_router(twilio_voice.router, prefix="/api")
+app.include_router(space.router, prefix="/api")
