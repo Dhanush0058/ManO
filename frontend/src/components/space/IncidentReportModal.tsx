@@ -405,10 +405,10 @@ Reviewer: ${incident.reviewed_by || 'Pending Operator Review'}
                     <button
                       disabled={isSubmittingReview}
                       onClick={handleMarkAsReviewed}
-                      className="flex items-center gap-1.5 px-4 py-2 bg-white text-black hover:bg-zinc-200 rounded text-xs font-bold transition-all shadow"
+                      className="btn-orange flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
                     >
-                      {isSubmittingReview ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
-                      Confirm Operator Signoff
+                      {isSubmittingReview ? <Loader2 className="w-3.5 h-3.5 animate-spin text-white" /> : <Check className="w-3.5 h-3.5 text-white" />}
+                      <span className="text-white">Confirm Operator Signoff</span>
                     </button>
                   </div>
                 </div>
@@ -547,27 +547,27 @@ Reviewer: ${incident.reviewed_by || 'Pending Operator Review'}
                 <div className="flex items-center gap-3 pt-4 border-t border-white/10">
                   <button
                     onClick={handlePlayVoiceBriefing}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-white text-black hover:bg-zinc-200 rounded-lg text-xs font-bold transition-all shadow"
+                    className="btn-orange flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
                   >
                     {isSpeaking ? (
                       <>
-                        <Pause className="w-4 h-4 fill-current" />
-                        Pause Briefing
+                        <Pause className="w-4 h-4 fill-current text-white" />
+                        <span className="text-white">Pause Briefing</span>
                       </>
                     ) : (
                       <>
-                        <Play className="w-4 h-4 fill-current" />
-                        Play Spoken Briefing
+                        <Play className="w-4 h-4 fill-current text-white" />
+                        <span className="text-white">Play Spoken Briefing</span>
                       </>
                     )}
                   </button>
 
                   <button
                     onClick={handleStopVoice}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 rounded-lg text-xs font-semibold transition-all"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 rounded-lg text-xs font-semibold transition-all cursor-pointer"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
-                    Reset Audio
+                    <span>Reset Audio</span>
                   </button>
                 </div>
               </div>
@@ -577,7 +577,7 @@ Reviewer: ${incident.reviewed_by || 'Pending Operator Review'}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="p-2.5 bg-zinc-900 border border-zinc-700 rounded-lg text-white">
-                      <PhoneCall className="w-5 h-5 animate-pulse" />
+                      <PhoneCall className="w-5 h-5 animate-pulse text-[#F27A30]" />
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-white uppercase tracking-wide">
@@ -591,10 +591,10 @@ Reviewer: ${incident.reviewed_by || 'Pending Operator Review'}
 
                   <button
                     onClick={() => setShowCallConfirmModal(true)}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-white text-black hover:bg-zinc-200 rounded-lg text-xs font-bold shadow transition-all"
+                    className="btn-orange flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
                   >
-                    <PhoneCall className="w-4 h-4" />
-                    Call Operator
+                    <PhoneCall className="w-4 h-4 text-white" />
+                    <span className="text-white">Call Operator</span>
                   </button>
                 </div>
 
@@ -625,16 +625,18 @@ Reviewer: ${incident.reviewed_by || 'Pending Operator Review'}
             <button
               onClick={handleMarkAsReviewed}
               disabled={isSubmittingReview || isReviewedSuccess || incident.review_status === 'marked_as_reviewed'}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 isReviewedSuccess || incident.review_status === 'marked_as_reviewed'
                   ? 'bg-zinc-800 text-zinc-400 border border-zinc-700 cursor-default'
-                  : 'bg-white text-black hover:bg-zinc-200 shadow'
+                  : 'btn-orange text-white shadow-sm cursor-pointer'
               }`}
             >
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              {isReviewedSuccess || incident.review_status === 'marked_as_reviewed'
-                ? 'Marked as Reviewed'
-                : 'Mark as Reviewed'}
+              <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+              <span className="text-white">
+                {isReviewedSuccess || incident.review_status === 'marked_as_reviewed'
+                  ? 'Marked as Reviewed'
+                  : 'Mark as Reviewed'}
+              </span>
             </button>
           </div>
 
@@ -715,17 +717,17 @@ Reviewer: ${incident.reviewed_by || 'Pending Operator Review'}
               <button
                 disabled={isCallingOperator}
                 onClick={handleConfirmCallOperator}
-                className="flex items-center gap-2 px-5 py-2.5 bg-white text-black hover:bg-zinc-200 rounded-lg text-xs font-bold shadow transition-all"
+                className="btn-orange flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
               >
                 {isCallingOperator ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Placing Outbound Call...
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    <span className="text-white">Placing Outbound Call...</span>
                   </>
                 ) : (
                   <>
-                    <PhoneCall className="w-4 h-4" />
-                    Authorize & Place Call
+                    <PhoneCall className="w-4 h-4 text-white" />
+                    <span className="text-white">Authorize & Place Call</span>
                   </>
                 )}
               </button>

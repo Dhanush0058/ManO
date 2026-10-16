@@ -204,21 +204,21 @@ export const LiveMonitoringModal: React.FC<LiveMonitoringModalProps> = ({
             {/* Start / Stop Monitoring Button */}
             <button
               onClick={() => setIsMonitoring(!isMonitoring)}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all border ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer ${
                 isMonitoring
-                  ? 'bg-zinc-900 text-white border-zinc-600 hover:border-white'
-                  : 'bg-white text-black border-white hover:bg-zinc-200'
+                  ? 'btn-secondary'
+                  : 'btn-orange text-white'
               }`}
             >
               {isMonitoring ? (
                 <>
-                  <Square className="w-3.5 h-3.5 fill-current" />
-                  Stop Monitoring
+                  <Square className="w-3.5 h-3.5 text-[#F27A30] fill-current" />
+                  <span className="text-[#1E1E24]">Stop Monitoring</span>
                 </>
               ) : (
                 <>
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                  Resume Monitoring
+                  <Play className="w-3.5 h-3.5 text-white fill-current" />
+                  <span className="text-white">Resume Monitoring</span>
                 </>
               )}
             </button>
@@ -448,14 +448,14 @@ export const LiveMonitoringModal: React.FC<LiveMonitoringModalProps> = ({
                     onClose();
                   }
                 }}
-                className={`w-full py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${
+                className={`w-full py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm ${
                   selectedMarker
-                    ? 'bg-white hover:bg-zinc-200 text-black shadow active:scale-[0.98]'
-                    : 'bg-zinc-900 text-zinc-600 border border-zinc-800 cursor-not-allowed'
+                    ? 'btn-orange text-white cursor-pointer active:scale-[0.98]'
+                    : 'bg-zinc-800 text-zinc-500 border border-zinc-700 cursor-not-allowed opacity-50'
                 }`}
               >
-                <Sparkles className="w-4 h-4 text-current" />
-                Analyse Selected Event with SpaceOS
+                <Sparkles className="w-4 h-4 text-white" />
+                <span className="text-white">Analyse Selected Event with SpaceOS</span>
               </button>
               <p className="text-[10px] text-zinc-500 text-center font-mono">
                 Routes direct evidence into 4-agent reasoning pipeline.

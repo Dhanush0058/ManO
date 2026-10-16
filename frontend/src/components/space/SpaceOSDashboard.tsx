@@ -303,21 +303,24 @@ export const SpaceOSDashboard: React.FC = () => {
   const activeSat = satellites.find(s => s.satellite_id === selectedSatId) || satellites[0];
 
   return (
-    <div className="spaceos-theme flex-1 flex flex-col min-h-0 bg-black text-white overflow-y-auto font-sans">
+    <div className="flex-1 flex flex-col min-h-0 bg-[#EFEFF1] text-[#1E1E24] overflow-y-auto font-sans">
       
-      {/* 1. Header Bar: Pure Black & White Branding & Actions */}
-      <div className="border-b border-white/20 bg-black px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+      {/* 1. Header Bar: Clean White & Orangish Cognivo Branding */}
+      <div className="border-b border-[#E5E5E7] bg-white px-6 py-4 flex items-center justify-between sticky top-0 z-20 shadow-xs">
         <div className="flex items-center gap-4">
-          <div className="p-2.5 bg-white text-black rounded-lg shadow-md">
+          <div className="p-2.5 bg-[#FFF4ED] text-[#F27A30] rounded-xl border border-[#F27A30]/30 shadow-xs">
             <Satellite className="w-5 h-5 stroke-[2.5]" />
           </div>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-xl font-black tracking-tight text-white uppercase">
+              <h1 className="text-xl font-bold tracking-tight text-[#1E1E24] uppercase">
                 SpaceOS
               </h1>
+              <span className="text-[10px] font-mono font-bold bg-[#FFF4ED] text-[#C85006] border border-[#F27A30]/30 px-2 py-0.5 rounded-full">
+                ISRO GROUNDED
+              </span>
             </div>
-            <p className="text-xs text-white/90 font-medium mt-0.5">
+            <p className="text-xs text-[#6E6E73] font-medium mt-0.5">
               Live orbital telemetry monitoring, multi-agent incident intelligence, and human-in-the-loop decision support.
             </p>
           </div>
@@ -330,11 +333,11 @@ export const SpaceOSDashboard: React.FC = () => {
           <button
             id="spaceos-live-btn"
             onClick={() => setIsLiveModalOpen(true)}
-            className="btn-dark flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all"
+            className="btn-secondary flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xs transition-all cursor-pointer"
           >
-            <Tv className="w-4 h-4 text-white" />
-            <span>Live Feed</span>
-            <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+            <Tv className="w-4 h-4 text-[#F27A30]" />
+            <span className="text-[#1E1E24]">Live Feed</span>
+            <span className="w-2 h-2 rounded-full bg-[#F27A30] animate-ping" />
           </button>
 
           {/* Primary Action Button: Analyse Incident */}
@@ -342,24 +345,24 @@ export const SpaceOSDashboard: React.FC = () => {
             id="spaceos-analyze-btn"
             disabled={!selectedEventId || isAnalyzing}
             onClick={() => handleAnalyzeEvent()}
-            className={`btn-white flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black transition-all ${
+            className={`btn-orange flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm ${
               selectedEventId && !isAnalyzing
                 ? 'cursor-pointer active:scale-95'
                 : 'opacity-50 cursor-not-allowed'
             }`}
           >
-            <Sparkles className="w-4 h-4 text-black" />
-            <span>{isAnalyzing ? 'Running 4 Agents...' : 'Analyse Incident'}</span>
+            <Sparkles className="w-4 h-4 text-white" />
+            <span className="text-white">{isAnalyzing ? 'Running 4 Agents...' : 'Analyse Incident'}</span>
           </button>
 
           {/* Simulate Anomaly Button */}
           <button
             onClick={() => handleSimulateAnomaly('solar_drop')}
-            className="btn-dark flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-colors"
+            className="btn-secondary flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold shadow-xs transition-colors cursor-pointer"
             title="Inject real-time telemetry deviation into event queue"
           >
-            <PlusCircle className="w-3.5 h-3.5 text-white" />
-            <span>Simulate Anomaly</span>
+            <PlusCircle className="w-3.5 h-3.5 text-[#F27A30]" />
+            <span className="text-[#1E1E24]">Simulate Anomaly</span>
           </button>
 
         </div>
@@ -367,49 +370,49 @@ export const SpaceOSDashboard: React.FC = () => {
 
       {/* Multi-Agent Reasoning Banner during Analysis */}
       {isAnalyzing && (
-        <div className="bg-black border-b border-white/30 px-6 py-3 flex items-center justify-between text-xs text-white">
+        <div className="bg-[#FFF4ED] border-b border-[#F27A30]/30 px-6 py-3 flex items-center justify-between text-xs text-[#C85006]">
           <div className="flex items-center gap-3">
             <RefreshCw className="w-4 h-4 animate-spin text-white" />
             <span className="font-bold tracking-wide">{analyzingAgentStep}</span>
           </div>
-          <span className="font-mono text-[11px] text-white/80">
+          <span className="font-mono text-[11px] text-[#C85006] font-semibold">
             Agents 1-4 Active • Context Grounding: ISRO Registry
           </span>
         </div>
       )}
 
       {/* 2. Main Workspace Layout */}
-      <div className="p-6 space-y-6 bg-black">
+      <div className="p-6 space-y-6">
         
         {/* Top Grid: Satellite HUD & Live Orbital Telemetry */}
         <div className="grid grid-cols-3 gap-6">
           
           {/* Left 2 Cols: Central Spacecraft Monitoring HUD */}
-          <div className="col-span-2 spaceos-card rounded-xl p-5 shadow-sm flex flex-col justify-between relative overflow-hidden">
+          <div className="col-span-2 bg-white border border-[#E5E5E7] rounded-2xl p-5 shadow-xs flex flex-col justify-between relative overflow-hidden">
             {/* Satellite Selector & Orbit Profile Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-white/20 relative z-10">
+            <div className="flex items-center justify-between pb-4 border-b border-[#E5E5E7] relative z-10">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-black border border-white/30 rounded-lg text-white">
+                <div className="p-2 bg-[#F4F4F6] border border-[#E5E5E7] rounded-xl text-[#F27A30]">
                   <Compass className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-[11px] font-black text-white uppercase tracking-widest">
+                  <div className="text-[11px] font-bold text-[#6E6E73] uppercase tracking-wider">
                     Selected Spacecraft
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
                     <select
                       value={selectedSatId}
                       onChange={(e) => setSelectedSatId(e.target.value)}
-                      className="bg-black border border-white/30 text-sm font-bold text-white rounded-md px-2.5 py-1 outline-none focus:border-white"
+                      className="bg-[#F4F4F6] border border-[#E5E5E7] text-sm font-semibold text-[#1E1E24] rounded-lg px-2.5 py-1 outline-none focus:border-[#F27A30]"
                     >
                       {satellites.map(sat => (
-                        <option key={sat.satellite_id} value={sat.satellite_id} className="bg-black text-white">
+                        <option key={sat.satellite_id} value={sat.satellite_id} className="bg-white text-[#1E1E24]">
                           {sat.name} ({sat.orbit_class})
                         </option>
                       ))}
                     </select>
                     {activeSat && (
-                      <span className="font-mono text-xs text-white bg-black border border-white/30 px-2 py-0.5 rounded font-bold">
+                      <span className="font-mono text-xs text-[#C85006] bg-[#FFF4ED] border border-[#F27A30]/30 px-2.5 py-0.5 rounded font-bold">
                         NORAD #{activeSat.norad_id}
                       </span>
                     )}
@@ -420,50 +423,50 @@ export const SpaceOSDashboard: React.FC = () => {
               {/* Mission Specs from Real ISRO Dataset */}
               {activeSat && (
                 <div className="text-right text-xs">
-                  <div className="text-white font-bold">
-                    Mission: <span className="text-white font-black underline">{activeSat.purpose}</span>
+                  <div className="text-[#6E6E73]">
+                    Mission: <span className="text-[#1E1E24] font-bold">{activeSat.purpose}</span>
                   </div>
-                  <div className="text-white/90 font-medium mt-0.5">
-                    User: <span className="text-white font-mono font-bold">{activeSat.users}</span>
+                  <div className="text-[#6E6E73] font-medium mt-0.5">
+                    User: <span className="text-[#1E1E24] font-mono font-bold">{activeSat.users}</span>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Real-Time Telemetry Dials Grid - Pure White Text on Black */}
+            {/* Real-Time Telemetry Dials Grid */}
             <div className="grid grid-cols-3 gap-3 my-4 relative z-10">
               
               {/* Metric 1: Orbital Altitude */}
-              <div className="metric-card rounded-lg p-3.5">
-                <div className="flex items-center justify-between text-xs text-white mb-1">
-                  <span className="flex items-center gap-1.5 font-bold">
-                    <Satellite className="w-3.5 h-3.5 text-white" />
+              <div className="bg-[#F4F4F6] border border-[#E5E5E7] rounded-xl p-3.5 hover:border-[#F27A30]/30 transition-colors">
+                <div className="flex items-center justify-between text-xs text-[#6E6E73] mb-1">
+                  <span className="flex items-center gap-1.5 font-semibold text-[#1E1E24]">
+                    <Satellite className="w-3.5 h-3.5 text-[#F27A30]" />
                     Orbital Altitude
                   </span>
-                  <span className="font-mono text-[10px] text-white/90 font-bold">
+                  <span className="font-mono text-[10px] text-[#6E6E73]">
                     NOM: {activeSat?.perigee_km || 505} km
                   </span>
                 </div>
-                <div className="text-2xl font-black text-white font-mono mt-1">
-                  {currentTelemetry?.telemetry.altitude_km.toFixed(1) || '505.2'} <span className="text-xs text-white/80 font-normal">km</span>
+                <div className="text-2xl font-black text-[#1E1E24] font-mono mt-1">
+                  {currentTelemetry?.telemetry.altitude_km.toFixed(1) || '505.2'} <span className="text-xs text-[#6E6E73] font-normal">km</span>
                 </div>
               </div>
 
               {/* Metric 2: Solar Bus Output */}
-              <div className="metric-card rounded-lg p-3.5">
-                <div className="flex items-center justify-between text-xs text-white mb-1">
-                  <span className="flex items-center gap-1.5 font-bold">
-                    <Zap className="w-3.5 h-3.5 text-white" />
+              <div className="bg-[#F4F4F6] border border-[#E5E5E7] rounded-xl p-3.5 hover:border-[#F27A30]/30 transition-colors">
+                <div className="flex items-center justify-between text-xs text-[#6E6E73] mb-1">
+                  <span className="flex items-center gap-1.5 font-semibold text-[#1E1E24]">
+                    <Zap className="w-3.5 h-3.5 text-[#F27A30]" />
                     Solar Array Output
                   </span>
-                  <span className="font-mono text-[10px] text-white/90 font-bold">
+                  <span className="font-mono text-[10px] text-[#6E6E73]">
                     BASE: {activeSat?.power_watts || 1800} W
                   </span>
                 </div>
-                <div className="text-2xl font-black text-white font-mono flex items-center justify-between mt-1">
-                  <span>{currentTelemetry?.telemetry.solar_array_power_w.toFixed(0) || '1850'} <span className="text-xs text-white/80 font-normal">W</span></span>
+                <div className="text-2xl font-black text-[#1E1E24] font-mono flex items-center justify-between mt-1">
+                  <span>{currentTelemetry?.telemetry.solar_array_power_w.toFixed(0) || '1850'} <span className="text-xs text-[#6E6E73] font-normal">W</span></span>
                   {currentTelemetry?.telemetry.status === 'ANOMALY_DETECTED' && (
-                    <span className="text-[10px] font-sans font-black text-black bg-white px-2 py-0.5 rounded uppercase">
+                    <span className="text-[10px] font-sans font-bold text-[#C85006] bg-[#FFF4ED] border border-[#F27A30]/30 px-2 py-0.5 rounded uppercase">
                       DEVIATION
                     </span>
                   )}
@@ -471,72 +474,72 @@ export const SpaceOSDashboard: React.FC = () => {
               </div>
 
               {/* Metric 3: Battery Charge */}
-              <div className="metric-card rounded-lg p-3.5">
-                <div className="flex items-center justify-between text-xs text-white mb-1">
-                  <span className="flex items-center gap-1.5 font-bold">
-                    <Cpu className="w-3.5 h-3.5 text-white" />
+              <div className="bg-[#F4F4F6] border border-[#E5E5E7] rounded-xl p-3.5 hover:border-[#F27A30]/30 transition-colors">
+                <div className="flex items-center justify-between text-xs text-[#6E6E73] mb-1">
+                  <span className="flex items-center gap-1.5 font-semibold text-[#1E1E24]">
+                    <Cpu className="w-3.5 h-3.5 text-[#F27A30]" />
                     Battery State
                   </span>
-                  <span className="font-mono text-[10px] text-white font-bold bg-white/20 px-1.5 py-0.5 rounded">NOMINAL</span>
+                  <span className="font-mono text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-bold">NOMINAL</span>
                 </div>
-                <div className="text-2xl font-black text-white font-mono mt-1">
-                  {currentTelemetry?.telemetry.battery_charge_pct.toFixed(1) || '96.4'} <span className="text-xs text-white/80 font-normal">%</span>
+                <div className="text-2xl font-black text-[#1E1E24] font-mono mt-1">
+                  {currentTelemetry?.telemetry.battery_charge_pct.toFixed(1) || '96.4'} <span className="text-xs text-[#6E6E73] font-normal">%</span>
                 </div>
               </div>
 
               {/* Metric 4: Downlink Carrier SNR */}
-              <div className="metric-card rounded-lg p-3.5">
-                <div className="flex items-center justify-between text-xs text-white mb-1">
-                  <span className="flex items-center gap-1.5 font-bold">
-                    <Radio className="w-3.5 h-3.5 text-white" />
+              <div className="bg-[#F4F4F6] border border-[#E5E5E7] rounded-xl p-3.5 hover:border-[#F27A30]/30 transition-colors">
+                <div className="flex items-center justify-between text-xs text-[#6E6E73] mb-1">
+                  <span className="flex items-center gap-1.5 font-semibold text-[#1E1E24]">
+                    <Radio className="w-3.5 h-3.5 text-[#F27A30]" />
                     Carrier SNR (X-Band)
                   </span>
-                  <span className="font-mono text-[10px] text-white/90 font-bold">24-28 dB</span>
+                  <span className="font-mono text-[10px] text-[#6E6E73]">24-28 dB</span>
                 </div>
-                <div className="text-2xl font-black text-white font-mono mt-1">
-                  {currentTelemetry?.telemetry.rx_snr_db.toFixed(1) || '25.8'} <span className="text-xs text-white/80 font-normal">dB</span>
+                <div className="text-2xl font-black text-[#1E1E24] font-mono mt-1">
+                  {currentTelemetry?.telemetry.rx_snr_db.toFixed(1) || '25.8'} <span className="text-xs text-[#6E6E73] font-normal">dB</span>
                 </div>
               </div>
 
               {/* Metric 5: Thermal Bus Regulator */}
-              <div className="metric-card rounded-lg p-3.5">
-                <div className="flex items-center justify-between text-xs text-white mb-1">
-                  <span className="flex items-center gap-1.5 font-bold">
-                    <Thermometer className="w-3.5 h-3.5 text-white" />
+              <div className="bg-[#F4F4F6] border border-[#E5E5E7] rounded-xl p-3.5 hover:border-[#F27A30]/30 transition-colors">
+                <div className="flex items-center justify-between text-xs text-[#6E6E73] mb-1">
+                  <span className="flex items-center gap-1.5 font-semibold text-[#1E1E24]">
+                    <Thermometer className="w-3.5 h-3.5 text-[#F27A30]" />
                     Thermal Bus
                   </span>
-                  <span className="font-mono text-[10px] text-white/90 font-bold">18 - 25 °C</span>
+                  <span className="font-mono text-[10px] text-[#6E6E73]">18 - 25 °C</span>
                 </div>
-                <div className="text-2xl font-black text-white font-mono mt-1">
-                  {currentTelemetry?.telemetry.thermal_bus_c.toFixed(1) || '21.4'} <span className="text-xs text-white/80 font-normal">°C</span>
+                <div className="text-2xl font-black text-[#1E1E24] font-mono mt-1">
+                  {currentTelemetry?.telemetry.thermal_bus_c.toFixed(1) || '21.4'} <span className="text-xs text-[#6E6E73] font-normal">°C</span>
                 </div>
               </div>
 
               {/* Metric 6: Attitude Gyro Jitter */}
-              <div className="metric-card rounded-lg p-3.5">
-                <div className="flex items-center justify-between text-xs text-white mb-1">
-                  <span className="flex items-center gap-1.5 font-bold">
-                    <Activity className="w-3.5 h-3.5 text-white" />
+              <div className="bg-[#F4F4F6] border border-[#E5E5E7] rounded-xl p-3.5 hover:border-[#F27A30]/30 transition-colors">
+                <div className="flex items-center justify-between text-xs text-[#6E6E73] mb-1">
+                  <span className="flex items-center gap-1.5 font-semibold text-[#1E1E24]">
+                    <Activity className="w-3.5 h-3.5 text-[#F27A30]" />
                     Pointing Jitter
                   </span>
-                  <span className="font-mono text-[10px] text-white/90 font-bold">&lt; 0.08 deg</span>
+                  <span className="font-mono text-[10px] text-[#6E6E73]">&lt; 0.08 deg</span>
                 </div>
-                <div className="text-2xl font-black text-white font-mono mt-1">
-                  {currentTelemetry?.telemetry.attitude_jitter_deg.toFixed(3) || '0.024'} <span className="text-xs text-white/80 font-normal">deg</span>
+                <div className="text-2xl font-black text-[#1E1E24] font-mono mt-1">
+                  {currentTelemetry?.telemetry.attitude_jitter_deg.toFixed(3) || '0.024'} <span className="text-xs text-[#6E6E73] font-normal">deg</span>
                 </div>
               </div>
 
             </div>
 
             {/* Bottom Status Ticker */}
-            <div className="pt-3 border-t border-white/20 flex items-center justify-between text-xs text-white relative z-10 font-mono font-bold">
+            <div className="pt-3 border-t border-[#E5E5E7] flex items-center justify-between text-xs text-[#6E6E73] relative z-10 font-mono">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                <span>Continuous Telemetry Ingestion: Active</span>
-                <span className="text-white/40">|</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="font-semibold text-[#1E1E24]">Continuous Telemetry Ingestion: Active</span>
+                <span className="text-[#E5E5E7]">|</span>
                 <span>Latency: 42 ms</span>
               </div>
-              <span className="text-[11px] text-white/90">
+              <span className="text-[11px] text-[#6E6E73]">
                 Frame UTC: {currentTelemetry?.timestamp || new Date().toISOString()}
               </span>
             </div>
@@ -544,30 +547,30 @@ export const SpaceOSDashboard: React.FC = () => {
           </div>
 
           {/* Right Col: Active Telemetry Trend Panel */}
-          <div className="col-span-1 spaceos-card rounded-xl p-5 shadow-sm flex flex-col justify-between">
+          <div className="col-span-1 bg-white border border-[#E5E5E7] rounded-2xl p-5 shadow-xs flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between pb-3 border-b border-white/20 mb-4">
-                <h3 className="text-sm font-black text-white flex items-center gap-2 uppercase tracking-wide">
-                  <Activity className="w-4 h-4 text-white" />
+              <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E7] mb-4">
+                <h3 className="text-sm font-bold text-[#1E1E24] flex items-center gap-2 uppercase tracking-wide">
+                  <Activity className="w-4 h-4 text-[#F27A30]" />
                   Telemetry Baseline Window
                 </h3>
-                <span className="text-[10px] font-mono text-white bg-black border border-white/40 px-2 py-0.5 rounded font-bold">
+                <span className="text-[10px] font-mono text-[#C85006] bg-[#FFF4ED] border border-[#F27A30]/30 px-2 py-0.5 rounded font-bold">
                   Z-SCORE
                 </span>
               </div>
 
-              {/* Micro Trend Bars in High Contrast Monochrome */}
+              {/* Trend Bars in Cognivo Orange Palette */}
               <div className="space-y-4">
                 <div className="text-xs">
-                  <div className="flex justify-between text-white font-bold mb-1.5">
+                  <div className="flex justify-between text-[#1E1E24] font-semibold mb-1.5">
                     <span>Solar Bus vs Baseline:</span>
-                    <span className="font-mono font-black text-white">
+                    <span className="font-mono font-bold text-[#1E1E24]">
                       {currentTelemetry?.telemetry.solar_array_power_w || 1850} W
                     </span>
                   </div>
-                  <div className="w-full h-2 bg-black rounded-full overflow-hidden border border-white/30">
+                  <div className="w-full h-2 bg-[#E5E5E7] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-white rounded-full transition-all duration-500"
+                      className="h-full bg-[#F27A30] rounded-full transition-all duration-500"
                       style={{
                         width: `${Math.min(100, ((currentTelemetry?.telemetry.solar_array_power_w || 1800) / (activeSat?.power_watts || 1800)) * 100)}%`
                       }}
@@ -576,15 +579,15 @@ export const SpaceOSDashboard: React.FC = () => {
                 </div>
 
                 <div className="text-xs">
-                  <div className="flex justify-between text-white font-bold mb-1.5">
+                  <div className="flex justify-between text-[#1E1E24] font-semibold mb-1.5">
                     <span>RF Carrier SNR Margin:</span>
-                    <span className="font-mono font-black text-white">
+                    <span className="font-mono font-bold text-[#1E1E24]">
                       {currentTelemetry?.telemetry.rx_snr_db || 25.8} dB
                     </span>
                   </div>
-                  <div className="w-full h-2 bg-black rounded-full overflow-hidden border border-white/30">
+                  <div className="w-full h-2 bg-[#E5E5E7] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-white rounded-full transition-all duration-500"
+                      className="h-full bg-[#F27A30] rounded-full transition-all duration-500"
                       style={{
                         width: `${Math.min(100, ((currentTelemetry?.telemetry.rx_snr_db || 25) / 30) * 100)}%`
                       }}
@@ -593,15 +596,15 @@ export const SpaceOSDashboard: React.FC = () => {
                 </div>
 
                 <div className="text-xs">
-                  <div className="flex justify-between text-white font-bold mb-1.5">
+                  <div className="flex justify-between text-[#1E1E24] font-semibold mb-1.5">
                     <span>Thermal Bus Headroom:</span>
-                    <span className="font-mono font-black text-white">
+                    <span className="font-mono font-bold text-[#1E1E24]">
                       {currentTelemetry?.telemetry.thermal_bus_c || 21.4} °C
                     </span>
                   </div>
-                  <div className="w-full h-2 bg-black rounded-full overflow-hidden border border-white/30">
+                  <div className="w-full h-2 bg-[#E5E5E7] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-white rounded-full transition-all duration-500"
+                      className="h-full bg-[#F27A30] rounded-full transition-all duration-500"
                       style={{
                         width: `${Math.min(100, ((currentTelemetry?.telemetry.thermal_bus_c || 22) / 45) * 100)}%`
                       }}
@@ -611,26 +614,26 @@ export const SpaceOSDashboard: React.FC = () => {
               </div>
 
               {/* Anomaly Detection Status Box */}
-              <div className="mt-5 p-3.5 rounded-lg border border-white/20 bg-black space-y-2">
+              <div className="mt-5 p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/70 space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-black text-white">Detector Status:</span>
-                  <span className="font-mono font-black text-black bg-white px-2 py-0.5 rounded text-[10px]">
+                  <span className="font-bold text-emerald-900">Detector Status:</span>
+                  <span className="font-mono font-bold text-emerald-700 bg-white border border-emerald-300 px-2 py-0.5 rounded text-[10px]">
                     NOMINAL
                   </span>
                 </div>
-                <p className="text-[11px] text-white/90 leading-relaxed font-sans font-medium">
+                <p className="text-[11px] text-emerald-800 leading-relaxed font-sans font-medium">
                   Evaluates live parameters every 3.5s against historical baselines from the ISRO satellite telemetry registry.
                 </p>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/20">
+            <div className="pt-4 border-t border-[#E5E5E7]">
               <button
                 onClick={() => setIsLiveModalOpen(true)}
-                className="btn-dark w-full py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all"
+                className="btn-secondary w-full py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
               >
-                <Tv className="w-4 h-4 text-white" />
-                Launch Dedicated Live Monitor
+                <Tv className="w-4 h-4 text-[#F27A30]" />
+                <span className="text-[#1E1E24]">Launch Dedicated Live Monitor</span>
               </button>
             </div>
           </div>
@@ -641,14 +644,14 @@ export const SpaceOSDashboard: React.FC = () => {
         <div className="grid grid-cols-3 gap-6">
           
           {/* Left 2 Cols: Detected Events List */}
-          <div className="col-span-2 spaceos-card rounded-xl p-5 shadow-sm">
-            <div className="flex items-center justify-between pb-3 border-b border-white/20 mb-4">
+          <div className="col-span-2 bg-white border border-[#E5E5E7] rounded-2xl p-5 shadow-xs">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E7] mb-4">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-white" />
-                <h3 className="text-sm font-black text-white tracking-wide uppercase">
+                <AlertTriangle className="w-4 h-4 text-[#F27A30]" />
+                <h3 className="text-sm font-bold text-[#1E1E24] tracking-wide uppercase">
                   Detected Space Events Queue
                 </h3>
-                <span className="text-xs text-white font-mono font-bold">
+                <span className="text-xs text-[#6E6E73] font-mono font-semibold">
                   ({events.length} logged detections)
                 </span>
               </div>
@@ -656,28 +659,29 @@ export const SpaceOSDashboard: React.FC = () => {
               <div className="flex items-center gap-2 text-xs">
                 <button
                   onClick={loadEvents}
-                  className="p-1.5 text-white hover:bg-white/20 rounded border border-white/30 transition-colors"
+                  className="p-1.5 text-[#6E6E73] hover:text-[#1E1E24] hover:bg-[#F4F4F6] rounded-lg border border-[#E5E5E7] transition-colors cursor-pointer"
+                  title="Refresh event detections"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
 
-            {/* Events Table in High Contrast Black & White */}
+            {/* Events Table with Crisp Typography and Wide Columns */}
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b-2 border-white/30 text-white font-mono text-[11px] uppercase">
-                    <th className="pb-3 text-white font-black">EVENT ID</th>
-                    <th className="pb-3 text-white font-black">SPACECRAFT</th>
-                    <th className="pb-3 text-white font-black">METRIC / EVIDENCE</th>
-                    <th className="pb-3 text-white font-black">OBSERVED VS BASELINE</th>
-                    <th className="pb-3 text-white font-black">CONFIDENCE</th>
-                    <th className="pb-3 text-white font-black">STATUS</th>
-                    <th className="pb-3 text-right text-white font-black">ACTION</th>
+                  <tr className="border-b border-[#E5E5E7] text-[#6E6E73] font-mono text-[11px] uppercase tracking-wider">
+                    <th className="pb-3 pr-4 font-bold text-[#6E6E73]">EVENT ID</th>
+                    <th className="pb-3 pr-4 font-bold text-[#6E6E73]">SPACECRAFT</th>
+                    <th className="pb-3 pr-4 font-bold text-[#6E6E73]">METRIC / EVIDENCE</th>
+                    <th className="pb-3 pr-4 font-bold text-[#6E6E73]">OBSERVED VS BASELINE</th>
+                    <th className="pb-3 px-4 font-bold text-[#6E6E73]">CONFIDENCE</th>
+                    <th className="pb-3 px-4 font-bold text-[#6E6E73]">STATUS</th>
+                    <th className="pb-3 pl-4 text-right font-bold text-[#6E6E73]">ACTION</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/10">
+                <tbody className="divide-y divide-[#F4F4F6]">
                   {events.map(evt => {
                     const isSelected = evt.event_id === selectedEventId;
                     return (
@@ -686,48 +690,48 @@ export const SpaceOSDashboard: React.FC = () => {
                         onClick={() => setSelectedEventId(evt.event_id)}
                         className={`cursor-pointer transition-colors ${
                           isSelected
-                            ? 'bg-white/20 text-white font-bold'
-                            : 'hover:bg-white/10 text-white'
+                            ? 'bg-[#FFF4ED] text-[#1E1E24] font-medium border-l-4 border-l-[#F27A30]'
+                            : 'hover:bg-[#FFF4ED]/40 text-[#1E1E24]'
                         }`}
                       >
-                        <td className="py-3.5 font-mono font-black text-white">
+                        <td className="py-3.5 pr-4 font-mono font-bold text-[#1E1E24]">
                           {evt.event_id}
                         </td>
-                        <td className="py-3.5 font-bold text-white">
+                        <td className="py-3.5 pr-4 font-bold text-[#1E1E24]">
                           {evt.satellite_name}
                         </td>
-                        <td className="py-3.5 max-w-[200px] truncate text-white font-medium" title={evt.detection_description}>
+                        <td className="py-3.5 pr-4 max-w-[200px] truncate text-[#6E6E73] font-medium" title={evt.detection_description}>
                           {evt.affected_measurement}
                         </td>
-                        <td className="py-3.5 font-mono text-[11px]">
-                          <span className="text-white font-black underline">{evt.observed_value}</span>
-                          <span className="text-white/60 mx-1">/</span>
-                          <span className="text-white/90">{evt.expected_baseline}</span>
+                        <td className="py-3.5 pr-4 font-mono text-[11px]">
+                          <span className="text-[#1E1E24] font-bold">{evt.observed_value}</span>
+                          <span className="text-[#6E6E73] mx-1.5">/</span>
+                          <span className="text-[#6E6E73]">{evt.expected_baseline}</span>
                         </td>
-                        <td className="py-3.5 font-mono text-white font-bold">
+                        <td className="py-3.5 px-4 font-mono text-[#1E1E24] font-bold">
                           {evt.detection_confidence ? `${(evt.detection_confidence * 100).toFixed(0)}%` : 'N/A'}
                         </td>
-                        <td className="py-3.5">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-black border ${
+                        <td className="py-3.5 px-4">
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold border ${
                             evt.review_status === 'marked_as_reviewed'
-                              ? 'bg-white text-black border-white'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                               : evt.review_status === 'analyzed'
-                              ? 'bg-black text-white border-white'
-                              : 'bg-black text-white/80 border-white/30'
+                              ? 'bg-[#FFF4ED] text-[#C85006] border-[#F27A30]/30'
+                              : 'bg-gray-100 text-[#6E6E73] border-gray-200'
                           }`}>
                             {evt.review_status}
                           </span>
                         </td>
-                        <td className="py-3.5 text-right">
+                        <td className="py-3.5 pl-4 text-right">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               handleAnalyzeEvent(evt.event_id);
                             }}
-                            className="btn-white px-3 py-1.5 rounded text-[11px] font-black inline-flex items-center gap-1 transition-all"
+                            className="btn-orange px-3 py-1.5 rounded-lg text-[11px] font-bold inline-flex items-center gap-1 shadow-xs transition-all active:scale-95 cursor-pointer"
                           >
-                            <span>Analyse</span>
-                            <ChevronRight className="w-3.5 h-3.5" />
+                            <span className="text-white">Analyse</span>
+                            <ChevronRight className="w-3.5 h-3.5 text-white" />
                           </button>
                         </td>
                       </tr>
@@ -740,14 +744,14 @@ export const SpaceOSDashboard: React.FC = () => {
           </div>
 
           {/* Right Col: Selected Event Evidence Preview Panel */}
-          <div className="col-span-1 spaceos-card rounded-xl p-5 shadow-sm flex flex-col justify-between">
+          <div className="col-span-1 bg-white border border-[#E5E5E7] rounded-2xl p-5 shadow-xs flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between pb-3 border-b border-white/20 mb-4">
-                <h3 className="text-sm font-black text-white flex items-center gap-2 uppercase tracking-wide">
-                  <Layers className="w-4 h-4 text-white" />
+              <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E7] mb-4">
+                <h3 className="text-sm font-bold text-[#1E1E24] flex items-center gap-2 uppercase tracking-wide">
+                  <Layers className="w-4 h-4 text-[#F27A30]" />
                   Evidence Inspector
                 </h3>
-                <span className="text-[10px] font-mono text-white bg-black border border-white/40 px-2 py-0.5 rounded font-bold">
+                <span className="text-[10px] font-mono text-[#C85006] bg-[#FFF4ED] border border-[#F27A30]/30 px-2 py-0.5 rounded font-bold">
                   {selectedEvent ? selectedEvent.event_id : 'NONE'}
                 </span>
               </div>
@@ -755,63 +759,63 @@ export const SpaceOSDashboard: React.FC = () => {
               {selectedEvent ? (
                 <div className="space-y-4 text-xs">
                   <div>
-                    <span className="text-white/80 block text-[10px] uppercase font-bold tracking-wider">
+                    <span className="text-[#6E6E73] block text-[10px] uppercase font-bold tracking-wider">
                       Target Satellite
                     </span>
-                    <span className="text-white font-black text-base">
+                    <span className="text-[#1E1E24] font-black text-base">
                       {selectedEvent.satellite_name}
                     </span>
                   </div>
 
-                  <div className="metric-card rounded-lg p-3.5 space-y-2">
+                  <div className="bg-[#F4F4F6] border border-[#E5E5E7] rounded-xl p-3.5 space-y-2 text-[#1E1E24]">
                     <div className="flex justify-between">
-                      <span className="text-white font-bold">Detection Method:</span>
-                      <span className="text-white font-mono font-bold">{selectedEvent.detection_method}</span>
+                      <span className="text-[#6E6E73] font-medium">Detection Method:</span>
+                      <span className="text-[#1E1E24] font-mono font-semibold">{selectedEvent.detection_method}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-white font-bold">Observed Value:</span>
-                      <span className="text-white font-mono font-black underline">{selectedEvent.observed_value}</span>
+                      <span className="text-[#6E6E73] font-medium">Observed Value:</span>
+                      <span className="text-[#1E1E24] font-mono font-bold text-[#C85006]">{selectedEvent.observed_value}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-white font-bold">Expected Baseline:</span>
-                      <span className="text-white font-mono font-bold">{selectedEvent.expected_baseline}</span>
+                      <span className="text-[#6E6E73] font-medium">Expected Baseline:</span>
+                      <span className="text-[#1E1E24] font-mono font-semibold">{selectedEvent.expected_baseline}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-white font-bold">Evidence Ref:</span>
-                      <span className="text-white font-mono font-bold">{selectedEvent.evidence_reference || 'N/A'}</span>
+                      <span className="text-[#6E6E73] font-medium">Evidence Ref:</span>
+                      <span className="text-[#1E1E24] font-mono font-semibold">{selectedEvent.evidence_reference || 'N/A'}</span>
                     </div>
                   </div>
 
                   <div>
-                    <span className="text-white/90 block text-[10px] uppercase font-black tracking-wider mb-1">
+                    <span className="text-[#6E6E73] block text-[10px] uppercase font-bold tracking-wider mb-1">
                       Observation Narrative
                     </span>
-                    <p className="metric-card text-white p-3.5 rounded-lg leading-relaxed text-xs font-medium">
+                    <p className="bg-[#F4F4F6] border border-[#E5E5E7] text-[#1E1E24] p-3.5 rounded-xl leading-relaxed text-xs font-normal">
                       {selectedEvent.detection_description}
                     </p>
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-12 text-white font-bold">
+                <div className="text-center py-12 text-[#6E6E73] font-medium">
                   Select an event from the queue to inspect evidence.
                 </div>
               )}
             </div>
 
-            <div className="pt-4 border-t border-white/20 space-y-2">
+            <div className="pt-4 border-t border-[#E5E5E7] space-y-2">
               <button
                 disabled={!selectedEvent || isAnalyzing}
                 onClick={() => handleAnalyzeEvent()}
-                className={`btn-white w-full py-3 rounded-lg text-xs font-black flex items-center justify-center gap-2 transition-all ${
+                className={`btn-orange w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all ${
                   selectedEvent && !isAnalyzing
                     ? 'cursor-pointer active:scale-[0.98]'
                     : 'opacity-50 cursor-not-allowed'
                 }`}
               >
-                <Sparkles className="w-4 h-4 text-current" />
-                {isAnalyzing ? 'Running 4 Agents...' : 'Analyse Incident with AI'}
+                <Sparkles className="w-4 h-4 text-white" />
+                <span className="text-white">{isAnalyzing ? 'Running 4 Agents...' : 'Analyse Incident with AI'}</span>
               </button>
-              <p className="text-[10px] text-white/80 text-center font-mono font-bold">
+              <p className="text-[10px] text-[#6E6E73] text-center font-mono font-medium">
                 Runs Detection, Incident, Risk, and Reporting Agents.
               </p>
             </div>
@@ -823,9 +827,9 @@ export const SpaceOSDashboard: React.FC = () => {
       </div>
 
       {/* Dataset Attribution Footer */}
-      <div className="border-t border-white/20 bg-black px-6 py-3 flex items-center justify-between text-xs text-white font-mono font-bold">
+      <div className="border-t border-[#E5E5E7] bg-white px-6 py-3 flex items-center justify-between text-xs text-[#6E6E73] font-mono">
         <div className="flex items-center gap-2">
-          <Database className="w-3.5 h-3.5 text-white" />
+          <Database className="w-3.5 h-3.5 text-[#F27A30]" />
           <span>
             Dataset Attribution: Grounded on the <strong>ISRO Satellite Complete Dataset</strong> (Kaggle: jyotmakadiya/isro-satellite-complete-dataset). Original orbital metrics and NORAD parameters preserved.
           </span>

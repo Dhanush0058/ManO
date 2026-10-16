@@ -110,7 +110,7 @@ header span {
   color: var(--foreground) !important;
 }
 
-/* Inner Card Panels (Scoped within workspace to not affect glows) */
+/* Inner Card Panels */
 .flex-1.flex.flex-col.min-h-0.relative .glass-panel,
 .flex-1.flex.flex-col.min-h-0.relative .bg-\[\#111221\]\/50,
 .flex-1.flex.flex-col.min-h-0.relative .bg-\[\#161214\]\/50,
@@ -157,16 +157,16 @@ header span {
   border-color: rgba(242, 122, 48, 0.25) !important;
 }
 
-/* Enforce dark text contrast inside workspace panels (strictly excluded for SpaceOS Black & White theme) */
-.flex-1.flex.flex-col.min-h-0.relative :not(.spaceos-theme):not(.spaceos-theme *) > .text-white,
-.flex-1.flex.flex-col.min-h-0.relative :not(.spaceos-theme):not(.spaceos-theme *) > .text-gray-100,
-.flex-1.flex.flex-col.min-h-0.relative :not(.spaceos-theme):not(.spaceos-theme *) > .text-gray-200,
-.flex-1.flex.flex-col.min-h-0.relative :not(.spaceos-theme):not(.spaceos-theme *) > .text-gray-300 {
+/* Enforce dark text contrast inside workspace panels */
+.flex-1.flex.flex-col.min-h-0.relative .text-white,
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-100,
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-200,
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-300 {
   color: var(--foreground) !important;
 }
 
-.flex-1.flex.flex-col.min-h-0.relative :not(.spaceos-theme):not(.spaceos-theme *) > .text-gray-400,
-.flex-1.flex.flex-col.min-h-0.relative :not(.spaceos-theme):not(.spaceos-theme *) > .text-gray-500 {
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-400,
+.flex-1.flex.flex-col.min-h-0.relative .text-gray-500 {
   color: var(--muted) !important;
 }
 
@@ -179,13 +179,16 @@ header span {
   color: var(--accent) !important;
 }
 
-/* Guard White text color on solid backgrounds (buttons/bubbles) */
-.flex-1.flex.flex-col.min-h-0.relative button .text-white,
-.flex-1.flex.flex-col.min-h-0.relative button.text-white,
-.flex-1.flex.flex-col.min-h-0.relative .bg-blue-600 .text-white,
-.flex-1.flex.flex-col.min-h-0.relative .bg-indigo-600 .text-white,
-.flex-1.flex.flex-col.min-h-0.relative .bg-rose-600 .text-white,
-.flex-1.flex.flex-col.min-h-0.relative .bg-red-600 .text-white,
+/* Guard White text color strictly on solid colored buttons/bubbles */
+.flex-1.flex.flex-col.min-h-0.relative button.btn-orange,
+.flex-1.flex.flex-col.min-h-0.relative button.btn-orange span,
+.flex-1.flex.flex-col.min-h-0.relative button.btn-orange svg,
+.flex-1.flex.flex-col.min-h-0.relative .btn-orange,
+.flex-1.flex.flex-col.min-h-0.relative .btn-orange span,
+.flex-1.flex.flex-col.min-h-0.relative .btn-orange svg,
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#F27A30\],
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#F27A30\] span,
+.flex-1.flex.flex-col.min-h-0.relative .bg-\[\#F27A30\] svg,
 .flex-1.flex.flex-col.min-h-0.relative .user-bubble .text-white,
 .flex-1.flex.flex-col.min-h-0.relative .user-bubble span,
 .flex-1.flex.flex-col.min-h-0.relative .user-bubble p {
@@ -206,26 +209,51 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 2px rgba(242, 122, 48, 0.08) !important;
 }
 
-/* Standard Buttons - enforce orange accent */
+/* Primary Action Orange Buttons */
 button.bg-blue-600, 
 button.bg-indigo-600, 
 button.bg-purple-600,
-button.bg-indigo-700,
 button.bg-rose-600,
-button.bg-red-600 {
-  background-color: var(--accent) !important;
+button.btn-orange,
+.btn-orange {
+  background-color: #F27A30 !important;
   color: #FFFFFF !important;
-  border: none !important;
-  box-shadow: 0 2px 8px rgba(242, 122, 48, 0.15) !important;
+  border: 1px solid #DE671C !important;
+  box-shadow: 0 2px 8px rgba(242, 122, 48, 0.2) !important;
   transition: all 0.2s ease !important;
 }
 
 button.bg-blue-600:hover, 
 button.bg-indigo-600:hover, 
 button.bg-purple-600:hover,
-button.bg-rose-600:hover {
+button.bg-rose-600:hover,
+button.btn-orange:hover,
+.btn-orange:hover {
   background-color: #DE671C !important;
-  box-shadow: 0 4px 12px rgba(242, 122, 48, 0.25) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(242, 122, 48, 0.28) !important;
+}
+
+/* Secondary Button: clean white with dark readable text */
+button.btn-secondary,
+.btn-secondary {
+  background-color: #FFFFFF !important;
+  color: #1E1E24 !important;
+  border: 1px solid #E5E5E7 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.15s ease !important;
+}
+
+button.btn-secondary:hover,
+.btn-secondary:hover {
+  background-color: #F4F4F6 !important;
+  color: #1E1E24 !important;
+  border-color: #D1D1D6 !important;
+}
+
+button.btn-secondary span,
+.btn-secondary span {
+  color: #1E1E24 !important;
 }
 
 /* Chat Bubbles */
@@ -309,115 +337,4 @@ button.bg-rose-600:hover {
 .sidebar-brand-block button:hover {
   background-color: rgba(255, 255, 255, 0.12) !important;
   color: #ffffff !important;
-}
-
-
-/* =========================================================================
-   SPACEOS BLACK & WHITE MONOCHROME THEME ISOLATION
-   Strictly overrides Cognivo light colors for SpaceOS Intel dashboard
-   Ensures crisp 100% PURE WHITE text on deep BLACK backgrounds without grey/silver wash
-   ========================================================================= */
-
-.spaceos-theme {
-  background-color: #000000 !important;
-  color: #FFFFFF !important;
-}
-
-/* SpaceOS Containers and Cards */
-.spaceos-theme .spaceos-card,
-.spaceos-theme .bg-\[\#080808\],
-.spaceos-theme .bg-\[\#0a0e1c\],
-.spaceos-theme .bg-\[\#05070f\],
-.spaceos-theme .bg-black {
-  background-color: #000000 !important;
-  border-color: rgba(255, 255, 255, 0.35) !important;
-}
-
-/* Pure Black Canvas for Metric Boxes */
-.spaceos-theme .metric-card {
-  background-color: #000000 !important;
-  border: 1px solid rgba(255, 255, 255, 0.35) !important;
-  box-shadow: none !important;
-}
-
-/* High-Contrast 100% Pure White Text - No Grey, No Silver */
-.flex-1.flex.flex-col.min-h-0.relative .spaceos-theme,
-.flex-1.flex.flex-col.min-h-0.relative .spaceos-theme *,
-.spaceos-theme,
-.spaceos-theme *,
-.spaceos-theme h1,
-.spaceos-theme h2,
-.spaceos-theme h3,
-.spaceos-theme h4,
-.spaceos-theme span,
-.spaceos-theme p,
-.spaceos-theme label,
-.spaceos-theme td,
-.spaceos-theme th,
-.spaceos-theme div,
-.spaceos-theme svg,
-.spaceos-theme .text-muted,
-.spaceos-theme .text-zinc-400,
-.spaceos-theme .text-zinc-500,
-.spaceos-theme .text-gray-400,
-.spaceos-theme .metric-value,
-.spaceos-theme .font-mono {
-  color: #FFFFFF !important;
-  opacity: 1 !important;
-}
-
-/* Dropdowns & Controls */
-.spaceos-theme select,
-.spaceos-theme option,
-.spaceos-theme input,
-.spaceos-theme textarea {
-  background-color: #000000 !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.5) !important;
-}
-
-/* Table in SpaceOS */
-.spaceos-theme table th {
-  color: #FFFFFF !important;
-  font-weight: 800 !important;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.4) !important;
-  background-color: #000000 !important;
-}
-
-.spaceos-theme table td {
-  color: #FFFFFF !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
-}
-
-.spaceos-theme table tbody tr:hover {
-  background-color: rgba(255, 255, 255, 0.12) !important;
-}
-
-/* Contrast Badges: Pure White Background with Pure Black Text */
-.spaceos-theme .bg-white,
-.spaceos-theme .bg-white *,
-.spaceos-theme button.btn-white,
-.spaceos-theme button.btn-white * {
-  background-color: #FFFFFF !important;
-  color: #000000 !important;
-  font-weight: 800 !important;
-}
-
-.spaceos-theme button.btn-white:hover {
-  background-color: #E4E4E7 !important;
-  color: #000000 !important;
-}
-
-/* Dark Action Buttons */
-.spaceos-theme button.btn-dark,
-.spaceos-theme button.bg-zinc-900,
-.spaceos-theme button.bg-transparent {
-  background-color: #000000 !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.5) !important;
-}
-
-.spaceos-theme button.btn-dark:hover {
-  background-color: #1A1A1A !important;
-  border-color: #FFFFFF !important;
 }
