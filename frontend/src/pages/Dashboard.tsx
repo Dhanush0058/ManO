@@ -190,7 +190,7 @@ export function Dashboard() {
                 Supabase PostgreSQL Database
               </h3>
               <p className="text-xs text-gray-400 leading-relaxed">
-                Reset tables and seed candidates, leads, and transaction records for ManO SaaS workspace.
+                Reset tables and seed candidates, telemetry events, and flight records for SpacsXOS Defense & Orbital workspace.
               </p>
               
               <button
@@ -223,12 +223,12 @@ export function Dashboard() {
       <Sidebar activeView={activeView} setActiveView={setActiveView} />
 
       <div className="flex-1 flex flex-col min-h-0 relative">
-        {/* Global Header (FounderOS) */}
+        {/* Global Header (SpacsXOS) */}
         <header className="px-6 py-3.5 border-b border-white/5 bg-[#030307]/50 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Workspace:</span>
             <span className="text-xs font-bold text-white bg-white/5 border border-white/5 px-2 py-0.5 rounded">
-              ManO Workspace
+              SpacsXOS Workspace
             </span>
           </div>
 

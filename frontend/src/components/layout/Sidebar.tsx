@@ -5,10 +5,10 @@ import {
   LayoutDashboard,
   Satellite,
   Brain,
-  Coins,
-  Megaphone,
-  UserCheck,
-  Scale,
+  Scan,
+  ShieldAlert,
+  ShieldCheck,
+  FileSpreadsheet,
   PhoneCall,
   ListTodo,
   Blocks,
@@ -29,11 +29,11 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
     { id: 'spaceos', label: 'SpaceOS Intel', icon: Satellite },
     { id: 'command', label: 'Command Center', icon: LayoutDashboard },
     { id: 'orchestrator', label: 'AI Orchestrator', icon: Brain },
-    { id: 'finance', label: 'Finance', icon: Coins, category: 'specialists' },
-    { id: 'gtm', label: 'GTM', icon: Megaphone, category: 'specialists' },
-    { id: 'hiring', label: 'Hiring', icon: UserCheck, category: 'specialists' },
-    { id: 'legal', label: 'Legal', icon: Scale, category: 'specialists' },
-    { id: 'voice_calling', label: 'Voice Calling (Twilio)', icon: PhoneCall, category: 'specialists' },
+    { id: 'finance', label: 'Detection Agent', icon: Scan, category: 'specialists' },
+    { id: 'gtm', label: 'Incident Diagnostics Agent', icon: ShieldAlert, category: 'specialists' },
+    { id: 'hiring', label: 'Risk Assessment Agent', icon: ShieldCheck, category: 'specialists' },
+    { id: 'legal', label: 'Mission Reporting Agent', icon: FileSpreadsheet, category: 'specialists' },
+    { id: 'voice_calling', label: 'Operator Voice Briefing', icon: PhoneCall, category: 'specialists' },
     { id: 'tasks', label: 'Tasks', icon: ListTodo, category: 'management' },
     { id: 'integrations', label: 'Integrations', icon: Blocks, category: 'management' },
     { id: 'analytics', label: 'Analytics', icon: BarChart3, category: 'management' },
@@ -53,12 +53,12 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
       }`}>
         {!collapsed && (
           <span className="text-[16px] font-extrabold text-white tracking-wide font-sans select-none">
-            FounderOS
+            SpacsXOS
           </span>
         )}
         {collapsed && (
           <span className="text-[13px] font-black text-white select-none">
-            FO
+            SX
           </span>
         )}
         <button
@@ -95,10 +95,10 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
           })}
         </div>
 
-        {/* Specialists Section */}
+        {/* AI Agents Section */}
         <div>
           {!collapsed && (
-            <p className="text-[10px] font-semibold text-gray-600 tracking-wider uppercase px-3 mb-1.5">Specialists</p>
+            <p className="text-[10px] font-bold text-gray-400 tracking-wider uppercase px-3 mb-1.5">AI Agents</p>
           )}
           <div className="space-y-0.5">
             {menuItems.filter(item => item.category === 'specialists').map((item) => {
