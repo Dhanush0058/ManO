@@ -101,7 +101,7 @@ Flight Operations Console: Incident corroboration complete. Decision gate pendin
         })
       }).catch((err) => console.error('[SpaceXOS] Email dispatch error:', err));
 
-      // 3. Concurrently activate all 4 aerospace agents with realistic telemetry arrival timing
+      // 3. Concurrently activate all 4 aerospace agents with realistic telemetry processing timing
       setTimeout(() => {
         setMessages((prev) => [
           ...prev,
@@ -113,7 +113,7 @@ Flight Operations Console: Incident corroboration complete. Decision gate pendin
             text: `🛰️ [TELEMETRY INGESTION CONFIRMED] Sensor: ${anomalyPayload.sensor}\n\n${anomalyPayload.detectionSummary}\n\nObserved: ${anomalyPayload.observedValue} | Nominal Baseline: ${anomalyPayload.expectedBaseline}`
           }
         ]);
-      }, 400);
+      }, 1200);
 
       setTimeout(() => {
         setMessages((prev) => [
@@ -126,7 +126,7 @@ Flight Operations Console: Incident corroboration complete. Decision gate pendin
             text: `🔍 [SUBSYSTEM DIAGNOSTICS COMPLETE]\n\n${anomalyPayload.diagnosticsSummary}\n\nCoordinates: ${anomalyPayload.coordinates}`
           }
         ]);
-      }, 1000);
+      }, 2400);
 
       setTimeout(() => {
         setMessages((prev) => [
@@ -139,7 +139,7 @@ Flight Operations Console: Incident corroboration complete. Decision gate pendin
             text: `🛡️ [SAFETY OF FLIGHT EVALUATION]\n\n${anomalyPayload.riskSummary}\n\nRecommended Safety Protocol: ${anomalyPayload.recommendedAction}`
           }
         ]);
-      }, 1600);
+      }, 3600);
 
       setTimeout(() => {
         setMessages((prev) => [
@@ -153,18 +153,21 @@ Flight Operations Console: Incident corroboration complete. Decision gate pendin
           }
         ]);
         setIsLoading(false);
-      }, 2200);
+      }, 4800);
 
       return;
     }
 
-    // Standard operator query handling
+    // Standard operator query handling with minimum 1.2s processing delay
     const userMsg: ChatMessage = { id: Date.now().toString(), role: 'user', text };
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
 
     try {
-      const response = await queryOrchestrator(text);
+      const [response] = await Promise.all([
+        queryOrchestrator(text),
+        new Promise((res) => setTimeout(res, 1200))
+      ]);
       const assistantMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
