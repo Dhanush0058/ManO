@@ -157,16 +157,16 @@ header span {
   border-color: rgba(242, 122, 48, 0.25) !important;
 }
 
-/* Enforce dark text contrast inside workspace panels */
-.flex-1.flex.flex-col.min-h-0.relative .text-white,
-.flex-1.flex.flex-col.min-h-0.relative .text-gray-100,
-.flex-1.flex.flex-col.min-h-0.relative .text-gray-200,
-.flex-1.flex.flex-col.min-h-0.relative .text-gray-300 {
+/* Enforce dark text contrast inside workspace panels (strictly excluded for SpaceOS Black & White theme) */
+.flex-1.flex.flex-col.min-h-0.relative :not(.spaceos-theme):not(.spaceos-theme *) > .text-white,
+.flex-1.flex.flex-col.min-h-0.relative :not(.spaceos-theme):not(.spaceos-theme *) > .text-gray-100,
+.flex-1.flex.flex-col.min-h-0.relative :not(.spaceos-theme):not(.spaceos-theme *) > .text-gray-200,
+.flex-1.flex.flex-col.min-h-0.relative :not(.spaceos-theme):not(.spaceos-theme *) > .text-gray-300 {
   color: var(--foreground) !important;
 }
 
-.flex-1.flex.flex-col.min-h-0.relative .text-gray-400,
-.flex-1.flex.flex-col.min-h-0.relative .text-gray-500 {
+.flex-1.flex.flex-col.min-h-0.relative :not(.spaceos-theme):not(.spaceos-theme *) > .text-gray-400,
+.flex-1.flex.flex-col.min-h-0.relative :not(.spaceos-theme):not(.spaceos-theme *) > .text-gray-500 {
   color: var(--muted) !important;
 }
 
@@ -341,6 +341,10 @@ button.bg-rose-600:hover {
 }
 
 /* High-Contrast 100% Pure White Text - No Grey, No Silver */
+.flex-1.flex.flex-col.min-h-0.relative .spaceos-theme,
+.flex-1.flex.flex-col.min-h-0.relative .spaceos-theme *,
+.spaceos-theme,
+.spaceos-theme *,
 .spaceos-theme h1,
 .spaceos-theme h2,
 .spaceos-theme h3,

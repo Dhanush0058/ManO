@@ -316,13 +316,6 @@ export const SpaceOSDashboard: React.FC = () => {
               <h1 className="text-xl font-black tracking-tight text-white uppercase">
                 SpaceOS
               </h1>
-              <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider uppercase bg-black text-white border border-white/40">
-                Decision Support Intelligence
-              </span>
-              <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] font-mono bg-black border border-white/30 text-white font-bold">
-                <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                <span>ONLINE: Bengaluru ISTRAC Pass</span>
-              </div>
             </div>
             <p className="text-xs text-white/90 font-medium mt-0.5">
               Live orbital telemetry monitoring, multi-agent incident intelligence, and human-in-the-loop decision support.
