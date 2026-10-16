@@ -25,6 +25,7 @@ interface ChatMessage {
   agent?: string;
   text: string;
   image?: string;
+  beforeImage?: string;
   badge?: string;
 }
 
@@ -58,6 +59,7 @@ export function Dashboard() {
         role: 'user',
         text: text,
         image: anomalyPayload.image,
+        beforeImage: anomalyPayload.beforeImage || '/anomalies/before-anomaly-1.jpg',
         badge: anomalyPayload.spacecraft
       };
       setMessages((prev) => [...prev, userMsg]);

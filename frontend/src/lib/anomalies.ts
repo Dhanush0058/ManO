@@ -1,6 +1,7 @@
 export interface SpaceAnomaly {
   id: string;
   image: string;
+  beforeImage?: string; // Pre-incident optical baseline capture
   title: string;
   spacecraft: string;
   noradId: string;
@@ -21,6 +22,7 @@ export const SPACE_ANOMALIES: SpaceAnomaly[] = [
   {
     id: 'anomaly-1',
     image: '/anomalies/anomaly-1.jpg',
+    beforeImage: '/anomalies/before-anomaly-1.jpg',
     title: 'Massive Wildfire Thermal Plume & Anomalous Heat Zone',
     spacecraft: 'Cartosat-3 Optical Transponder',
     noradId: '44804',
@@ -39,6 +41,7 @@ export const SPACE_ANOMALIES: SpaceAnomaly[] = [
   {
     id: 'anomaly-2',
     image: '/anomalies/anomaly-2.jpg',
+    beforeImage: '/anomalies/before-anomaly-1.jpg',
     title: 'Active Volcanic Eruption & Pyroclastic Ash Plume',
     spacecraft: 'RISAT-2BR1 / ISS Recon Track',
     noradId: '44857',
@@ -57,6 +60,7 @@ export const SPACE_ANOMALIES: SpaceAnomaly[] = [
   {
     id: 'anomaly-3',
     image: '/anomalies/anomaly-3.jpg',
+    beforeImage: '/anomalies/before-anomaly-1.jpg',
     title: 'Seismic Surface Fault Rupture & Large-Scale Subsidence',
     spacecraft: 'Cartosat-3 High-Res Imager',
     noradId: '44804',
@@ -75,6 +79,7 @@ export const SPACE_ANOMALIES: SpaceAnomaly[] = [
   {
     id: 'anomaly-4',
     image: '/anomalies/anomaly-4.jpg',
+    beforeImage: '/anomalies/before-anomaly-1.jpg',
     title: 'Massive Glacial Ice Shelf Calving & Marine Thermal Bloom',
     spacecraft: 'GSAT-7A / Polar Earth Observation',
     noradId: '43864',

@@ -11,6 +11,7 @@ interface ChatMessage {
   agent?: string;
   text: string;
   image?: string;
+  beforeImage?: string;
   badge?: string;
 }
 
@@ -294,11 +295,38 @@ export function CommandCenter({ messages, onSendMessage, isLoading, stagedAnomal
             return (
               <div key={m.id} className="max-w-[85%] ml-auto animate-fade-in space-y-2">
                 {m.image && (
-                  <div className="rounded-xl overflow-hidden border border-orange-500/50 shadow-lg max-w-sm ml-auto">
-                    <img src={m.image} alt="Staged Telemetry Anomaly" className="w-full h-44 object-cover" />
+                  <div className="rounded-xl overflow-hidden border border-orange-500/40 shadow-xl max-w-lg ml-auto bg-[#0b0d18]/90">
+                    <div className="grid grid-cols-2 gap-1.5 p-1.5 bg-black/60">
+                      {/* Before Image */}
+                      <div className="relative rounded-lg overflow-hidden border border-emerald-500/30 group">
+                        <img 
+                          src={m.beforeImage || '/anomalies/before-anomaly-1.jpg'} 
+                          alt="Pre-Incident Optical Baseline" 
+                          className="w-full h-36 object-cover" 
+                        />
+                        <div className="absolute top-1.5 left-1.5 bg-black/80 backdrop-blur-xs px-2 py-0.5 rounded text-[9.5px] font-mono font-bold text-emerald-400 border border-emerald-500/30">
+                          BEFORE • BASELINE
+                        </div>
+                      </div>
+
+                      {/* After Image */}
+                      <div className="relative rounded-lg overflow-hidden border border-orange-500/40 group">
+                        <img 
+                          src={m.image} 
+                          alt="Anomalous Optical Capture" 
+                          className="w-full h-36 object-cover" 
+                        />
+                        <div className="absolute top-1.5 left-1.5 bg-black/80 backdrop-blur-xs px-2 py-0.5 rounded text-[9.5px] font-mono font-bold text-orange-400 border border-orange-500/30">
+                          AFTER • ANOMALY
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="bg-black/90 px-3 py-1.5 text-[11px] font-mono text-orange-400 flex items-center justify-between border-t border-white/10">
-                      <span className="font-bold">🛰️ OPTICAL ANOMALY CAPTURE</span>
-                      <span className="text-gray-400">{m.badge || 'TELEMETRY FRAME'}</span>
+                      <span className="font-bold flex items-center gap-1.5">
+                        🛰️ OPTICAL DUAL-FRAME TELEMETRY
+                      </span>
+                      <span className="text-gray-400">{m.badge || 'CARTOSAT-3'}</span>
                     </div>
                   </div>
                 )}
@@ -336,19 +364,42 @@ export function CommandCenter({ messages, onSendMessage, isLoading, stagedAnomal
 
       {/* 4. Goal Input Composer Form with Voice Recognition */}
       <div className="p-4 bg-[#020205]/45 border-t border-white/5">
-        {/* Staged Optical Telemetry Frame Preview */}
+        {/* Staged Optical Telemetry Dual-Frame Preview */}
         {stagedAnomaly && (
           <div className="mb-3 p-3 rounded-xl bg-[#171108] border border-orange-500/50 flex items-center justify-between gap-3 animate-fade-in shadow-lg shadow-orange-950/20">
             <div className="flex items-center gap-3">
-              <img
-                src={stagedAnomaly.image}
-                alt="Captured Optical Evidence"
-                className="w-16 h-16 object-cover rounded-lg border border-orange-500/60 shadow-md shrink-0"
-              />
+              <div className="flex items-center gap-1.5 shrink-0">
+                {/* Before Image thumbnail */}
+                <div className="relative">
+                  <img
+                    src={stagedAnomaly.beforeImage || '/anomalies/before-anomaly-1.jpg'}
+                    alt="Pre-Incident Optical Baseline"
+                    className="w-14 h-14 object-cover rounded-lg border border-emerald-500/50 shadow-md"
+                  />
+                  <span className="absolute bottom-0.5 left-0.5 text-[8px] font-bold font-mono px-1 py-0.2 rounded bg-black/85 text-emerald-400 border border-emerald-500/30">
+                    BEFORE
+                  </span>
+                </div>
+
+                <span className="text-orange-400 font-bold text-xs">→</span>
+
+                {/* After Image thumbnail */}
+                <div className="relative">
+                  <img
+                    src={stagedAnomaly.image}
+                    alt="Captured Optical Evidence"
+                    className="w-14 h-14 object-cover rounded-lg border border-orange-500/60 shadow-md"
+                  />
+                  <span className="absolute bottom-0.5 left-0.5 text-[8px] font-bold font-mono px-1 py-0.2 rounded bg-black/85 text-orange-400 border border-orange-500/30">
+                    AFTER
+                  </span>
+                </div>
+              </div>
+
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20">
-                    🛰️ Optical Telemetry Frame Staged
+                    🛰️ Optical Dual-Frame Telemetry Staged
                   </span>
                   <span className="text-[11px] font-mono text-gray-300">{stagedAnomaly.spacecraft}</span>
                 </div>
