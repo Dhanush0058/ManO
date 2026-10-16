@@ -153,7 +153,7 @@ export function TwilioVoicePanel() {
           <div className="flex items-center gap-3">
             <div className="text-right">
               <span className="text-[10px] text-gray-500 block uppercase font-bold tracking-wider">Caller Line</span>
-              <span className="text-xs font-semibold text-blue-400 font-mono">+1 (737) 258-3742</span>
+              <span className="text-xs font-semibold text-blue-400 font-mono">+1 (737) 250-8034</span>
             </div>
           </div>
         </div>
