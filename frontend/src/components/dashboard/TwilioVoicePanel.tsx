@@ -98,7 +98,8 @@ export function TwilioVoicePanel() {
     setOutboundNotice(null);
 
     try {
-      const res = await fetch('http://localhost:8000/api/twilio/voice/outbound', {
+      const apiBase = (import.meta as any).env?.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+      const res = await fetch(`${apiBase}/api/twilio/voice/outbound`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
