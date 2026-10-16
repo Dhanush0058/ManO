@@ -53,7 +53,7 @@ export function Sidebar({ activeView, setActiveView }: SidebarProps) {
       }`}>
         {!collapsed && (
           <span className="text-[16px] font-extrabold text-white tracking-wide font-sans select-none">
-            SpacsXOS
+            SpaceXOS
           </span>
         )}
         {collapsed && (
