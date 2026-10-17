@@ -366,7 +366,10 @@ export function CommandCenter({ messages, onSendMessage, isLoading, stagedAnomal
       <div className="p-4 bg-[#020205]/45 border-t border-white/5">
         {/* Staged Optical Telemetry Dual-Frame Preview */}
         {stagedAnomaly && (
-          <div className="mb-3 p-3 rounded-xl bg-[#171108] border border-orange-500/50 flex items-center justify-between gap-3 animate-fade-in shadow-lg shadow-orange-950/20">
+          <div 
+            className="mb-3 p-3.5 rounded-xl border border-orange-500/60 flex items-center justify-between gap-3 animate-fade-in shadow-xl shadow-black/40"
+            style={{ backgroundColor: '#130d06' }}
+          >
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 shrink-0">
                 {/* Before Image thumbnail */}
@@ -398,26 +401,41 @@ export function CommandCenter({ messages, onSendMessage, isLoading, stagedAnomal
 
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-400 bg-orange-500/15 px-2 py-0.5 rounded border border-orange-500/30">
                     🛰️ Optical Dual-Frame Telemetry Staged
                   </span>
-                  <span className="text-[11px] font-mono text-gray-300">{stagedAnomaly.spacecraft}</span>
+                  <span 
+                    className="text-[11px] font-mono font-bold"
+                    style={{ color: '#F8FAFC' }}
+                  >
+                    {stagedAnomaly.spacecraft}
+                  </span>
                 </div>
-                <div className="text-xs font-bold text-white mt-1">{stagedAnomaly.title}</div>
-                <div className="text-[11px] text-gray-400 font-mono mt-0.5">
-                  LOC: {stagedAnomaly.coordinates} • Sensor: {stagedAnomaly.sensor}
+                <div 
+                  className="text-[13px] font-black tracking-wide mt-1"
+                  style={{ color: '#FFFFFF' }}
+                >
+                  {stagedAnomaly.title}
+                </div>
+                <div 
+                  className="text-[11px] font-mono mt-0.5"
+                  style={{ color: '#E2E8F0' }}
+                >
+                  <span style={{ color: '#FB923C', fontWeight: 700 }}>LOC:</span> {stagedAnomaly.coordinates}{' '}
+                  <span style={{ color: '#94A3B8' }}>•</span>{' '}
+                  <span style={{ color: '#FB923C', fontWeight: 700 }}>Sensor:</span> {stagedAnomaly.sensor}
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <span className="text-[11px] font-semibold text-orange-300 bg-orange-500/10 px-2.5 py-1 rounded-lg border border-orange-500/20 hidden sm:inline">
+              <span className="text-[11px] font-bold text-orange-300 bg-orange-500/15 px-2.5 py-1 rounded-lg border border-orange-500/30 hidden sm:inline shadow-xs">
                 Press Enter to Dispatch 4 Agents
               </span>
               {onClearStagedAnomaly && (
                 <button
                   type="button"
                   onClick={onClearStagedAnomaly}
-                  className="text-gray-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                  className="text-gray-300 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
                   title="Remove staged frame"
                 >
                   ✕
